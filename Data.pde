@@ -19,8 +19,6 @@ class Data {
     first_output = 0;
   }
   
-  //////////////////////////
-  // Data-related operations
   void setScreenData() {
     switch (environment.getScreen()) {
       case 1:
@@ -74,7 +72,7 @@ class Data {
           toAdd = Character.isLetter(new_text.charAt(i)) || Character.isDigit(new_text.charAt(i));
       }     
       if (toAdd) output_stream.add(new_text.substring(0, subset_length));
-      addToOutput(new_text.substring(subset_length));
+      addToOutput(new_text.substring(new_text.charAt(subset_length) == ' ' ? subset_length + 1 : subset_length));
     }
   }
   
@@ -90,8 +88,6 @@ class Data {
     addToOutput(output_content);
   }
   
-  /////////////////////////////
-  // Buttons-related operations
   void username() {
     if (environment.accountExists(input_stream)) {
       environment.setAccount(input_stream);
@@ -159,35 +155,32 @@ class Data {
   }
   
   void scrollLast() {
-    first_output = output_stream.size() - dims.lines_count;
+    first_output = max(0, output_stream.size() - dims.lines_count);
     display();  
   }
 
-
-  ///////////////////
-  // Display function
   void display() {
     textFont(environment.getCurrentFont(), dims.text_size);
     fill(INPUT_FILL);
-    stroke(INPUT_STROKE);
-        
+    noStroke();
+    
     switch (environment.getScreen()) {
       case 1:
-        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.keyboard_width, dims.text_size); 
+        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.output_width, dims.text_size); 
         fill(FONT_FILL);
         textAlign(CENTER);
-        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.keyboard_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
+        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
         textAlign(CENTER);    
-        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.keyboard_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
+        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
       break;      
       
       case 2:
-        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.keyboard_width, dims.text_size); 
+        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.output_width, dims.text_size); 
         fill(FONT_FILL);
         textAlign(CENTER);
-        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.keyboard_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
+        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
         textAlign(CENTER);    
-        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.keyboard_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
+        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
       break;   
       
       case 3:
@@ -195,17 +188,17 @@ class Data {
         rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
         fill(FONT_FILL);
         textAlign(LEFT);
-        text(input_stream, dims.input_x + dims.text_indent + int(dims.basic_key_size*0.25), dims.input_y + int(dims.text_size*1.25)); // Y is a little bit higher - whole field is not needed withoud diacritics
+        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8); // Y is a little bit higher - whole field is not needed withoud diacritics
         for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
           text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output));
         }
       break;
       
       case 4:
-        rect(dims.input_x, dims.input_y , dims.keyboard_width, dims.output_height); 
+        rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.output_width, dims.output_height + int(dims.basic_key_size*0.5)); 
         fill(ERROR_COLOR);
         textAlign(LEFT);
-        text(error, dims.input_x + dims.text_indent, dims.input_y + (dims.text_size/5*4));
+        text(error, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + (dims.text_size*0.75));
       break;    
     }
   }

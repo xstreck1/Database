@@ -1,14 +1,16 @@
+// Actually important colors
+final color FONT_FILL    = #5277FF; // I/O text
+final color TEXT_FILL    = #DDEEFF; // GUI text
+final color ERROR_COLOR  = #FF1111; // Color of error text
+final color INPUT_FILL   = #FFFFFF; // I/O fields
+
 // Coloring
 final color BG_COLOR     = #020014; // Basic background
-final color ERROR_COLOR  = #FF1111; // Color of error text
 final color BUTTON_NOF   = #040026; // Non-active fill
 final color BUTTON_NOS   = #5277FF; // Non-active stroke
 final color BUTTON_ACF   = #243269; // Active fill
 final color BUTTON_ACS   = #6791FF; // Active stroke
-final color INPUT_FILL   = #FFFFFF; // I/O fields
 final color INPUT_STROKE = #5277FF; // I/O fields
-final color FONT_FILL    = #5277FF; // I/O text
-final color TEXT_FILL    = #DDEEFF; // GUI text
 
 // Keyboard values
 final int BUTTON_COLUMNS = 9;
@@ -64,13 +66,11 @@ public class Dimensions {
     keyboard_width = basic_key_size*12;
     wide_key_size  = basic_key_size*3;
     input_x        = border_x;
-    input_y        = basic_key_size + border_y; // First possible position
+    input_y        = basic_key_size + border_y;
     output_width   = keyboard_width - basic_key_size;
     output_height  = basic_key_size*4;
-    lines_count    = (int) ( (float) output_height / (float) text_size);
+    lines_count    = (int) ((float) (output_height - text_indent*2)  / (float) text_size);
   }
 }
-
-// Strings
 
 

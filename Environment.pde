@@ -14,8 +14,7 @@ class Environment {
     dims = _dims; 
     loadFonts();
     currentFont = FONT1;
-    user_name = "";
-    
+    user_name = "";  
     screen_type = 0;   
   }
 

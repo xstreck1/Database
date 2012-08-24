@@ -36,7 +36,19 @@ void parseSettings() {
   } 
 }
 
+void setBackground() {
+  String file = String.valueOf(settings.screen_width);
+  file = file.concat("x");
+  file = file.concat(String.valueOf(settings.screen_height));
+  file = file.concat(".png");
+  
+  PImage b = loadImage(file);
+  
+  background(b);
+}
+
 void setup() {
+  error = "";
   parseSettings();
   
   dims = new Dimensions(settings);
@@ -47,23 +59,13 @@ void setup() {
   data        = new Data(dims);
   
   http        = new HTTPHelper();
-  error       = "";
 
   // Application attributes setup
   size(settings.screen_width, settings.screen_height, JAVA2D);
   PImage my_cursor = loadImage(CURSOR1);
   cursor(my_cursor, 16, 16);
   smooth();
-  
-  // Setup Connection
-  try {
-    println(http.connect(new String("http://www.fi.muni.cz/~xstreck1/")));
-  }
-  catch (Exception e) {
-    e.printStackTrace();
-    error = e.getMessage();
-  }
-    
+      
   draw();  
   environment.setScreen(1);
 }
@@ -72,7 +74,7 @@ void draw() {
   if (!error.isEmpty())
     environment.setScreen(4);  
     
-  background(BG_COLOR);
+  setBackground();
   keyboard.displayButtons();
   data.display();
 }

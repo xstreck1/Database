@@ -32,6 +32,8 @@ public class XMLParse extends DefaultHandler
       settings.screen_height = Integer.valueOf(getAttribute("value", atts));
     } else if (qName.equals("USER")) {
       settings.users.put(getAttribute("name", atts), getAttribute("pass", atts));     
+    } else if (qName.equals("STRING")) {
+      settings.strings.put(getAttribute("name", atts), getAttribute("text", atts));     
     } else {
       error = (qName.concat(" is not a known tag."));      
     }

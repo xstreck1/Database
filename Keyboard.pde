@@ -168,17 +168,18 @@ class Button {
   }
 
   void display() {
+    // fill(BG_COLOR);
+    // noStroke();
+    // stroke(BUTTON_ACS);
+    // rect(x_pos, y_pos, x_size, y_size); 
+    
+    textAlign(CENTER);
     if (is_mouse_over) {
-      fill(active_fill);
-      stroke(active_stroke);
+      fill(text_fill);
     }
     else {
-      fill(normal_fill);
-      stroke(normal_stroke);
+      fill(active_fill);
     }   
-    rect(x_pos, y_pos, x_size, y_size); 
-    fill(text_fill);
-    textAlign(CENTER);
     text(caption, x_pos + (x_size/2), y_pos + (dims.basic_key_size + dims.font_size*3/5)/2);
   }
 
