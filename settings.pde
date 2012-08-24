@@ -2,6 +2,7 @@ class Settings {
   int ID;
   int screen_width;
   int screen_height;
+  String target_url;
   HashMap users;
   HashMap strings;
   HashMap colors;
@@ -13,6 +14,7 @@ class Settings {
     users = new HashMap();
     strings = new HashMap();
     colors = new HashMap();
+    target_url = "";
   }
   
   String obtainString(String name) {

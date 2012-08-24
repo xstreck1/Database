@@ -30,6 +30,8 @@ public class XMLParse extends DefaultHandler
       settings.screen_width = Integer.valueOf(getAttribute("value", atts));
     } else if (qName.equals("HEIGHT")) {
       settings.screen_height = Integer.valueOf(getAttribute("value", atts));
+    } else if (qName.equals("URL")) {
+      settings.target_url = getAttribute("url", atts);     
     } else if (qName.equals("USER")) {
       settings.users.put(getAttribute("name", atts), getAttribute("pass", atts));     
     } else if (qName.equals("STRING")) {

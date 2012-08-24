@@ -29,7 +29,7 @@ class HTTPHelper {
     String result;
       
     try {
-      result = http.connect(new String("http://www.fi.muni.cz/~xstreck1/index.html"));
+      result = http.connect(settings.target_url);
     }
     catch (Exception e) {
       e.printStackTrace();
