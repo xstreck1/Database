@@ -30,27 +30,23 @@ class Keyboard {
 
     // Special input buttons
     buttons[button_num++] = new Button("Potvrd", 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 0*dims.basic_key_size, 
-    dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);                                 
+    dims.wide_key_size, dims.basic_key_size);                                 
     buttons[button_num++] = new Button("Smaz"  , 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 1*dims.basic_key_size, 
-    dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
+    dims.wide_key_size, dims.basic_key_size);
     buttons[button_num++] = new Button("Zrus"  , 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 2*dims.basic_key_size, 
-    dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
+    dims.wide_key_size, dims.basic_key_size);
 
     // Environment language buttons
-    buttons[button_num++] = new Button(FONT1, dims.wide_key_size*0 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);                                 
-    buttons[button_num++] = new Button(FONT2, dims.wide_key_size*1 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);   
-    buttons[button_num++] = new Button(FONT3, dims.wide_key_size*2 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);  
-    buttons[button_num++] = new Button(FONT4, dims.wide_key_size*3 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
+    buttons[button_num++] = new Button(FONT1, dims.wide_key_size*0 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);                                 
+    buttons[button_num++] = new Button(FONT2, dims.wide_key_size*1 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);   
+    buttons[button_num++] = new Button(FONT3, dims.wide_key_size*2 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);  
+    buttons[button_num++] = new Button(FONT4, dims.wide_key_size*3 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);
   
     // Output scroll buttons
-    buttons[button_num++] = new Button("▲", 11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75), dims.basic_key_size, dims.basic_key_size, 
-                                       BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("↑", 11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75) + dims.basic_key_size, dims.basic_key_size, dims.basic_key_size, 
-                                       BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("↓", 11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75) + dims.basic_key_size*2, dims.basic_key_size, dims.basic_key_size, 
-                                       BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("▼",  11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75) + dims.basic_key_size*3, dims.basic_key_size, dims.basic_key_size, 
-                                       BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
+    buttons[button_num++] = new Button("▲", 11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75), dims.basic_key_size, dims.basic_key_size);
+    buttons[button_num++] = new Button("↑", 11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75) + dims.basic_key_size, dims.basic_key_size, dims.basic_key_size);
+    buttons[button_num++] = new Button("↓", 11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75) + dims.basic_key_size*2, dims.basic_key_size, dims.basic_key_size);
+    buttons[button_num++] = new Button("▼",  11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75) + dims.basic_key_size*3, dims.basic_key_size, dims.basic_key_size);
   }  
 
   void displayButtons() {
@@ -112,6 +108,7 @@ class Keyboard {
       environment.setScreen(1);
       environment.changeFont(button);
       data.clear();
+      data.output("Abeceda byla zmenena, databaze byla resetovana.");
       keyboard.displayButtons();
       data.display();    
     }
@@ -135,22 +132,16 @@ class Keyboard {
  */
 class Button {
   int x_pos, y_pos, x_size, y_size;
-  color normal_fill, normal_stroke, active_fill, active_stroke, text_fill;
   boolean is_mouse_over = false;
   String caption;
 
   // Full constructor
-  Button (String cap, int xp, int yp, int xs, int ys, color nof, color nos, color acf, color acs, color tf) {
+  Button (String cap, int xp, int yp, int xs, int ys) {
     caption = cap;
     x_pos = xp;
     y_pos = yp;
     x_size = xs;
     y_size = ys;
-    normal_fill = nof;
-    normal_stroke = nos;
-    active_fill = acf;
-    active_stroke = acs;
-    text_fill = tf;
   }
 
   // Basic constructor for simpliest buttons
@@ -160,11 +151,6 @@ class Button {
     y_pos = yp;
     x_size = dims.basic_key_size;
     y_size = dims.basic_key_size;
-    normal_fill = BUTTON_NOF;
-    normal_stroke = BUTTON_NOS;
-    active_fill = BUTTON_ACF;
-    active_stroke = BUTTON_ACS;
-    text_fill = TEXT_FILL;
   }
 
   void display() {
@@ -175,10 +161,10 @@ class Button {
     
     textAlign(CENTER);
     if (is_mouse_over) {
-      fill(text_fill);
+      fill(settings.getColor("highlight"));
     }
     else {
-      fill(active_fill);
+      fill(settings.getColor("caption"));
     }   
     text(caption, x_pos + (x_size/2), y_pos + (dims.basic_key_size + dims.font_size*3/5)/2);
   }

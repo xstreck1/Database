@@ -161,13 +161,13 @@ class Data {
 
   void display() {
     textFont(environment.getCurrentFont(), dims.text_size);
-    fill(INPUT_FILL);
+    fill(settings.getColor("field"));
     noStroke();
     
     switch (environment.getScreen()) {
       case 1:
         rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.output_width, dims.text_size); 
-        fill(FONT_FILL);
+        fill(settings.getColor("text"));
         textAlign(CENTER);
         text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
         textAlign(CENTER);    
@@ -176,7 +176,7 @@ class Data {
       
       case 2:
         rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.output_width, dims.text_size); 
-        fill(FONT_FILL);
+        fill(color(settings.getColor("text")));
         textAlign(CENTER);
         text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
         textAlign(CENTER);    
@@ -186,7 +186,7 @@ class Data {
       case 3:
         rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
         rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
-        fill(FONT_FILL);
+        fill(settings.getColor("text"));
         textAlign(LEFT);
         text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8); // Y is a little bit higher - whole field is not needed withoud diacritics
         for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
@@ -196,7 +196,7 @@ class Data {
       
       case 4:
         rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.output_width, dims.output_height + int(dims.basic_key_size*0.5)); 
-        fill(ERROR_COLOR);
+        fill(settings.getColor("error"));
         textAlign(LEFT);
         text(error, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + (dims.text_size*0.75));
       break;    

@@ -17,7 +17,9 @@ HTTPHelper  http;
 Settings    settings;
 Dimensions  dims;
 
+PImage background_image;
 String error;
+int draw_count = 0;
 
 void parseSettings() {
   settings = new Settings();
@@ -36,23 +38,22 @@ void parseSettings() {
   } 
 }
 
-void setBackground() {
+void loadBackground() {
   String file = String.valueOf(settings.screen_width);
   file = file.concat("x");
   file = file.concat(String.valueOf(settings.screen_height));
   file = file.concat(".png");
   
-  PImage b = loadImage(file);
-  
-  background(b);
+  background_image = loadImage(file);
 }
 
 void setup() {
   error = "";
   parseSettings();
+  loadBackground();
   
   dims = new Dimensions(settings);
-  
+    
   // Create global objects
   keyboard    = new Keyboard(dims);
   environment = new Environment(dims);
@@ -61,11 +62,12 @@ void setup() {
   http        = new HTTPHelper();
 
   // Application attributes setup
+  
   size(settings.screen_width, settings.screen_height, JAVA2D);
   PImage my_cursor = loadImage(CURSOR1);
   cursor(my_cursor, 16, 16);
   smooth();
-      
+       
   draw();  
   environment.setScreen(1);
 }
@@ -73,10 +75,14 @@ void setup() {
 void draw() {
   if (!error.isEmpty())
     environment.setScreen(4);  
-    
-  setBackground();
+  if (background_image != null)
+    background(background_image);
   keyboard.displayButtons();
   data.display();
+  
+  if (draw_count++ == 50) {
+    http.check();
+  }
 }
 
 void mouseMoved() {

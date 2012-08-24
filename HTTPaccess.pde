@@ -25,6 +25,9 @@ class HTTPHelper {
     return new String(buffer);
   }
 
+  /**
+   * Get data from server. 
+   */
   String findEntry(String key_word) {
     String result;
       
@@ -38,5 +41,21 @@ class HTTPHelper {
     }
     
     return result;
+  }
+
+  /**
+   * Check status of the database on the server.
+   */  
+  void check() {
+    String result;
+      
+    try {
+      result = http.connect(settings.target_url);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      error = e.getMessage();
+      result = "Error.";
+    }  
   }
 }

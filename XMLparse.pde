@@ -36,6 +36,13 @@ public class XMLParse extends DefaultHandler
       settings.users.put(getAttribute("name", atts), getAttribute("pass", atts));     
     } else if (qName.equals("STRING")) {
       settings.strings.put(getAttribute("name", atts), getAttribute("text", atts));     
+    } else if (qName.equals("COLOR")) {
+      Vector parts = new Vector();
+      parts.add(getAttribute("r", atts));
+      parts.add(getAttribute("g", atts));     
+      parts.add(getAttribute("b", atts));  
+      parts.add(getAttribute("a", atts));       
+      settings.colors.put(getAttribute("name", atts), parts);           
     } else {
       error = (qName.concat(" is not a known tag."));      
     }

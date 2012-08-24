@@ -29,9 +29,15 @@ class Settings {
   int getColor(String name) {
     if (colors.get(name) == null) {
       error = name.concat(" color was not found.");
-      return 0;
+      return color(0);
     }
-    else 
-      return Integer.decode((String)(colors.get(name)));
+    else {
+      Vector parts = (Vector) colors.get(name);
+      int r = Integer.valueOf((String) parts.elementAt(0));
+      int g = Integer.valueOf((String) parts.elementAt(1)); 
+      int b = Integer.valueOf((String) parts.elementAt(2));  
+      int a = Integer.valueOf((String) parts.elementAt(3));  
+      return color(r,g,b,a);
+    }  
   }
 }
