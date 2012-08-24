@@ -13,7 +13,6 @@ import org.xml.sax.helpers.DefaultHandler;
 Keyboard    keyboard;
 Environment environment;
 Data        data;
-Information info;
 HTTPHelper  http;
 Settings    settings;
 Dimensions  dims;
@@ -47,7 +46,6 @@ void setup() {
   environment = new Environment(dims);
   data        = new Data(dims);
   
-  info        = new Information();
   http        = new HTTPHelper();
   error       = "";
 

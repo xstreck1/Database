@@ -1,8 +1,9 @@
 <DATABASE>
-	<ID>1</ID>
-	<--! Fullscreen can be 1 or 0, width*height can be 640*480, 800*600, 1024*768, 1280*1024 -->
-	<FULLSCREEN>1</FULLSCREEN>
-	<WIDTH>800</WIDTH>
-	<HEIGHT>600</HEIGHT>
-	<USER name="Admin" password="Admin" />
+	<ID value="1" />
+	<!-- Fullscreen can be 1 or 0, width*height can be 640*480, 800*600, 1024*768, 1280*1024 -->
+	<WIDTH value="640" />
+	<HEIGHT value="480" />
+	<!-- name and password must be in caps -->
+	<USER name="ADMIN" pass="ADMIN" />
+	<USER name="I" pass="I" />
 </DATABASE>
