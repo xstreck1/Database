@@ -43,13 +43,13 @@ class Keyboard {
     buttons[button_num++] = new Button(FONT4, dims.key_space*7 + dims.wide_key_size*3 + dims.border, dims.key_space + dims.border, dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
   
     // Output scroll buttons
-    buttons[button_num++] = new Button("▲", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + dims.text_size + dims.key_space*2, dims.basic_key_size, (dims.output_height / 4), 
+    buttons[button_num++] = new Button("▲", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + int(dims.basic_key_size*0.75) + dims.key_space*3, dims.basic_key_size, dims.basic_key_size, 
                                        BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("↑", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + dims.text_size + dims.key_space*2 + (dims.output_height / 4), dims.basic_key_size, (dims.output_height / 4), 
+    buttons[button_num++] = new Button("↑", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + int(dims.basic_key_size*0.75) + dims.key_space*5 + dims.basic_key_size, dims.basic_key_size, dims.basic_key_size, 
                                        BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("↓", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + dims.text_size + dims.key_space*2 + (dims.output_height / 4 * 2), dims.basic_key_size, (dims.output_height / 4), 
+    buttons[button_num++] = new Button("↓", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + int(dims.basic_key_size*0.75) + dims.key_space*7 + dims.basic_key_size*2, dims.basic_key_size, dims.basic_key_size, 
                                        BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("▼", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + dims.text_size + dims.key_space*2 + (dims.output_height / 4 * 3), dims.basic_key_size, dims.output_height - (dims.output_height / 4 * 3), 
+    buttons[button_num++] = new Button("▼", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + int(dims.basic_key_size*0.75) + dims.key_space*9 + dims.basic_key_size*3, dims.basic_key_size, dims.basic_key_size, 
                                        BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
   }  
 
@@ -109,7 +109,9 @@ class Keyboard {
     }
     
     else if (button.equals(FONT1) || button.equals(FONT2) || button.equals(FONT3) || button.equals(FONT4)) {
+      environment.setScreen(1);
       environment.changeFont(button);
+      data.clear();
       keyboard.displayButtons();
       data.display();    
     }

@@ -24,4 +24,19 @@ class HTTPHelper {
       throw new IOException("Text too long");
     return new String(buffer);
   }
+
+  String findEntry(String key_word) {
+    String result;
+      
+    try {
+      result = http.connect(new String("http://www.fi.muni.cz/~xstreck1/index.html"));
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      error = e.getMessage();
+      result = "Error.";
+    }
+    
+    return result;
+  }
 }

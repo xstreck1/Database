@@ -52,9 +52,9 @@ public class Dimensions {
     width_ = settings.screen_width;
     height = settings.screen_height;
     
-    border = int(width_ * 0.05);
-    key_space = int(height *0.01);
-    basic_key_size = int(height *0.08);
+    border = int(height * 0.05);
+    key_space = 0;
+    basic_key_size = int(height *0.1);
     font_size = 30;
     text_size = 20;
     text_indent = 3;
@@ -63,10 +63,10 @@ public class Dimensions {
     keyboard_y     = height - basic_key_size*3 - key_space*6 - border;
     keyboard_width = basic_key_size*12 + key_space*22;
     wide_key_size  = key_space*4 + basic_key_size*3;
-    input_x        = key_space + border; // First possible position
-    input_y        = basic_key_size + 3*key_space + border; // First possible position
+    input_x        = border;
+    input_y        = basic_key_size + 2*key_space + border; // First possible position
     output_width   = keyboard_width - 2*key_space - basic_key_size;
-    output_height  = keyboard_y - (input_y + text_size + key_space*3);
+    output_height  = key_space*6 + basic_key_size*4;
     lines_count    = (int) ( (float) output_height / (float) text_size);
   }
 }

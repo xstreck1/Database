@@ -6,37 +6,15 @@ class Environment {
   HashMap fonts;
   String  currentFont;
   int     screen_type; // 1 for name, 2 for password, 3 for data, 4 for error
-  HashMap accounts;
-  Account current_account;
   int     buttons_count; // How many buttons are active
+  String  user_name;
   Dimensions dims;
-  
-  /** 
-   * Simple structure for accounts
-   */
-  class Account {
-    String name;
-    String password;
-    int    clearence;
-    
-    Account (String n, String p, int c) {
-      name      = n;
-      password  = p;
-      clearence = c;
-    }
-    
-    String getMyName () {return name;}
-    String getPass () {return password;}
-    int getClearence () {return clearence;}
-  }
 
   Environment (Dimensions _dims) {
     dims = _dims; 
     loadFonts();
     currentFont = FONT1;
-
-    createAccounts();
-    setAccount("VEREJNY"); // TODO Erase - there should be no account at the start
+    user_name = "";
     
     screen_type = 0;   
   }
@@ -60,35 +38,21 @@ class Environment {
     fonts.put(FONT4, new_font);
   }
   
-  void createAccounts() { 
-    accounts = new HashMap();
-    Account temp;
-    
-    temp = new Account("Veřejný", "", 0);
-    accounts.put("VEREJNY", temp);
-    temp = new Account("Admin", "admin", 1);
-    accounts.put("ADMIN", temp);    
-  }
-
   boolean accountExists(String name) {
-    return accounts.containsKey(name);
+    return settings.users.containsKey(name);
   } 
 
   void setAccount(String name) {
-    current_account = (Account) accounts.get(name);
+    user_name = name;
   }
   
   boolean passwordMatches(String pass) {
-    return (0 == pass.compareToIgnoreCase(current_account.getPass()));
+    return (0 == pass.compareToIgnoreCase((String) settings.users.get(user_name)));
   }
   
   String getAccountName() {
-    return current_account.getMyName();
+    return user_name;
   }  
- 
-  int getAccountClereance() {
-    return current_account.getClearence();
-  }   
 
   PFont getCurrentFont() {
     return (PFont) fonts.get(currentFont);
