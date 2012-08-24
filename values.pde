@@ -29,15 +29,15 @@ public class Dimensions {
   int width_;
   int height;
   
-  // Layout constants
-  int border; // Space between layout and window
-  int key_space; // Border of the key (2* between keys)
+  // Layout variables
+  int border_x; // Space between layout and window horizontally
+  int border_y; // Space between layout and window vertically
   int basic_key_size; // Key size
   int font_size; // GUI text
   int text_size; // I/O text
   int text_indent;  // Space between window and text
   
-  // Layout varialbes - just for simplicity in reccurent uses
+  // Object placement variables - just for simplicity in reccurent uses
   int keyboard_x;
   int keyboard_y;
   int keyboard_width;
@@ -52,21 +52,21 @@ public class Dimensions {
     width_ = settings.screen_width;
     height = settings.screen_height;
     
-    border = int(height * 0.05);
-    key_space = 0;
+    border_y = int(height * 0.05);
+    border_x = int(height * 0.05) + int((width_ - height*1.3)/2.0);
     basic_key_size = int(height *0.1);
     font_size = 30;
     text_size = 20;
     text_indent = 3;
     
-    keyboard_x     = border;
-    keyboard_y     = height - basic_key_size*3 - key_space*6 - border;
-    keyboard_width = basic_key_size*12 + key_space*22;
-    wide_key_size  = key_space*4 + basic_key_size*3;
-    input_x        = border;
-    input_y        = basic_key_size + 2*key_space + border; // First possible position
-    output_width   = keyboard_width - 2*key_space - basic_key_size;
-    output_height  = key_space*6 + basic_key_size*4;
+    keyboard_x     = border_x;
+    keyboard_y     = height - basic_key_size*3 - border_y;
+    keyboard_width = basic_key_size*12;
+    wide_key_size  = basic_key_size*3;
+    input_x        = border_x;
+    input_y        = basic_key_size + border_y; // First possible position
+    output_width   = keyboard_width - basic_key_size;
+    output_height  = basic_key_size*4;
     lines_count    = (int) ( (float) output_height / (float) text_size);
   }
 }

@@ -62,16 +62,19 @@ class Data {
     }
     else {
       int subset_length = 0;
-      // while the substrin is too long or can't be spliced, shorten it
+      // while the substring is too long or can't be spliced, shorten it
       while (textWidth(new_text.substring(0, subset_length)) < (dims.output_width-2*dims.text_indent))
         subset_length++;
+      subset_length--;
+      while (subset_length > 0 && Character.isLetter(new_text.charAt(subset_length)))
+        subset_length--;    
        
       boolean toAdd = false;
       for (int i = 0; i < subset_length; i++) {
           toAdd = Character.isLetter(new_text.charAt(i)) || Character.isDigit(new_text.charAt(i));
       }     
-      if (toAdd) output_stream.add(new_text.substring(0, subset_length-1));
-      addToOutput(new_text.substring(subset_length-1));
+      if (toAdd) output_stream.add(new_text.substring(0, subset_length));
+      addToOutput(new_text.substring(subset_length));
     }
   }
   
@@ -188,13 +191,13 @@ class Data {
       break;   
       
       case 3:
-        rect(dims.input_x, dims.input_y + dims.key_space + int(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
-        rect(dims.input_x, dims.input_y + dims.key_space*3 + int(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
+        rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
+        rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
         fill(FONT_FILL);
         textAlign(LEFT);
-        text(input_stream, dims.input_x + dims.text_indent + int(dims.basic_key_size*0.25), dims.input_y + (dims.text_size/5*4) + dims.key_space); // Y is a little bit higher - whole field is not needed withoud diacritics
+        text(input_stream, dims.input_x + dims.text_indent + int(dims.basic_key_size*0.25), dims.input_y + int(dims.text_size*1.25)); // Y is a little bit higher - whole field is not needed withoud diacritics
         for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
-          text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output) + dims.key_space*3);
+          text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output));
         }
       break;
       
