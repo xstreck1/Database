@@ -5,11 +5,9 @@ class Data {
   ArrayList output_stream;  
   String input_stream;
   int first_output;
-  Dimensions dims;
 
-  Data(Dimensions _dims) {
+  Data() {
     clear();
-    dims = _dims;
   }
   
   void clear() {
@@ -23,15 +21,16 @@ class Data {
     switch (environment.getScreen()) {
       case 1:
         output_stream.clear();
-        output("Zadejte uživateské jméno.");       
+        output(settings.getText("username"));       
       break;
       case 2:
         output_stream.clear();
-        output("Účet: " + environment.getAccountName() + ", zadejte heslo.");       
+        output(settings.getText("password") + environment.getAccountName());       
       break;
       case 3:
         output_stream.clear();
-        output("Vítejte uživateli " + environment.getAccountName() + ". Pro odhlášení zadejte EXIT. Pro vyhledávání zadejte požadované slovo.");       
+        output(settings.getText("welcome") + environment.getAccountName() + ".");
+        output(settings.getText("logoff") );       
       break;
     }
   }
@@ -95,7 +94,7 @@ class Data {
       eraseAll();
     }
     else {
-      output("Zadané uživatelské jméno neexistuje. Zadejte nové jméno.");
+      output(settings.getText("noname"));
     }
   }
   
@@ -106,7 +105,7 @@ class Data {
     }
     else {
       environment.setScreen(1);      
-      output("Zadáno špatné heslo. Zadejte uživatelské jméno.");
+      output(settings.getText("wrongpass"));
       eraseAll();
     }
   }
@@ -115,6 +114,7 @@ class Data {
     if (input_stream.equals("EXIT")) {
       environment.setScreen(1);
       clear();
+      data.output(settings.getText("logoffreset"));
     }
     else {
       output(input_stream + ": " + (http.findEntry(input_stream)));
@@ -126,7 +126,7 @@ class Data {
     input_stream = input_stream.concat(str(letter));
     if (textWidth(input_stream) > (dims.keyboard_width-2*dims.text_indent)) {
       eraseLast();
-      output("Překročena délka vstupního pole.");
+      output(settings.getText("outofbounds"));
     }
   }
   

@@ -1,15 +1,11 @@
-import org.xml.sax.XMLReader;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-
+/**
+ * Class parses data from the settings.xml file and stores them in settings object.
+ */
 public class XMLParse extends DefaultHandler
-{
-  Settings settings;
-  
-  public XMLParse (Settings _settings)
+{ 
+  public XMLParse ()
   {
     super();
-    settings = _settings;
   }
 
   String getAttribute(String name, Attributes atts) {
@@ -30,10 +26,16 @@ public class XMLParse extends DefaultHandler
       settings.screen_width = Integer.valueOf(getAttribute("value", atts));
     } else if (qName.equals("HEIGHT")) {
       settings.screen_height = Integer.valueOf(getAttribute("value", atts));
-    } else if (qName.equals("URL")) {
+    } else if (qName.equals("TEXTSIZE")) {
+      settings.text_size = Integer.valueOf(getAttribute("value", atts));
+    } else if (qName.equals("CAPSSIZE")) {
+      settings.caps_size = Integer.valueOf(getAttribute("value", atts));
+    }  else if (qName.equals("URL")) {
       settings.target_url = getAttribute("url", atts);     
     } else if (qName.equals("USER")) {
       settings.users.put(getAttribute("name", atts), getAttribute("pass", atts));     
+    } else if (qName.equals("FONT")) {
+      settings.fonts.add(getAttribute("name", atts));     
     } else if (qName.equals("STRING")) {
       settings.strings.put(getAttribute("name", atts), getAttribute("text", atts));     
     } else if (qName.equals("COLOR")) {

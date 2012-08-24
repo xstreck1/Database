@@ -4,10 +4,8 @@
 class Keyboard {
   Button[] buttons;
   int hover_button;
-  Dimensions dims;
 
-  Keyboard(Dimensions _dims) {
-    dims = _dims;
+  Keyboard() {
     createButtons();
     hover_button = BUTTON_COUNT;
   }
@@ -37,11 +35,11 @@ class Keyboard {
     dims.wide_key_size, dims.basic_key_size);
 
     // Environment language buttons
-    buttons[button_num++] = new Button(FONT1, dims.wide_key_size*0 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);                                 
-    buttons[button_num++] = new Button(FONT2, dims.wide_key_size*1 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);   
-    buttons[button_num++] = new Button(FONT3, dims.wide_key_size*2 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);  
-    buttons[button_num++] = new Button(FONT4, dims.wide_key_size*3 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);
-  
+    buttons[button_num++] = new Button(settings.getFont(0), dims.wide_key_size*0 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);                                 
+    buttons[button_num++] = new Button(settings.getFont(1), dims.wide_key_size*1 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);   
+    buttons[button_num++] = new Button(settings.getFont(2), dims.wide_key_size*2 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);  
+    buttons[button_num++] = new Button(settings.getFont(3), dims.wide_key_size*3 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);
+
     // Output scroll buttons
     buttons[button_num++] = new Button("▲", 11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75), dims.basic_key_size, dims.basic_key_size);
     buttons[button_num++] = new Button("↑", 11*dims.basic_key_size + dims.border_x, dims.input_y + int(dims.basic_key_size*0.75) + dims.basic_key_size, dims.basic_key_size, dims.basic_key_size);
@@ -50,7 +48,7 @@ class Keyboard {
   }  
 
   void displayButtons() {
-    textFont(environment.getCurrentFont(), dims.font_size);
+    textFont(environment.getCurrentFont(), dims.caps_size);
     for (int i = 0; i < environment.getButtonsCount(); i++) // Display only this environments buttons
       buttons[i].display();
   }
@@ -104,11 +102,11 @@ class Keyboard {
       data.eraseAll();
     }
     
-    else if (button.equals(FONT1) || button.equals(FONT2) || button.equals(FONT3) || button.equals(FONT4)) {
+    else if (button.equals(settings.getFont(0)) || button.equals(settings.getFont(1)) || button.equals(settings.getFont(2)) || button.equals(settings.getFont(3))) {
       environment.setScreen(1);
       environment.changeFont(button);
       data.clear();
-      data.output("Abeceda byla zmenena, databaze byla resetovana.");
+      data.output(settings.getText("alphareset"));
       keyboard.displayButtons();
       data.display();    
     }
@@ -166,7 +164,7 @@ class Button {
     else {
       fill(settings.getColor("caption"));
     }   
-    text(caption, x_pos + (x_size/2), y_pos + (dims.basic_key_size + dims.font_size*3/5)/2);
+    text(caption, x_pos + (x_size/2), y_pos + (dims.basic_key_size + dims.caps_size*3/5)/2);
   }
 
   boolean testMousePosition() {

@@ -1,14 +1,8 @@
-import java.lang.Exception;
-import java.lang.Character;
-import java.util.ArrayList;
-import java.net.URL;
-import java.net.HttpURLConnection;
-import java.io.FileReader;
 import org.xml.sax.XMLReader;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
 import org.xml.sax.helpers.XMLReaderFactory;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 
 Keyboard    keyboard;
 Environment environment;
@@ -27,7 +21,7 @@ void parseSettings() {
   // Setup parser and parse settings
   try {
     XMLReader xr = XMLReaderFactory.createXMLReader();
-    XMLParse handler = new XMLParse(settings);
+    XMLParse handler = new XMLParse();
     xr.setContentHandler(handler);
     xr.setErrorHandler(handler);
     xr.parse(new InputSource("settings.xml"));
@@ -52,19 +46,14 @@ void setup() {
   parseSettings();
   loadBackground();
   
-  dims = new Dimensions(settings);
-    
-  // Create global objects
-  keyboard    = new Keyboard(dims);
-  environment = new Environment(dims);
-  data        = new Data(dims);
-  
+  dims = new Dimensions();
+  keyboard    = new Keyboard();
+  environment = new Environment();
+  data        = new Data();
   http        = new HTTPHelper();
-
-  // Application attributes setup
   
   size(settings.screen_width, settings.screen_height, JAVA2D);
-  PImage my_cursor = loadImage(CURSOR1);
+  PImage my_cursor = loadImage("Cursor.png");
   cursor(my_cursor, 16, 16);
   smooth();
        
@@ -80,8 +69,10 @@ void draw() {
   keyboard.displayButtons();
   data.display();
   
-  if (draw_count++ == 50) {
+  // Within a loop, check status from time to time
+  if (draw_count++ > 50) {
     http.check();
+    draw_count = 0;
   }
 }
 

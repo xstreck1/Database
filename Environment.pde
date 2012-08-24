@@ -1,4 +1,3 @@
-
 /**
  * Class that holds and manages environment info
  */
@@ -8,12 +7,10 @@ class Environment {
   int     screen_type; // 1 for name, 2 for password, 3 for data, 4 for error
   int     buttons_count; // How many buttons are active
   String  user_name;
-  Dimensions dims;
 
-  Environment (Dimensions _dims) {
-    dims = _dims; 
+  Environment () {
     loadFonts();
-    currentFont = FONT1;
+    currentFont = settings.getFont(0);
     user_name = "";  
     screen_type = 0;   
   }
@@ -23,18 +20,18 @@ class Environment {
     String font_path;
     PFont  new_font;
     
-    font_path = FONT1 + ".vlw";
+    font_path = settings.getFont(0) + ".vlw";
     new_font  = loadFont(font_path);
-    fonts.put(FONT1, new_font);
-    font_path = FONT2 + ".vlw";
+    fonts.put(settings.getFont(0), new_font);
+    font_path = settings.getFont(1)  + ".vlw";
     new_font  = loadFont(font_path);
-    fonts.put(FONT2, new_font);
-    font_path = FONT3 + ".vlw";
+    fonts.put(settings.getFont(1), new_font);
+    font_path = settings.getFont(2) + ".vlw";
     new_font  = loadFont(font_path);
-    fonts.put(FONT3, new_font);
-    font_path = FONT4 + ".vlw";
+    fonts.put(settings.getFont(2), new_font);
+    font_path = settings.getFont(3) + ".vlw";
     new_font  = loadFont(font_path);
-    fonts.put(FONT4, new_font);
+    fonts.put(settings.getFont(3), new_font);
   }
   
   boolean accountExists(String name) {
