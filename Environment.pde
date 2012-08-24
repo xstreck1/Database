@@ -9,6 +9,7 @@ class Environment {
   HashMap accounts;
   Account current_account;
   int     buttons_count; // How many buttons are active
+  Dimensions dims;
   
   /** 
    * Simple structure for accounts
@@ -29,14 +30,15 @@ class Environment {
     int getClearence () {return clearence;}
   }
 
-  Environment () {
+  Environment (Dimensions _dims) {
+    dims = _dims; 
     loadFonts();
     currentFont = FONT1;
 
     createAccounts();
     setAccount("VEREJNY"); // TODO Erase - there should be no account at the start
     
-    screen_type = 0;    
+    screen_type = 0;   
   }
 
   void loadFonts() {

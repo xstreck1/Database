@@ -5,11 +5,13 @@ class Data {
   ArrayList output_stream;  
   String input_stream;
   int first_output;
+  Dimensions dims;
 
-  Data() {
+  Data(Dimensions _dims) {
     output_stream = new ArrayList();
     input_stream = new String();
     first_output = 0;
+    dims = _dims;
   }
   
   //////////////////////////
@@ -35,7 +37,7 @@ class Data {
   void output(String new_text) {
     if (environment.getScreen() == 3) {
       addToOutput(new_text);
-      first_output = max (0, (output_stream.size() - LINES_COUNT));
+      first_output = max (0, (output_stream.size() - dims.lines_count));
     }
     else {
       output_stream.clear();
@@ -44,13 +46,13 @@ class Data {
   }
   
   void addToOutput(String new_text) {
-     if (textWidth(new_text) <= (OUTPUT_WIDTH-2*TEXT_INTENT)) {
+     if (textWidth(new_text) <= (dims.output_width-2*dims.text_indent)) {
        output_stream.add(new_text);
      }
      else {
        int subset_length = new_text.length() - 1;
        // while the substrin is too long or can't be spliced, shorten it
-       while (textWidth(new_text.substring(0, subset_length)) > (OUTPUT_WIDTH-2*TEXT_INTENT)
+       while (textWidth(new_text.substring(0, subset_length)) > (dims.output_width-2*dims.text_indent)
               || Character.isLetter(new_text.charAt(subset_length)))
          subset_length--;
        
@@ -66,7 +68,7 @@ class Data {
     }
     output_stream.clear();
     
-    textFont(environment.getCurrentFont(), TEXT_SIZE);
+    textFont(environment.getCurrentFont(), dims.text_size);
     
     addToOutput(output_content);
   }
@@ -108,7 +110,7 @@ class Data {
   
   void addLetter(char letter) {
     input_stream = input_stream.concat(str(letter));
-    if (textWidth(input_stream) > (KEYBOARD_WIDTH-2*TEXT_INTENT)) {
+    if (textWidth(input_stream) > (dims.keyboard_width-2*dims.text_indent)) {
       eraseLast();
       output("Překročena délka vstupního pole.");
     }
@@ -134,12 +136,12 @@ class Data {
   }
   
   void scrollForward() {
-    first_output = max (min (first_output + 1, (output_stream.size() - LINES_COUNT)), 0);
+    first_output = max (min (first_output + 1, (output_stream.size() - dims.lines_count)), 0);
     display();  
   }
   
   void scrollLast() {
-    first_output = output_stream.size() - LINES_COUNT;
+    first_output = output_stream.size() - dims.lines_count;
     display();  
   }
 
@@ -147,37 +149,37 @@ class Data {
   ///////////////////
   // Display function
   void display() {
-    textFont(environment.getCurrentFont(), TEXT_SIZE);
+    textFont(environment.getCurrentFont(), dims.text_size);
     fill(INPUT_FILL);
     stroke(INPUT_STROKE);
         
     switch (environment.getScreen()) {
       case 1:
-        rect(INPUT_X, INPUT_Y + (KEYBOARD_Y - INPUT_Y)/2, KEYBOARD_WIDTH, TEXT_SIZE); 
+        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.keyboard_width, dims.text_size); 
         fill(FONT_FILL);
         textAlign(CENTER);
-        text((String) output_stream.get(0), (INPUT_X + TEXT_INTENT*2 + KEYBOARD_WIDTH)/2, INPUT_Y + (KEYBOARD_Y - INPUT_Y - TEXT_SIZE)/2);
+        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.keyboard_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
         textAlign(CENTER);    
-        text(input_stream , (INPUT_X + TEXT_INTENT*2 + KEYBOARD_WIDTH)/2, INPUT_Y + (KEYBOARD_Y - INPUT_Y)/2 + (TEXT_SIZE/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
+        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.keyboard_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
       break;      
       
       case 2:
-        rect(INPUT_X, INPUT_Y + (KEYBOARD_Y - INPUT_Y)/2, KEYBOARD_WIDTH, TEXT_SIZE); 
+        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.keyboard_width, dims.text_size); 
         fill(FONT_FILL);
         textAlign(CENTER);
-        text((String) output_stream.get(0), (INPUT_X + TEXT_INTENT*2 + KEYBOARD_WIDTH)/2, INPUT_Y + (KEYBOARD_Y - INPUT_Y - TEXT_SIZE)/2);
+        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.keyboard_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
         textAlign(CENTER);    
-        text(input_stream , (INPUT_X + TEXT_INTENT*2 + KEYBOARD_WIDTH)/2, INPUT_Y + (KEYBOARD_Y - INPUT_Y)/2 + (TEXT_SIZE/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
+        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.keyboard_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
       break;   
       
       case 3:
-        rect(INPUT_X, INPUT_Y                          , KEYBOARD_WIDTH, TEXT_SIZE); 
-        rect(INPUT_X, INPUT_Y + TEXT_SIZE + KEY_SPACE*2, OUTPUT_WIDTH  , OUTPUT_HEIGHT); 
+        rect(dims.input_x, dims.input_y                          , dims.keyboard_width, dims.text_size); 
+        rect(dims.input_x, dims.input_y + dims.text_size + dims.key_space*2, dims.output_width  , dims.output_height); 
         fill(FONT_FILL);
         textAlign(LEFT);
-        text(input_stream, INPUT_X + TEXT_INTENT, INPUT_Y + (TEXT_SIZE/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
-        for (int i = first_output; i < (min(output_stream.size(), (first_output + LINES_COUNT))); i++) {
-          text((String) output_stream.get(i), INPUT_X + TEXT_INTENT, INPUT_Y + TEXT_SIZE*(2 + i - first_output) + KEY_SPACE*2);
+        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
+        for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
+          text((String) output_stream.get(i), dims.input_x + dims.text_indent, dims.input_y + dims.text_size*(2 + i - first_output) + dims.key_space*2);
         }
       break;
     }

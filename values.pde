@@ -34,20 +34,19 @@ public class Dimensions {
   int key_space; // Border of the key (2* between keys)
   int basic_key_size; // Key size
   int font_size; // GUI text
-  final int TEXT_SIZE      = 20; // I/O text
-  final int TEXT_INTENT    = 3;  // Space between window and text
+  int text_size; // I/O text
+  int text_indent;  // Space between window and text
   
   // Layout varialbes - just for simplicity in reccurent uses
-  int KEYBOARD_X     = BORDER;
-  int KEYBOARD_Y     = WINDOW_HEIGHT - BASIC_KEY_SIZE*3 - KEY_SPACE*6 - BORDER;
-  int KEYBOARD_WIDTH = BASIC_KEY_SIZE*12 + KEY_SPACE*22;
-  int WIDE_KEY_SIZE  = KEY_SPACE*4 + BASIC_KEY_SIZE*3;
-  int INPUT_X        = KEY_SPACE + BORDER; // First possible position
-  int INPUT_Y        = BASIC_KEY_SIZE + 3*KEY_SPACE + BORDER; // First possible position
-  int WINDOW_WIDTH   = BORDER*2 + KEY_SPACE*2 + BASIC_KEY_SIZE*12 + KEY_SPACE*22;
-  int OUTPUT_WIDTH   = KEYBOARD_WIDTH - 2*KEY_SPACE - BASIC_KEY_SIZE;
-  int OUTPUT_HEIGHT  = KEYBOARD_Y - (INPUT_Y + TEXT_SIZE + KEY_SPACE*3);
-  int LINES_COUNT    = (int) ( (float) OUTPUT_HEIGHT / (float) TEXT_SIZE);
+  int keyboard_x;
+  int keyboard_y;
+  int keyboard_width;
+  int wide_key_size;
+  int input_x;
+  int input_y;
+  int output_width;
+  int output_height;
+  int lines_count;
   
   Dimensions(Settings settings) {
     width_ = settings.screen_width;
@@ -58,9 +57,18 @@ public class Dimensions {
     basic_key_size = 55;
     font_size = 30;
     text_size = 20;
-  }
-  
-  public void compute(){
+    text_indent = 3;
+    
+  // Layout varialbes - just for simplicity in reccurent uses
+    keyboard_x     = border;
+    keyboard_y     = height - basic_key_size*3 - key_space*6 - border;
+    keyboard_width = basic_key_size*12 + key_space*22;
+    wide_key_size  = key_space*4 + basic_key_size*3;
+    input_x        = key_space + border; // First possible position
+    input_y        = basic_key_size + 3*key_space + border; // First possible position
+    output_width   = keyboard_width - 2*key_space - basic_key_size;
+    output_height  = keyboard_y - (input_y + text_size + key_space*3);
+    lines_count    = (int) ( (float) output_height / (float) text_size);
   }
 }
 

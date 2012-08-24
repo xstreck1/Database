@@ -4,8 +4,10 @@
 class Keyboard {
   Button[] buttons;
   int hover_button;
+  Dimensions dims;
 
-  Keyboard() {
+  Keyboard(Dimensions _dims) {
+    dims = _dims;
     createButtons();
     hover_button = BUTTON_COUNT;
   }
@@ -22,37 +24,37 @@ class Keyboard {
           caption += 1;
         else // Last button - space
         caption = char(95);
-        buttons[button_num] = new Button(str(caption), KEYBOARD_X + (x_counter*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE, KEYBOARD_Y + (y_counter*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE);
+        buttons[button_num] = new Button(str(caption), dims.keyboard_x + (x_counter*(dims.key_space*2+dims.basic_key_size)) + dims.key_space, dims.keyboard_y + (y_counter*(dims.key_space*2+dims.basic_key_size)) + dims.key_space);
       }
     }
 
     // Special input buttons
-    buttons[button_num++] = new Button("Potvrd", (9*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE + BORDER, KEYBOARD_Y + (0*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE, 
-    WIDE_KEY_SIZE, BASIC_KEY_SIZE, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);                                 
-    buttons[button_num++] = new Button("Smaz"  , (9*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE + BORDER, KEYBOARD_Y + (1*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE, 
-    WIDE_KEY_SIZE, BASIC_KEY_SIZE, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("Zrus"  , (9*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE + BORDER, KEYBOARD_Y + (2*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE, 
-    WIDE_KEY_SIZE, BASIC_KEY_SIZE, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
+    buttons[button_num++] = new Button("Potvrd", (9*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.keyboard_y + (0*(dims.key_space*2+dims.basic_key_size)) + dims.key_space, 
+    dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);                                 
+    buttons[button_num++] = new Button("Smaz"  , (9*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.keyboard_y + (1*(dims.key_space*2+dims.basic_key_size)) + dims.key_space, 
+    dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
+    buttons[button_num++] = new Button("Zrus"  , (9*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.keyboard_y + (2*(dims.key_space*2+dims.basic_key_size)) + dims.key_space, 
+    dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
 
     // Environment language buttons
-    buttons[button_num++] = new Button(FONT1, KEY_SPACE*1 + WIDE_KEY_SIZE*0 + BORDER, KEY_SPACE + BORDER, WIDE_KEY_SIZE, BASIC_KEY_SIZE, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);                                 
-    buttons[button_num++] = new Button(FONT2, KEY_SPACE*3 + WIDE_KEY_SIZE*1 + BORDER, KEY_SPACE + BORDER, WIDE_KEY_SIZE, BASIC_KEY_SIZE, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);   
-    buttons[button_num++] = new Button(FONT3, KEY_SPACE*5 + WIDE_KEY_SIZE*2 + BORDER, KEY_SPACE + BORDER, WIDE_KEY_SIZE, BASIC_KEY_SIZE, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);  
-    buttons[button_num++] = new Button(FONT4, KEY_SPACE*7 + WIDE_KEY_SIZE*3 + BORDER, KEY_SPACE + BORDER, WIDE_KEY_SIZE, BASIC_KEY_SIZE, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
+    buttons[button_num++] = new Button(FONT1, dims.key_space*1 + dims.wide_key_size*0 + dims.border, dims.key_space + dims.border, dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);                                 
+    buttons[button_num++] = new Button(FONT2, dims.key_space*3 + dims.wide_key_size*1 + dims.border, dims.key_space + dims.border, dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);   
+    buttons[button_num++] = new Button(FONT3, dims.key_space*5 + dims.wide_key_size*2 + dims.border, dims.key_space + dims.border, dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);  
+    buttons[button_num++] = new Button(FONT4, dims.key_space*7 + dims.wide_key_size*3 + dims.border, dims.key_space + dims.border, dims.wide_key_size, dims.basic_key_size, BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
   
     // Output scroll buttons
-    buttons[button_num++] = new Button("▲", (11*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE + BORDER, INPUT_Y + TEXT_SIZE + KEY_SPACE*2, BASIC_KEY_SIZE, (OUTPUT_HEIGHT / 4), 
+    buttons[button_num++] = new Button("▲", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + dims.text_size + dims.key_space*2, dims.basic_key_size, (dims.output_height / 4), 
                                        BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("↑", (11*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE + BORDER, INPUT_Y + TEXT_SIZE + KEY_SPACE*2 + (OUTPUT_HEIGHT / 4), BASIC_KEY_SIZE, (OUTPUT_HEIGHT / 4), 
+    buttons[button_num++] = new Button("↑", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + dims.text_size + dims.key_space*2 + (dims.output_height / 4), dims.basic_key_size, (dims.output_height / 4), 
                                        BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("↓", (11*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE + BORDER, INPUT_Y + TEXT_SIZE + KEY_SPACE*2 + (OUTPUT_HEIGHT / 4 * 2), BASIC_KEY_SIZE, (OUTPUT_HEIGHT / 4), 
+    buttons[button_num++] = new Button("↓", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + dims.text_size + dims.key_space*2 + (dims.output_height / 4 * 2), dims.basic_key_size, (dims.output_height / 4), 
                                        BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
-    buttons[button_num++] = new Button("▼", (11*(KEY_SPACE*2+BASIC_KEY_SIZE)) + KEY_SPACE + BORDER, INPUT_Y + TEXT_SIZE + KEY_SPACE*2 + (OUTPUT_HEIGHT / 4 * 3), BASIC_KEY_SIZE, OUTPUT_HEIGHT - (OUTPUT_HEIGHT / 4 * 3), 
+    buttons[button_num++] = new Button("▼", (11*(dims.key_space*2+dims.basic_key_size)) + dims.key_space + dims.border, dims.input_y + dims.text_size + dims.key_space*2 + (dims.output_height / 4 * 3), dims.basic_key_size, dims.output_height - (dims.output_height / 4 * 3), 
                                        BUTTON_NOF, BUTTON_NOS, BUTTON_ACF, BUTTON_ACS, TEXT_FILL);
   }  
 
   void displayButtons() {
-    textFont(environment.getCurrentFont(), FONT_SIZE);
+    textFont(environment.getCurrentFont(), dims.font_size);
     for (int i = 0; i < environment.getButtonsCount(); i++) // Display only this environments buttons
       buttons[i].display();
   }
@@ -151,8 +153,8 @@ class Button {
     caption = cap;
     x_pos = xp;
     y_pos = yp;
-    x_size = BASIC_KEY_SIZE;
-    y_size = BASIC_KEY_SIZE;
+    x_size = dims.basic_key_size;
+    y_size = dims.basic_key_size;
     normal_fill = BUTTON_NOF;
     normal_stroke = BUTTON_NOS;
     active_fill = BUTTON_ACF;
@@ -172,7 +174,7 @@ class Button {
     rect(x_pos, y_pos, x_size, y_size); 
     fill(text_fill);
     textAlign(CENTER);
-    text(caption, x_pos + (x_size/2), y_pos + (BASIC_KEY_SIZE + FONT_SIZE*3/5)/2);
+    text(caption, x_pos + (x_size/2), y_pos + (dims.basic_key_size + dims.font_size*3/5)/2);
   }
 
   boolean testMousePosition() {

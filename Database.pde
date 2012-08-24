@@ -44,13 +44,13 @@ void setup() {
   dims = new Dimensions(settings);
   
   // Create global objects
-  keyboard    = new Keyboard();
-  environment = new Environment();
-  data        = new Data();
+  keyboard    = new Keyboard(dims);
+  environment = new Environment(dims);
+  data        = new Data(dims);
+  
   info        = new Information();
   http        = new HTTPHelper();
 
-  
   error = new String(); 
 
   // Application attributes setup
@@ -85,7 +85,7 @@ void draw() {
     textFont(f);
     fill(#000000);
     textAlign(CENTER);
-    text(error, 0, 100, WINDOW_WIDTH, WINDOW_HEIGHT);
+    text(error, 0, 100, dims.width_, dims.height);
   }
 }
 
