@@ -14,7 +14,7 @@ public class XMLParse extends DefaultHandler
 
   String getAttribute(String name, Attributes atts) {
     if (atts.getValue(name) == null) {
-      System.out.println(name.concat(" attribute was not found where expected."));
+      error = (name.concat(" attribute was not found where expected."));
       return "";  
     }
     return atts.getValue(name);
@@ -26,8 +26,6 @@ public class XMLParse extends DefaultHandler
       System.out.println("Parsing started."); 
     } else if (qName.equals("ID")) {
       settings.ID = Integer.valueOf(getAttribute("value", atts));
-    } else if (qName.equals("FULLSCREEN")) {
-      settings.fullscreen = Boolean.valueOf(getAttribute("value", atts));
     } else if (qName.equals("WIDTH")) {
       settings.screen_width = Integer.valueOf(getAttribute("value", atts));
     } else if (qName.equals("HEIGHT")) {
@@ -35,7 +33,7 @@ public class XMLParse extends DefaultHandler
     } else if (qName.equals("USER")) {
       settings.users.put(getAttribute("name", atts), getAttribute("pass", atts));     
     } else {
-      System.out.println(qName.concat(" is not a known tag."));      
+      error = (qName.concat(" is not a known tag."));      
     }
   }
 }

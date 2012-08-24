@@ -173,7 +173,7 @@ class Data {
       break;   
       
       case 3:
-        rect(dims.input_x, dims.input_y                          , dims.keyboard_width, dims.text_size); 
+        rect(dims.input_x, dims.input_y , dims.keyboard_width, dims.text_size); 
         rect(dims.input_x, dims.input_y + dims.text_size + dims.key_space*2, dims.output_width  , dims.output_height); 
         fill(FONT_FILL);
         textAlign(LEFT);
@@ -182,6 +182,13 @@ class Data {
           text((String) output_stream.get(i), dims.input_x + dims.text_indent, dims.input_y + dims.text_size*(2 + i - first_output) + dims.key_space*2);
         }
       break;
+      
+      case 4:
+        rect(dims.input_x, dims.input_y , dims.keyboard_width, dims.output_height); 
+        fill(ERROR_COLOR);
+        textAlign(LEFT);
+        text(error, dims.input_x + dims.text_indent, dims.input_y + (dims.text_size/5*4));
+      break;    
     }
   }
 }

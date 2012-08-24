@@ -52,14 +52,13 @@ public class Dimensions {
     width_ = settings.screen_width;
     height = settings.screen_height;
     
-    border = height / 20;
-    key_space = 8;
-    basic_key_size = 55;
+    border = int(width_ * 0.05);
+    key_space = int(height *0.01);
+    basic_key_size = int(height *0.08);
     font_size = 30;
     text_size = 20;
     text_indent = 3;
     
-  // Layout varialbes - just for simplicity in reccurent uses
     keyboard_x     = border;
     keyboard_y     = height - basic_key_size*3 - key_space*6 - border;
     keyboard_width = basic_key_size*12 + key_space*22;

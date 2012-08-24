@@ -1,7 +1,3 @@
-/**
- * Database that will contain all the game information.
- */
-
 import java.lang.Exception;
 import java.lang.Character;
 import java.util.ArrayList;
@@ -14,7 +10,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.helpers.XMLReaderFactory;
 import org.xml.sax.helpers.DefaultHandler;
 
-
 Keyboard    keyboard;
 Environment environment;
 Data        data;
@@ -25,7 +20,7 @@ Dimensions  dims;
 
 String error;
 
-void setup() {
+void parseSettings() {
   settings = new Settings();
   
   // Setup parser and parse settings
@@ -39,7 +34,11 @@ void setup() {
   catch (Exception e) {
     e.printStackTrace();
     error = e.getMessage();
-  }
+  } 
+}
+
+void setup() {
+  parseSettings();
   
   dims = new Dimensions(settings);
   
@@ -50,8 +49,7 @@ void setup() {
   
   info        = new Information();
   http        = new HTTPHelper();
-
-  error = new String(); 
+  error       = "";
 
   // Application attributes setup
   size(settings.screen_width, settings.screen_height, JAVA2D);
@@ -69,24 +67,16 @@ void setup() {
   }
     
   draw();  
-  environment.setScreen(1); 
+  environment.setScreen(1);
 }
 
 void draw() {
-  if (error.isEmpty()) {
-    background(BG_COLOR);
-    keyboard.displayButtons();
-    data.display();
-  }
-  else {
-    // TODO add string output
-    background(ERROR_COLOR);  
-    PFont f = createFont("Arial",30,true);  
-    textFont(f);
-    fill(#000000);
-    textAlign(CENTER);
-    text(error, 0, 100, dims.width_, dims.height);
-  }
+  if (!error.isEmpty())
+    environment.setScreen(4);  
+    
+  background(BG_COLOR);
+  keyboard.displayButtons();
+  data.display();
 }
 
 void mouseMoved() {

@@ -5,7 +5,7 @@
 class Environment {
   HashMap fonts;
   String  currentFont;
-  int     screen_type; // 1 for name, 2 for password, 3 for data
+  int     screen_type; // 1 for name, 2 for password, 3 for data, 4 for error
   HashMap accounts;
   Account current_account;
   int     buttons_count; // How many buttons are active

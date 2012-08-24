@@ -95,13 +95,16 @@ class Keyboard {
         case 3:
           data.search();  
         break;
+        case 4:
+          error = "";
+          environment.setScreen(1);  
+        break;
       }
     }
     else if (button.equals("Smaz")) {
       data.eraseLast();
     }
     else if (button.equals("Zrus")) {
-      error = "Test";
       data.eraseAll();
     }
     
