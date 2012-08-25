@@ -22,6 +22,9 @@ public class XMLParse extends DefaultHandler
       System.out.println("Parsing started."); 
     } else if (qName.equals("ID")) {
       settings.ID = Integer.valueOf(getAttribute("value", atts));
+    } else if (qName.equals("ILLEGAL")) {
+      settings.illegal = Boolean.valueOf(getAttribute("value", atts));
+      System.out.print(settings.illegal);
     } else if (qName.equals("WIDTH")) {
       settings.screen_width = Integer.valueOf(getAttribute("value", atts));
     } else if (qName.equals("HEIGHT")) {

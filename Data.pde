@@ -49,18 +49,18 @@ class Data {
   }
   
   void addToOutput(String new_text) {
-    if (new_text.indexOf('\n') != -1) {
+    if ((new_text.indexOf('\n') != -1) && (new_text.indexOf('\n') != new_text.length() - 1)) {
       if (new_text.indexOf('\n') != 0)
         addToOutput(new_text.substring(0,new_text.indexOf('\n')));
       addToOutput(new_text.substring(new_text.indexOf('\n')+1));     
     }
     else if (textWidth(new_text) <= (dims.output_width-2*dims.text_indent)) {
-      output_stream.add(new_text);
+      output_stream.add(new_text + "\n");
     }
     else {
       int subset_length = 0;
       // while the substring is too long or can't be spliced, shorten it
-      while (textWidth(new_text.substring(0, subset_length)) < (dims.output_width-2*dims.text_indent))
+      while ((textWidth(new_text.substring(0, subset_length)) < (dims.output_width-2*dims.text_indent)) && (subset_length < new_text.length()))
         subset_length++;
       subset_length--;
       while (subset_length > 0 && Character.isLetter(new_text.charAt(subset_length)))
@@ -69,9 +69,13 @@ class Data {
       boolean toAdd = false;
       for (int i = 0; i < subset_length; i++) {
           toAdd = Character.isLetter(new_text.charAt(i)) || Character.isDigit(new_text.charAt(i));
-      }     
-      if (toAdd) output_stream.add(new_text.substring(0, subset_length));
-      addToOutput(new_text.substring(new_text.charAt(subset_length) == ' ' ? subset_length + 1 : subset_length));
+      }
+      
+      if (new_text.charAt(subset_length) == ' ')
+        subset_length++;
+      if (toAdd)
+        output_stream.add(new_text.substring(0, subset_length));
+      addToOutput(new_text.substring(subset_length));
     }
   }
   

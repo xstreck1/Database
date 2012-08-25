@@ -103,12 +103,9 @@ class Keyboard {
     }
     
     else if (button.equals(settings.getFont(0)) || button.equals(settings.getFont(1)) || button.equals(settings.getFont(2)) || button.equals(settings.getFont(3))) {
-      environment.setScreen(1);
       environment.changeFont(button);
-      data.clear();
-      data.output(settings.getText("alphareset"));
-      keyboard.displayButtons();
-      data.display();    
+      data.reFormatOutput(); 
+      data.first_output = min(data.first_output, data.output_stream.size() - dims.lines_count);
     }
     else if (button.equals("▲")) {
       data.scrollFirst();
