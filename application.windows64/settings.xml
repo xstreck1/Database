@@ -1,6 +1,8 @@
 <DATABASE>
 	<!-- ID must be unique for each running database -->
 	<ID value="1" />
+	<!-- value can be "true" or "false", if this set to true, terminal can not be logged off -->
+	<ILLEGAL value="false" />
 	<!-- Fullscreen can be 1 or 0, width*height can be 640*480, 800*600, 1024*768, 1280*960 -->
 	<WIDTH value="1024" />
 	<HEIGHT value="768" />
@@ -22,6 +24,7 @@
 	<COLOR name="text" r="0" g="0" b="0" a="255" /> <!-- input/output text --> 
 	<COLOR name="caption" r="30" g="30" b="110" a="255" /> <!-- caption of the button --> 
 	<COLOR name="highlight" r="80" g="160" b="190" a="255" /> <!-- caption for button that is under the cursor --> 
+	<COLOR name="offline" r="80" g="160" b="190" a="255" /> <!-- Color in which the OFF text is displayed. --> 
 	<COLOR name="error" r="150" g="0" b="0" a="255" /> <!-- program error info --> 
 	<!-- strings are expected in the ASCII coding -->	
 	<STRING name="username" text="Zadejte uzivatelske jmeno." />
@@ -30,6 +33,6 @@
 	<STRING name="logoff" text="Pro odhlaseni zadejte EXIT a potvrdte." />
 	<STRING name="noname" text="Zadane uzivatelske jmeno neexistuje." />
 	<STRING name="outofbounds" text="Prekrocena delka vstupniho pole." />
-	<STRING name="alphareset" text="Zmena abecedy. Zadejte uzivatelske jmeno." />	
-	<STRING name="logoffreset" text="Logoff. Zadejte uzivatelske jmeno."  />		
+	<STRING name="logoffreset" text="Logoff. Zadejte uzivatelske jmeno."  />
+	<STRING name="illegallogoff" text="Logoff nelze provest, terminal je blokovan."  />
 </DATABASE>

@@ -29,23 +29,26 @@ class Data {
       break;
       case 3:
         output_stream.clear();
-        output(settings.getText("welcome") + environment.getAccountName() + ".");
-        output(settings.getText("logoff") );       
+        if (settings.illegal)
+          output(settings.getText("welcome") + "???");
+        else {
+          output(settings.getText("welcome") + environment.getAccountName() + ".");
+          output(settings.getText("logoff") );
+        }       
+      break;
+      case 4:
+        output_stream.clear();
+        output(error);
+        error = "";      
       break;
     }
   }
   
   // If in the third (database) screen, add data to output, otherwise replace current output with data
   void output(String new_text) {
-    if (environment.getScreen() == 3) {
-      new_text.replace('\r', ' ');
-      addToOutput(new_text);
-      first_output = max (0, (output_stream.size() - dims.lines_count));
-    }
-    else {
-      output_stream.clear();
-      output_stream.add(new_text);
-    }
+    new_text.replace('\r', ' ');
+    addToOutput(new_text);
+    first_output = max (0, (output_stream.size() - dims.lines_count));
   }
   
   void addToOutput(String new_text) {
@@ -116,9 +119,13 @@ class Data {
   
   void search() {
     if (input_stream.equals("EXIT")) {
-      environment.setScreen(1);
-      clear();
-      data.output(settings.getText("logoffreset"));
+      if (settings.illegal)
+        data.output(settings.getText("illegallogoff"));
+      else {
+        environment.setScreen(1);
+        clear();
+        data.output(settings.getText("logoffreset"));
+      }
     }
     else {
       output(input_stream + ": " + (http.findEntry(input_stream)));
@@ -165,45 +172,38 @@ class Data {
 
   void display() {
     textFont(environment.getCurrentFont(), dims.text_size);
-    fill(settings.getColor("field"));
     noStroke();
-    
+    fill(settings.getColor("field"));
+    rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
+    rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
+        
     switch (environment.getScreen()) {
-      case 1:
-        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.output_width, dims.text_size); 
-        fill(settings.getColor("text"));
-        textAlign(CENTER);
-        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
-        textAlign(CENTER);    
-        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
-      break;      
-      
-      case 2:
-        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.output_width, dims.text_size); 
-        fill(color(settings.getColor("text")));
-        textAlign(CENTER);
-        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
-        textAlign(CENTER);    
-        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
-      break;   
-      
-      case 3:
-        rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
-        rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
+      case 1: case 2:  case 3:
         fill(settings.getColor("text"));
         textAlign(LEFT);
-        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8); // Y is a little bit higher - whole field is not needed withoud diacritics
+        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
         for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
           text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output));
         }
       break;
       
       case 4:
-        rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.output_width, dims.output_height + int(dims.basic_key_size*0.5)); 
         fill(settings.getColor("error"));
         textAlign(LEFT);
-        text(error, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + (dims.text_size*0.75));
-      break;    
+        for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
+          text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output));
+        }
+      break;
+      
+      case 5:
+        fill(settings.getColor("text"));
+        textAlign(LEFT);
+        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
+        fill(settings.getColor("offline"));
+        textAlign(CENTER);
+        textSize(250);
+        text("OFF", dims.input_x + dims.output_width/2,  int(dims.basic_key_size*0.75) + dims.input_y + dims.output_height/2 + 80);
+      break;
     }
   }
 }

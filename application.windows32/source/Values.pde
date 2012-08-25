@@ -1,8 +1,3 @@
-// Keyboard values
-final int BUTTON_COLUMNS = 9;
-final int BUTTON_ROWS    = 3;
-final int BUTTON_COUNT   = BUTTON_COLUMNS*BUTTON_ROWS+11;
-
 /**
  * Class holds layout placement values.
  */
@@ -19,6 +14,8 @@ public class Dimensions {
   int text_size; // I/O text
   int text_indent;  // Space between window and text
   
+  int buttons_count; // How many buttons are active
+  
   // Object placement variables - just for simplicity in reccurent uses
   int keyboard_x;
   int keyboard_y;
@@ -33,6 +30,8 @@ public class Dimensions {
   Dimensions() {
     width_ = settings.screen_width;
     height = settings.screen_height;
+    
+    buttons_count = 38;
     
     border_y = int(height * 0.05);
     border_x = int(height * 0.05) + int((width_ - height*1.3)/2.0);

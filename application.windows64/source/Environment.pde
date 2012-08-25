@@ -4,8 +4,7 @@
 class Environment {
   HashMap fonts;
   String  currentFont;
-  int     screen_type; // 1 for name, 2 for password, 3 for data, 4 for error
-  int     buttons_count; // How many buttons are active
+  int     screen_type; // 1 for name, 2 for password, 3 for data, 4 for error 
   String  user_name;
 
   Environment () {
@@ -60,16 +59,11 @@ class Environment {
   
   void setScreen(int new_screen) { 
     screen_type = new_screen;
-    buttons_count = (new_screen == 3) ? BUTTON_COUNT : (BUTTON_COUNT - 4);
     data.setScreenData();
   }
   
   void changeFont(String font_name) {
     currentFont = font_name;
     data.reFormatOutput();
-  }
-  
-  int getButtonsCount() {
-    return buttons_count;
   }
 }

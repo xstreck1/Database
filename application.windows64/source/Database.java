@@ -85,9 +85,9 @@ public void setup() {
   PImage my_cursor = loadImage("Cursor.png");
   cursor(my_cursor, 16, 16);
   smooth();
-       
+  
+  environment.setScreen(settings.illegal ? 3 : 1);     
   draw();  
-  environment.setScreen(1);
 }
 
 public void draw() {
@@ -98,8 +98,8 @@ public void draw() {
   keyboard.displayButtons();
   data.display();
   
-  // Within a loop, check status from time to time
-  if (draw_count++ > 50) {
+  // Within a loop, check status from time to time (100 == 2 secs)
+  if (draw_count++ > 100) {
     http.check();
     draw_count = 0;
   }
@@ -145,38 +145,41 @@ class Data {
       break;
       case 3:
         output_stream.clear();
-        output(settings.getText("welcome") + environment.getAccountName() + ".");
-        output(settings.getText("logoff") );       
+        if (settings.illegal)
+          output(settings.getText("welcome") + "???");
+        else {
+          output(settings.getText("welcome") + environment.getAccountName() + ".");
+          output(settings.getText("logoff") );
+        }       
+      break;
+      case 4:
+        output_stream.clear();
+        output(error);
+        error = "";      
       break;
     }
   }
   
   // If in the third (database) screen, add data to output, otherwise replace current output with data
   public void output(String new_text) {
-    if (environment.getScreen() == 3) {
-      new_text.replace('\r', ' ');
-      addToOutput(new_text);
-      first_output = max (0, (output_stream.size() - dims.lines_count));
-    }
-    else {
-      output_stream.clear();
-      output_stream.add(new_text);
-    }
+    new_text.replace('\r', ' ');
+    addToOutput(new_text);
+    first_output = max (0, (output_stream.size() - dims.lines_count));
   }
   
   public void addToOutput(String new_text) {
-    if (new_text.indexOf('\n') != -1) {
+    if ((new_text.indexOf('\n') != -1) && (new_text.indexOf('\n') != new_text.length() - 1)) {
       if (new_text.indexOf('\n') != 0)
         addToOutput(new_text.substring(0,new_text.indexOf('\n')));
       addToOutput(new_text.substring(new_text.indexOf('\n')+1));     
     }
     else if (textWidth(new_text) <= (dims.output_width-2*dims.text_indent)) {
-      output_stream.add(new_text);
+      output_stream.add(new_text + "\n");
     }
     else {
       int subset_length = 0;
       // while the substring is too long or can't be spliced, shorten it
-      while (textWidth(new_text.substring(0, subset_length)) < (dims.output_width-2*dims.text_indent))
+      while ((textWidth(new_text.substring(0, subset_length)) < (dims.output_width-2*dims.text_indent)) && (subset_length < new_text.length()))
         subset_length++;
       subset_length--;
       while (subset_length > 0 && Character.isLetter(new_text.charAt(subset_length)))
@@ -185,9 +188,13 @@ class Data {
       boolean toAdd = false;
       for (int i = 0; i < subset_length; i++) {
           toAdd = Character.isLetter(new_text.charAt(i)) || Character.isDigit(new_text.charAt(i));
-      }     
-      if (toAdd) output_stream.add(new_text.substring(0, subset_length));
-      addToOutput(new_text.substring(new_text.charAt(subset_length) == ' ' ? subset_length + 1 : subset_length));
+      }
+      
+      if (new_text.charAt(subset_length) == ' ')
+        subset_length++;
+      if (toAdd)
+        output_stream.add(new_text.substring(0, subset_length));
+      addToOutput(new_text.substring(subset_length));
     }
   }
   
@@ -228,9 +235,13 @@ class Data {
   
   public void search() {
     if (input_stream.equals("EXIT")) {
-      environment.setScreen(1);
-      clear();
-      data.output(settings.getText("logoffreset"));
+      if (settings.illegal)
+        data.output(settings.getText("illegallogoff"));
+      else {
+        environment.setScreen(1);
+        clear();
+        data.output(settings.getText("logoffreset"));
+      }
     }
     else {
       output(input_stream + ": " + (http.findEntry(input_stream)));
@@ -277,45 +288,38 @@ class Data {
 
   public void display() {
     textFont(environment.getCurrentFont(), dims.text_size);
-    fill(settings.getColor("field"));
     noStroke();
-    
+    fill(settings.getColor("field"));
+    rect(dims.input_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.25f), dims.keyboard_width, dims.text_size); 
+    rect(dims.input_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f), dims.output_width, dims.output_height); 
+        
     switch (environment.getScreen()) {
-      case 1:
-        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.output_width, dims.text_size); 
-        fill(settings.getColor("text"));
-        textAlign(CENTER);
-        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
-        textAlign(CENTER);    
-        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
-      break;      
-      
-      case 2:
-        rect(dims.input_x, dims.input_y + (dims.keyboard_y - dims.input_y)/2, dims.output_width, dims.text_size); 
-        fill(color(settings.getColor("text")));
-        textAlign(CENTER);
-        text((String) output_stream.get(0), (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y - dims.text_size)/2);
-        textAlign(CENTER);    
-        text(input_stream , (dims.input_x + dims.text_indent*2 + dims.output_width)/2, dims.input_y + (dims.keyboard_y - dims.input_y)/2 + (dims.text_size/5*4)); // Y is a little bit higher - whole field is not needed withoud diacritics
-      break;   
-      
-      case 3:
-        rect(dims.input_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.25f), dims.keyboard_width, dims.text_size); 
-        rect(dims.input_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f), dims.output_width, dims.output_height); 
+      case 1: case 2:  case 3:
         fill(settings.getColor("text"));
         textAlign(LEFT);
-        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.25f) + dims.text_size*0.8f); // Y is a little bit higher - whole field is not needed withoud diacritics
+        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.25f) + dims.text_size*0.8f);
         for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
           text((String) output_stream.get(i), dims.input_x + dims.text_indent,  PApplet.parseInt(dims.basic_key_size*0.75f) + dims.input_y + dims.text_size*(1 + i - first_output));
         }
       break;
       
       case 4:
-        rect(dims.input_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.25f), dims.output_width, dims.output_height + PApplet.parseInt(dims.basic_key_size*0.5f)); 
         fill(settings.getColor("error"));
         textAlign(LEFT);
-        text(error, dims.input_x + dims.text_indent, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.25f) + (dims.text_size*0.75f));
-      break;    
+        for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
+          text((String) output_stream.get(i), dims.input_x + dims.text_indent,  PApplet.parseInt(dims.basic_key_size*0.75f) + dims.input_y + dims.text_size*(1 + i - first_output));
+        }
+      break;
+      
+      case 5:
+        fill(settings.getColor("text"));
+        textAlign(LEFT);
+        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.25f) + dims.text_size*0.8f);
+        fill(settings.getColor("offline"));
+        textAlign(CENTER);
+        textSize(250);
+        text("OFF", dims.input_x + dims.output_width/2,  PApplet.parseInt(dims.basic_key_size*0.75f) + dims.input_y + dims.output_height/2 + 80);
+      break;
     }
   }
 }
@@ -325,8 +329,7 @@ class Data {
 class Environment {
   HashMap fonts;
   String  currentFont;
-  int     screen_type; // 1 for name, 2 for password, 3 for data, 4 for error
-  int     buttons_count; // How many buttons are active
+  int     screen_type; // 1 for name, 2 for password, 3 for data, 4 for error 
   String  user_name;
 
   Environment () {
@@ -381,17 +384,12 @@ class Environment {
   
   public void setScreen(int new_screen) { 
     screen_type = new_screen;
-    buttons_count = (new_screen == 3) ? BUTTON_COUNT : (BUTTON_COUNT - 4);
     data.setScreenData();
   }
   
   public void changeFont(String font_name) {
     currentFont = font_name;
     data.reFormatOutput();
-  }
-  
-  public int getButtonsCount() {
-    return buttons_count;
   }
 }
 
@@ -460,17 +458,17 @@ class Keyboard {
 
   Keyboard() {
     createButtons();
-    hover_button = BUTTON_COUNT;
+    hover_button = dims.buttons_count;
   }
 
   public void createButtons() {
-    buttons = new Button [BUTTON_COUNT];
+    buttons = new Button [dims.buttons_count];
     int button_num = 0;
 
     // Basic input buttons
     char caption = PApplet.parseChar(64);
-    for (int y_counter = 0; y_counter < BUTTON_ROWS; y_counter++) {
-      for (int x_counter = 0; x_counter < BUTTON_COLUMNS; x_counter++, button_num++) {
+    for (int y_counter = 0; y_counter < 3; y_counter++) {
+      for (int x_counter = 0; x_counter < 9; x_counter++, button_num++) {
         if (button_num != 26)
           caption += 1;
         else // Last button - space
@@ -502,31 +500,29 @@ class Keyboard {
 
   public void displayButtons() {
     textFont(environment.getCurrentFont(), dims.caps_size);
-    for (int i = 0; i < environment.getButtonsCount(); i++) // Display only this environments buttons
+    for (int i = 0; i < dims.buttons_count; i++) // Display only this environments buttons
       buttons[i].display();
   }
 
   public void mouseMove() {
     int i;
-    for (i = 0; i < environment.getButtonsCount(); i++)
+    for (i = 0; i < dims.buttons_count; i++)
       if (buttons[i].testMousePosition())
         break;
-    if (i != hover_button) {
-      if (hover_button != BUTTON_COUNT) // Mouse was off buttons
-        buttons[hover_button].highlight(false);
-      if (i != BUTTON_COUNT) // Mouse is now off buttons
-        buttons[i].highlight(true);
-      hover_button = i;
-    }
+    if (hover_button != dims.buttons_count) // Mouse was off buttons
+      buttons[hover_button].highlight(false);
+    if (i != dims.buttons_count) // Mouse is now off buttons
+      buttons[i].highlight(true);
+    hover_button = i;
   }
   
   public void mousePress() {
-    if (hover_button == BUTTON_COUNT)
+    if (hover_button == dims.buttons_count)
       return;
     
     String button = buttons[hover_button].getCaption();
-    if (hover_button >= 0 && hover_button < BUTTON_COLUMNS*BUTTON_ROWS) {
-      if (hover_button == (BUTTON_COLUMNS*BUTTON_ROWS-1))
+    if (hover_button >= 0 && hover_button < 27) {
+      if (hover_button == 26)
         data.addLetter(' ');
       else
         data.addLetter(button.charAt(0));
@@ -543,8 +539,7 @@ class Keyboard {
           data.search();  
         break;
         case 4:
-          error = "";
-          environment.setScreen(1);  
+          environment.setScreen(settings.illegal ? 3 : 1);   
         break;
       }
     }
@@ -556,12 +551,9 @@ class Keyboard {
     }
     
     else if (button.equals(settings.getFont(0)) || button.equals(settings.getFont(1)) || button.equals(settings.getFont(2)) || button.equals(settings.getFont(3))) {
-      environment.setScreen(1);
       environment.changeFont(button);
-      data.clear();
-      data.output(settings.getText("alphareset"));
-      keyboard.displayButtons();
-      data.display();    
+      data.reFormatOutput(); 
+      data.first_output = max(0, min(data.first_output, data.output_stream.size() - dims.lines_count));
     }
     else if (button.equals("\u25b2")) {
       data.scrollFirst();
@@ -604,12 +596,7 @@ class Button {
     y_size = dims.basic_key_size;
   }
 
-  public void display() {
-    // fill(BG_COLOR);
-    // noStroke();
-    // stroke(BUTTON_ACS);
-    // rect(x_pos, y_pos, x_size, y_size); 
-    
+  public void display() {    
     textAlign(CENTER);
     if (is_mouse_over) {
       fill(settings.getColor("highlight"));
@@ -644,6 +631,7 @@ class Settings {
   int screen_height;
   int text_size;
   int caps_size;
+  boolean illegal;
   String target_url;
   HashMap users;
   HashMap strings;
@@ -652,6 +640,7 @@ class Settings {
   
   Settings () {
     ID = -1;
+    illegal = false;
     screen_width = 800;
     screen_height = 600;
     text_size = 20;
@@ -700,11 +689,6 @@ class Settings {
     }  
   }
 }
-// Keyboard values
-final int BUTTON_COLUMNS = 9;
-final int BUTTON_ROWS    = 3;
-final int BUTTON_COUNT   = BUTTON_COLUMNS*BUTTON_ROWS+11;
-
 /**
  * Class holds layout placement values.
  */
@@ -721,6 +705,8 @@ public class Dimensions {
   int text_size; // I/O text
   int text_indent;  // Space between window and text
   
+  int buttons_count; // How many buttons are active
+  
   // Object placement variables - just for simplicity in reccurent uses
   int keyboard_x;
   int keyboard_y;
@@ -735,6 +721,8 @@ public class Dimensions {
   Dimensions() {
     width_ = settings.screen_width;
     height = settings.screen_height;
+    
+    buttons_count = 38;
     
     border_y = PApplet.parseInt(height * 0.05f);
     border_x = PApplet.parseInt(height * 0.05f) + PApplet.parseInt((width_ - height*1.3f)/2.0f);
@@ -777,9 +765,11 @@ public class XMLParse extends DefaultHandler
   public void startElement (String uri, String name, String qName, Attributes atts)
   {
     if (qName.equals("DATABASE")) {
-      System.out.println("Parsing started."); 
+      // System.out.println("Parsing started."); 
     } else if (qName.equals("ID")) {
       settings.ID = Integer.valueOf(getAttribute("value", atts));
+    } else if (qName.equals("ILLEGAL")) {
+      settings.illegal = Boolean.valueOf(getAttribute("value", atts));
     } else if (qName.equals("WIDTH")) {
       settings.screen_width = Integer.valueOf(getAttribute("value", atts));
     } else if (qName.equals("HEIGHT")) {

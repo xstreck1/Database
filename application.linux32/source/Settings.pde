@@ -7,6 +7,7 @@ class Settings {
   int screen_height;
   int text_size;
   int caps_size;
+  boolean illegal;
   String target_url;
   HashMap users;
   HashMap strings;
@@ -15,6 +16,7 @@ class Settings {
   
   Settings () {
     ID = -1;
+    illegal = false;
     screen_width = 800;
     screen_height = 600;
     text_size = 20;

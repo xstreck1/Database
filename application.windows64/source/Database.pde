@@ -56,9 +56,9 @@ void setup() {
   PImage my_cursor = loadImage("Cursor.png");
   cursor(my_cursor, 16, 16);
   smooth();
-       
+  
+  environment.setScreen(settings.illegal ? 3 : 1);     
   draw();  
-  environment.setScreen(1);
 }
 
 void draw() {
@@ -69,8 +69,8 @@ void draw() {
   keyboard.displayButtons();
   data.display();
   
-  // Within a loop, check status from time to time
-  if (draw_count++ > 50) {
+  // Within a loop, check status from time to time (100 == 2 secs)
+  if (draw_count++ > 100) {
     http.check();
     draw_count = 0;
   }

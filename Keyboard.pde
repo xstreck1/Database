@@ -7,17 +7,17 @@ class Keyboard {
 
   Keyboard() {
     createButtons();
-    hover_button = BUTTON_COUNT;
+    hover_button = dims.buttons_count;
   }
 
   void createButtons() {
-    buttons = new Button [BUTTON_COUNT];
+    buttons = new Button [dims.buttons_count];
     int button_num = 0;
 
     // Basic input buttons
     char caption = char(64);
-    for (int y_counter = 0; y_counter < BUTTON_ROWS; y_counter++) {
-      for (int x_counter = 0; x_counter < BUTTON_COLUMNS; x_counter++, button_num++) {
+    for (int y_counter = 0; y_counter < 3; y_counter++) {
+      for (int x_counter = 0; x_counter < 9; x_counter++, button_num++) {
         if (button_num != 26)
           caption += 1;
         else // Last button - space
@@ -49,31 +49,29 @@ class Keyboard {
 
   void displayButtons() {
     textFont(environment.getCurrentFont(), dims.caps_size);
-    for (int i = 0; i < environment.getButtonsCount(); i++) // Display only this environments buttons
+    for (int i = 0; i < dims.buttons_count; i++) // Display only this environments buttons
       buttons[i].display();
   }
 
   void mouseMove() {
     int i;
-    for (i = 0; i < environment.getButtonsCount(); i++)
+    for (i = 0; i < dims.buttons_count; i++)
       if (buttons[i].testMousePosition())
         break;
-    if (i != hover_button) {
-      if (hover_button != BUTTON_COUNT) // Mouse was off buttons
-        buttons[hover_button].highlight(false);
-      if (i != BUTTON_COUNT) // Mouse is now off buttons
-        buttons[i].highlight(true);
-      hover_button = i;
-    }
+    if (hover_button != dims.buttons_count) // Mouse was off buttons
+      buttons[hover_button].highlight(false);
+    if (i != dims.buttons_count) // Mouse is now off buttons
+      buttons[i].highlight(true);
+    hover_button = i;
   }
   
   void mousePress() {
-    if (hover_button == BUTTON_COUNT)
+    if (hover_button == dims.buttons_count)
       return;
     
     String button = buttons[hover_button].getCaption();
-    if (hover_button >= 0 && hover_button < BUTTON_COLUMNS*BUTTON_ROWS) {
-      if (hover_button == (BUTTON_COLUMNS*BUTTON_ROWS-1))
+    if (hover_button >= 0 && hover_button < 27) {
+      if (hover_button == 26)
         data.addLetter(' ');
       else
         data.addLetter(button.charAt(0));
@@ -90,8 +88,7 @@ class Keyboard {
           data.search();  
         break;
         case 4:
-          error = "";
-          environment.setScreen(1);  
+          environment.setScreen(settings.illegal ? 3 : 1);   
         break;
       }
     }
@@ -105,7 +102,7 @@ class Keyboard {
     else if (button.equals(settings.getFont(0)) || button.equals(settings.getFont(1)) || button.equals(settings.getFont(2)) || button.equals(settings.getFont(3))) {
       environment.changeFont(button);
       data.reFormatOutput(); 
-      data.first_output = min(data.first_output, data.output_stream.size() - dims.lines_count);
+      data.first_output = max(0, min(data.first_output, data.output_stream.size() - dims.lines_count));
     }
     else if (button.equals("▲")) {
       data.scrollFirst();
@@ -148,12 +145,7 @@ class Button {
     y_size = dims.basic_key_size;
   }
 
-  void display() {
-    // fill(BG_COLOR);
-    // noStroke();
-    // stroke(BUTTON_ACS);
-    // rect(x_pos, y_pos, x_size, y_size); 
-    
+  void display() {    
     textAlign(CENTER);
     if (is_mouse_over) {
       fill(settings.getColor("highlight"));
