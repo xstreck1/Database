@@ -3,9 +3,13 @@
 	<ID value="1" />
 	<!-- value can be "true" or "false", if this set to true, terminal can not be logged off -->
 	<ILLEGAL value="false" />
-	<!-- Fullscreen can be 1 or 0, width*height can be 640*480, 800*600, 1024*768, 1280*960 -->
-	<WIDTH value="1024" />
-	<HEIGHT value="768" />
+	<!-- width*height can be 640*480, 800*600, 1024*768, 1280*960 -->
+	<WIDTH value="800" />
+	<HEIGHT value="600" />
+	<!-- Images count describes number of images used for animation - each image must have name width*height_num.suffix where num must be from ]1,IMAGES_COUNT[ interval. Delay defines time destance between in bulks of 20ms e.g. delay of 5 causes picture to switch every 0.1s . -->
+	<IMAGES_COUNT value="10" />
+	<DELAY value="7" />
+	<IMAGE_SUFFIX value=".png" />
 	<!-- sizes of fonts are in pixels -->
 	<TEXTSIZE value="20" /> <!-- input / output text -->
 	<CAPSSIZE value="30" /> <!-- caption of the buttons -->

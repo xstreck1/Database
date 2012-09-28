@@ -11,7 +11,8 @@ HTTPHelper  http;
 Settings    settings;
 Dimensions  dims;
 
-PImage background_image;
+PImage [] background_images;
+
 String error;
 int draw_count = 0;
 
@@ -33,12 +34,15 @@ void parseSettings() {
 }
 
 void loadBackground() {
+  background_images = new PImage[settings.images_num];
+  
   String file = String.valueOf(settings.screen_width);
   file = file.concat("x");
   file = file.concat(String.valueOf(settings.screen_height));
-  file = file.concat(".png");
   
-  background_image = loadImage(file);
+  for (int i = 1; i <= settings.images_num; i++) {
+    background_images[i-1] = loadImage(file + "_" + i + settings.image_suffix);
+  }
 }
 
 void setup() {
@@ -64,15 +68,16 @@ void setup() {
 void draw() {
   if (!error.isEmpty())
     environment.setScreen(4);  
-  if (background_image != null)
-    background(background_image);
+  
+  int img_num = ((draw_count % (settings.delay * settings.images_num)) / settings.delay);
+  if (background_images[img_num] != null)
+    background(background_images[img_num]);
   keyboard.displayButtons();
   data.display();
   
   // Within a loop, check status from time to time (100 == 2 secs)
-  if (draw_count++ > 100) {
-    http.check();
-    draw_count = 0;
+  if ((draw_count++ % 100) == 0) {
+    // http.check();
   }
 }
 

@@ -40,6 +40,12 @@ public class XMLParse extends DefaultHandler
       settings.fonts.add(getAttribute("name", atts));     
     } else if (qName.equals("STRING")) {
       settings.strings.put(getAttribute("name", atts), getAttribute("text", atts));     
+    } else if (qName.equals("IMAGES_COUNT")) {
+      settings.images_num = Integer.valueOf(getAttribute("value", atts));   
+    } else if (qName.equals("DELAY")) {
+      settings.delay = Integer.valueOf(getAttribute("value", atts));   
+    } else if (qName.equals("IMAGE_SUFFIX")) {
+      settings.image_suffix = getAttribute("value", atts);   
     } else if (qName.equals("COLOR")) {
       Vector parts = new Vector();
       parts.add(getAttribute("r", atts));

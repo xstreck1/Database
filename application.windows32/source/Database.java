@@ -40,7 +40,8 @@ HTTPHelper  http;
 Settings    settings;
 Dimensions  dims;
 
-PImage background_image;
+PImage [] background_images;
+
 String error;
 int draw_count = 0;
 
@@ -62,12 +63,15 @@ public void parseSettings() {
 }
 
 public void loadBackground() {
+  background_images = new PImage[settings.images_num];
+  
   String file = String.valueOf(settings.screen_width);
   file = file.concat("x");
   file = file.concat(String.valueOf(settings.screen_height));
-  file = file.concat(".png");
   
-  background_image = loadImage(file);
+  for (int i = 1; i <= settings.images_num; i++) {
+    background_images[i-1] = loadImage(file + "_" + i + settings.image_suffix);
+  }
 }
 
 public void setup() {
@@ -93,15 +97,16 @@ public void setup() {
 public void draw() {
   if (!error.isEmpty())
     environment.setScreen(4);  
-  if (background_image != null)
-    background(background_image);
+  
+  int img_num = ((draw_count % (settings.delay * settings.images_num)) / settings.delay);
+  if (background_images[img_num] != null)
+    background(background_images[img_num]);
   keyboard.displayButtons();
   data.display();
   
   // Within a loop, check status from time to time (100 == 2 secs)
-  if (draw_count++ > 100) {
-    http.check();
-    draw_count = 0;
+  if ((draw_count++ % 100) == 0) {
+    // http.check();
   }
 }
 
@@ -623,6 +628,66 @@ class Button {
   }
 }
 /**
+ * Class parses data from the settings.xml file and stores them in settings object.
+ */
+public class XMLParse extends DefaultHandler
+{ 
+  public XMLParse ()
+  {
+    super();
+  }
+
+  public String getAttribute(String name, Attributes atts) {
+    if (atts.getValue(name) == null) {
+      error = (name.concat(" attribute was not found where expected."));
+      return "";  
+    }
+    return atts.getValue(name);
+  }
+
+  public void startElement (String uri, String name, String qName, Attributes atts)
+  {
+    if (qName.equals("DATABASE")) {
+      // System.out.println("Parsing started."); 
+    } else if (qName.equals("ID")) {
+      settings.ID = Integer.valueOf(getAttribute("value", atts));
+    } else if (qName.equals("ILLEGAL")) {
+      settings.illegal = Boolean.valueOf(getAttribute("value", atts));
+    } else if (qName.equals("WIDTH")) {
+      settings.screen_width = Integer.valueOf(getAttribute("value", atts));
+    } else if (qName.equals("HEIGHT")) {
+      settings.screen_height = Integer.valueOf(getAttribute("value", atts));
+    } else if (qName.equals("TEXTSIZE")) {
+      settings.text_size = Integer.valueOf(getAttribute("value", atts));
+    } else if (qName.equals("CAPSSIZE")) {
+      settings.caps_size = Integer.valueOf(getAttribute("value", atts));
+    }  else if (qName.equals("URL")) {
+      settings.target_url = getAttribute("url", atts);     
+    } else if (qName.equals("USER")) {
+      settings.users.put(getAttribute("name", atts), getAttribute("pass", atts));     
+    } else if (qName.equals("FONT")) {
+      settings.fonts.add(getAttribute("name", atts));     
+    } else if (qName.equals("STRING")) {
+      settings.strings.put(getAttribute("name", atts), getAttribute("text", atts));     
+    } else if (qName.equals("IMAGES_COUNT")) {
+      settings.images_num = Integer.valueOf(getAttribute("value", atts));   
+    } else if (qName.equals("DELAY")) {
+      settings.delay = Integer.valueOf(getAttribute("value", atts));   
+    } else if (qName.equals("IMAGE_SUFFIX")) {
+      settings.image_suffix = getAttribute("value", atts);   
+    } else if (qName.equals("COLOR")) {
+      Vector parts = new Vector();
+      parts.add(getAttribute("r", atts));
+      parts.add(getAttribute("g", atts));     
+      parts.add(getAttribute("b", atts));  
+      parts.add(getAttribute("a", atts));       
+      settings.colors.put(getAttribute("name", atts), parts);           
+    } else {
+      error = (qName.concat(" is not a known tag."));      
+    }
+  }
+}
+/**
  * Contains settings load from the xml file.
  */
 class Settings {
@@ -631,8 +696,11 @@ class Settings {
   int screen_height;
   int text_size;
   int caps_size;
+  int images_num;
+  int delay;
   boolean illegal;
   String target_url;
+  String image_suffix;
   HashMap users;
   HashMap strings;
   HashMap colors;
@@ -645,11 +713,14 @@ class Settings {
     screen_height = 600;
     text_size = 20;
     caps_size = 30;
+    images_num = 1;
+    delay = 1;
     users = new HashMap();
     strings = new HashMap();
     colors = new HashMap();
     fonts = new Vector();
     target_url = "";
+    image_suffix = ".png";
   }
   
   public String getText(String name) {
@@ -744,60 +815,6 @@ public class Dimensions {
 }
 
 
-/**
- * Class parses data from the settings.xml file and stores them in settings object.
- */
-public class XMLParse extends DefaultHandler
-{ 
-  public XMLParse ()
-  {
-    super();
-  }
-
-  public String getAttribute(String name, Attributes atts) {
-    if (atts.getValue(name) == null) {
-      error = (name.concat(" attribute was not found where expected."));
-      return "";  
-    }
-    return atts.getValue(name);
-  }
-
-  public void startElement (String uri, String name, String qName, Attributes atts)
-  {
-    if (qName.equals("DATABASE")) {
-      // System.out.println("Parsing started."); 
-    } else if (qName.equals("ID")) {
-      settings.ID = Integer.valueOf(getAttribute("value", atts));
-    } else if (qName.equals("ILLEGAL")) {
-      settings.illegal = Boolean.valueOf(getAttribute("value", atts));
-    } else if (qName.equals("WIDTH")) {
-      settings.screen_width = Integer.valueOf(getAttribute("value", atts));
-    } else if (qName.equals("HEIGHT")) {
-      settings.screen_height = Integer.valueOf(getAttribute("value", atts));
-    } else if (qName.equals("TEXTSIZE")) {
-      settings.text_size = Integer.valueOf(getAttribute("value", atts));
-    } else if (qName.equals("CAPSSIZE")) {
-      settings.caps_size = Integer.valueOf(getAttribute("value", atts));
-    }  else if (qName.equals("URL")) {
-      settings.target_url = getAttribute("url", atts);     
-    } else if (qName.equals("USER")) {
-      settings.users.put(getAttribute("name", atts), getAttribute("pass", atts));     
-    } else if (qName.equals("FONT")) {
-      settings.fonts.add(getAttribute("name", atts));     
-    } else if (qName.equals("STRING")) {
-      settings.strings.put(getAttribute("name", atts), getAttribute("text", atts));     
-    } else if (qName.equals("COLOR")) {
-      Vector parts = new Vector();
-      parts.add(getAttribute("r", atts));
-      parts.add(getAttribute("g", atts));     
-      parts.add(getAttribute("b", atts));  
-      parts.add(getAttribute("a", atts));       
-      settings.colors.put(getAttribute("name", atts), parts);           
-    } else {
-      error = (qName.concat(" is not a known tag."));      
-    }
-  }
-}
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "--full-screen", "--bgcolor=#666666", "--hide-stop", "Database" };
     if (passedArgs != null) {
