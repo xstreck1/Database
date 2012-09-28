@@ -94,13 +94,14 @@ public void setup() {
   draw();  
 }
 
-public void draw() {
+public void draw() {  
   if (!error.isEmpty())
     environment.setScreen(4);  
-  
   int img_num = ((draw_count % (settings.delay * settings.images_num)) / settings.delay);
   if (background_images[img_num] != null)
     background(background_images[img_num]);
+  else
+    background(settings.getColor("background")); 
   keyboard.displayButtons();
   data.display();
   
