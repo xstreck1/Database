@@ -8,8 +8,8 @@ import java.net.URLConnection;
 class HTTPHelper {
   URL url;
   URLConnection conn;
-  final static int max_lenght = 10000;
-    
+  final static int max_lenght = 1000; // MAXIMAL LENGHT OF THE DATA! REST WILL BE CROPPED!
+  
   String connect (String URL) throws MalformedURLException, IOException {
     url = new URL(URL);
     conn = url.openConnection();
@@ -38,7 +38,10 @@ class HTTPHelper {
       error = e.getMessage();
       result = "Error.";
     }
-    
+   
+    int index_of_space = result.indexOf(0x0);
+    result = result.substring(0, index_of_space);
+    System.out.println(result);
     return result;
   }
 

@@ -111,8 +111,7 @@ class Data {
       eraseAll(); 
     }
     else {
-      environment.setScreen(1);      
-      output(settings.getText("wrongpass"));
+      environment.setScreen(1);   
       eraseAll();
     }
   }
@@ -128,7 +127,7 @@ class Data {
       }
     }
     else {
-      output(input_stream + ": " + (http.findEntry(input_stream)));
+      output(input_stream + ": " + http.findEntry(input_stream));
       display();
     }
   }
