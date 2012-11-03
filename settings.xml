@@ -14,7 +14,7 @@
 	<TEXTSIZE value="20" /> <!-- input / output text -->
 	<CAPSSIZE value="30" /> <!-- caption of the buttons -->
 	<!-- url must be of the format http://adress -->
-	<URL url="http://markyparky.php5.cz/strepiny/databaze.php" />
+	<URL url="http://markyparky.php5.cz/strepiny/databaze.php?" />
 	<!-- name and password must be in caps -->
 	<USER name="TEST" pass="TSET" />
 	<USER name="I" pass="I" />
@@ -35,10 +35,14 @@
 	<STRING name="username" text="Zadejte uzivatelske jmeno." />
 	<STRING name="password" text="Zadejte heslo k uctu: " />
 	<STRING name="wrongpass" text="Neplatne uzivatelske heslo." />
+	<STRING name="wronglogin" text="Neplatne uzivatelske jmeno nebo heslo." />
 	<STRING name="welcome" text="Vitejte uzivateli " />
 	<STRING name="logoff" text="Pro odhlaseni zadejte EXIT a potvrdte." />
 	<STRING name="noname" text="Zadane uzivatelske jmeno neexistuje." />
 	<STRING name="outofbounds" text="Prekrocena delka vstupniho pole." />
-	<STRING name="logoffreset" text="Logoff. Zadejte uzivatelske jmeno."  />
+	<STRING name="denied" text="K zobrazeni tohoto hesla nemate dostatecne pravomoce." />	
+	<STRING name="notfound" text="Heslo nebylo nalezeno v databazi." />
+	<STRING name="corrupted" text="Heslo je v tuto chvili nedostupne." />
+	<STRING name="logoffreset" text="Logoff. Zadejte uzivatelske jmeno." />
 	<STRING name="illegallogoff" text="Logoff nelze provest, terminal je blokovan."  />
 </DATABASE>
