@@ -6,11 +6,12 @@ class Environment {
   String  currentFont;
   int     screen_type; // 1 for name, 2 for password, 3 for data, 4 for error 
   String  user_name;
+  String  password;
 
   Environment () {
     loadFonts();
     currentFont = settings.getFont(0);
-    user_name = "";  
+    user_name = password = "";  
     screen_type = 0;   
   }
 

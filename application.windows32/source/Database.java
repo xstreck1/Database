@@ -217,40 +217,49 @@ class Data {
   }
   
   public void username() {
-    if (environment.accountExists(input_stream)) {
-      environment.setAccount(input_stream);
-      environment.setScreen(2);
-      eraseAll();
-    }
-    else {
-      output(settings.getText("noname"));
-    }
+    environment.setAccount(input_stream);
+    environment.setScreen(2);
+    eraseAll();
   }
   
+  /**
+   * Control if the user has the access rights - currently take both DENIED and NOT and OK, but sth else should be put here
+   */
   public void password() {
-    if (environment.passwordMatches(input_stream)) {
+    environment.password = input_stream;
+    String valid = http.findEntry("ACCOUNT_VALID");
+    if (valid.substring(0,6).contentEquals("DENIED") || valid.substring(0,2).contentEquals("OK") || valid.substring(0,3).contentEquals("NOT")) {
       environment.setScreen(3);
       eraseAll(); 
     }
     else {
-      environment.setScreen(1);      
-      output(settings.getText("wrongpass"));
+      environment.setScreen(1);   
       eraseAll();
+      output(settings.getText("wronglogin"));
     }
   }
   
   public void search() {
     if (input_stream.equals("EXIT")) {
       if (settings.illegal)
-        data.output(settings.getText("illegallogoff"));
+        output(settings.getText("illegallogoff"));
       else {
         environment.setScreen(1);
         clear();
-        data.output(settings.getText("logoffreset"));
+        output(settings.getText("logoffreset"));
       }
     }
     else {
-      output(input_stream + ": " + (http.findEntry(input_stream)));
+      String result = http.findEntry(input_stream);
+      if (result.substring(0,2).contentEquals("OK")) {
+        output(input_stream + ": " + result.substring(3));
+      } else if (result.substring(0,6).contentEquals("DENIED")) {
+        output(input_stream + ": " + settings.getText("denied"));
+      } else if (result.substring(0,6).contentEquals("NOT FOUND")) {
+        output(input_stream + ": " + settings.getText("notfound"));
+      } else if (result.substring(0,6).contentEquals("CORRUPTED")) {
+        output(input_stream + ": " + settings.getText("corrupted"));
+      }
       display();
     }
   }
@@ -337,11 +346,12 @@ class Environment {
   String  currentFont;
   int     screen_type; // 1 for name, 2 for password, 3 for data, 4 for error 
   String  user_name;
+  String  password;
 
   Environment () {
     loadFonts();
     currentFont = settings.getFont(0);
-    user_name = "";  
+    user_name = password = "";  
     screen_type = 0;   
   }
 
@@ -408,8 +418,8 @@ class Environment {
 class HTTPHelper {
   URL url;
   URLConnection conn;
-  final static int max_lenght = 10000;
-    
+  final static int max_lenght = 1000; // MAXIMAL LENGHT OF THE DATA! REST WILL BE CROPPED!
+  
   public String connect (String URL) throws MalformedURLException, IOException {
     url = new URL(URL);
     conn = url.openConnection();
@@ -428,16 +438,24 @@ class HTTPHelper {
    * Get data from server. 
    */
   public String findEntry(String key_word) {
-    String result;
-      
+    String result = "";
+    String my_query = new String(settings.target_url + "klic=" + key_word + "&login=" + environment.user_name + "&password=" + environment.password);  
+    
+    System.out.print("Query: " + my_query); // Debug output
+    
     try {
-      result = http.connect(settings.target_url);
+      result = connect(my_query);
     }
     catch (Exception e) {
       e.printStackTrace();
       error = e.getMessage();
       result = "Error.";
     }
+        
+    int index_of_space = result.indexOf(0x0);
+    result = result.substring(0, index_of_space);
+    
+    System.out.println(". Response: " + result); // Debug output
     
     return result;
   }
@@ -446,8 +464,9 @@ class HTTPHelper {
    * Check status of the database on the server.
    */  
   public void check() {    
+    String status = "";
     try {
-      http.connect(settings.target_url);
+      status = connect(settings.target_url + "CHECK");
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -817,7 +836,7 @@ public class Dimensions {
 
 
   static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "--full-screen", "--bgcolor=#666666", "--hide-stop", "Database" };
+    String[] appletArgs = new String[] { "Database" };
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {

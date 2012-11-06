@@ -95,40 +95,49 @@ class Data {
   }
   
   void username() {
-    if (environment.accountExists(input_stream)) {
-      environment.setAccount(input_stream);
-      environment.setScreen(2);
-      eraseAll();
-    }
-    else {
-      output(settings.getText("noname"));
-    }
+    environment.setAccount(input_stream);
+    environment.setScreen(2);
+    eraseAll();
   }
   
+  /**
+   * Control if the user has the access rights - currently take both DENIED and NOT and OK, but sth else should be put here
+   */
   void password() {
-    if (environment.passwordMatches(input_stream)) {
+    environment.password = input_stream;
+    String valid = http.findEntry("ACCOUNT_VALID");
+    if (valid.substring(0,6).contentEquals("DENIED") || valid.substring(0,2).contentEquals("OK") || valid.substring(0,3).contentEquals("NOT")) {
       environment.setScreen(3);
       eraseAll(); 
     }
     else {
-      environment.setScreen(1);      
-      output(settings.getText("wrongpass"));
+      environment.setScreen(1);   
       eraseAll();
+      output(settings.getText("wronglogin"));
     }
   }
   
   void search() {
     if (input_stream.equals("EXIT")) {
       if (settings.illegal)
-        data.output(settings.getText("illegallogoff"));
+        output(settings.getText("illegallogoff"));
       else {
         environment.setScreen(1);
         clear();
-        data.output(settings.getText("logoffreset"));
+        output(settings.getText("logoffreset"));
       }
     }
     else {
-      output(input_stream + ": " + (http.findEntry(input_stream)));
+      String result = http.findEntry(input_stream);
+      if (result.substring(0,2).contentEquals("OK")) {
+        output(input_stream + ": " + result.substring(3));
+      } else if (result.substring(0,6).contentEquals("DENIED")) {
+        output(input_stream + ": " + settings.getText("denied"));
+      } else if (result.substring(0,6).contentEquals("NOT FOUND")) {
+        output(input_stream + ": " + settings.getText("notfound"));
+      } else if (result.substring(0,6).contentEquals("CORRUPTED")) {
+        output(input_stream + ": " + settings.getText("corrupted"));
+      }
       display();
     }
   }
