@@ -517,10 +517,10 @@ class Keyboard {
     buttons[button_num++] = new Button(settings.getFont(3), dims.wide_key_size*3 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size);
 
     // Output scroll buttons
-    buttons[button_num++] = new Button("\u25b2", 11*dims.basic_key_size + dims.border_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f), dims.basic_key_size, dims.basic_key_size);
-    buttons[button_num++] = new Button("\u2191", 11*dims.basic_key_size + dims.border_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f) + dims.basic_key_size, dims.basic_key_size, dims.basic_key_size);
-    buttons[button_num++] = new Button("\u2193", 11*dims.basic_key_size + dims.border_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f) + dims.basic_key_size*2, dims.basic_key_size, dims.basic_key_size);
-    buttons[button_num++] = new Button("\u25bc",  11*dims.basic_key_size + dims.border_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f) + dims.basic_key_size*3, dims.basic_key_size, dims.basic_key_size);
+    buttons[button_num++] = new Button("<<", 11*dims.basic_key_size + dims.border_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f), dims.basic_key_size, dims.basic_key_size);
+    buttons[button_num++] = new Button("<", 11*dims.basic_key_size + dims.border_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f) + dims.basic_key_size, dims.basic_key_size, dims.basic_key_size);
+    buttons[button_num++] = new Button(">", 11*dims.basic_key_size + dims.border_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f) + dims.basic_key_size*2, dims.basic_key_size, dims.basic_key_size);
+    buttons[button_num++] = new Button(">>",  11*dims.basic_key_size + dims.border_x, dims.input_y + PApplet.parseInt(dims.basic_key_size*0.75f) + dims.basic_key_size*3, dims.basic_key_size, dims.basic_key_size);
   }  
 
   public void displayButtons() {
@@ -580,16 +580,16 @@ class Keyboard {
       data.reFormatOutput(); 
       data.first_output = max(0, min(data.first_output, data.output_stream.size() - dims.lines_count));
     }
-    else if (button.equals("\u25b2")) {
+    else if (button.equals("<<")) {
       data.scrollFirst();
     }
-    else if (button.equals("\u2191")) {
+    else if (button.equals("<")) {
       data.scrollBackwards();
     }
-    else if (button.equals("\u2193")) {
+    else if (button.equals(">")) {
       data.scrollForward();
     }
-    else if (button.equals("\u25bc")) {
+    else if (button.equals(">>")) {
       data.scrollLast();
     }
   }
