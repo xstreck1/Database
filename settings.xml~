@@ -20,9 +20,9 @@
 	<USER name="I" pass="I" />
 	<!-- four fonts are currently expected, must be in file name.vlw; order of font names here determines order of buttons displayed -->
 	<FONT name="AlienLines" />
-	<FONT name="OmikronOne" />
-	<FONT name="Homeworld" />	
-	<FONT name="SilverStream" />	
+	<FONT name="Nobilia" />
+	<FONT name="Vlada" />	
+	<FONT name="Mafie" />	
 	<!-- colors - Red, Green, Blue, Alpha component (the lower the value is the more opaque the color gets), can be in the range ]0,255[ -->
 	<COLOR name="background" r="20" g="65" b="20" a="125" /> <!-- color that is displayed on background if the image is not loaded correcly --> 
 	<COLOR name="field" r="255" g="255" b="255" a="255" /> <!-- backgound of input/output views --> 
