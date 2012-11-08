@@ -33,9 +33,9 @@ public class Dimensions {
     
     buttons_count = 38;
     
-    border_y = int(height * 0.05);
-    border_x = int(height * 0.05) + int((width_ - height*1.3)/2.0);
-    basic_key_size = int(height *0.1);
+    border_y = round(height * 0.05);
+    border_x = round(height * 0.05) + round((width_ - height*1.3)/2.0);
+    basic_key_size = round(height *0.1);
     caps_size = settings.caps_size;
     text_size = settings.text_size;
     text_indent = 3;

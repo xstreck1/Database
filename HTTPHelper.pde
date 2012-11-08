@@ -8,7 +8,6 @@ import java.net.URLConnection;
 class HTTPHelper {
   URL url;
   URLConnection conn;
-  final static int max_lenght = 1000; // MAXIMAL LENGHT OF THE DATA! REST WILL BE CROPPED!
   
   String connect (String URL) throws MalformedURLException, IOException {
     url = new URL(URL);
@@ -17,10 +16,15 @@ class HTTPHelper {
 		
     InputStreamReader content;
     content = new InputStreamReader(conn.getInputStream());
+    char [] buffer;
+    int max_lenght = 100; // Current lenght of the buffer
     
-    char [] buffer = new char[max_lenght];
-    if (content.read(buffer, 0, max_lenght) >= max_lenght)
-      throw new IOException("Text too long");
+    // Increase the buffer size until you read it all
+    do {
+      max_lenght *= 2;
+      buffer = new char[max_lenght]; }
+    while (content.read(buffer, 0, max_lenght) >= max_lenght);
+    
     return new String(buffer);
   }
 
@@ -29,7 +33,7 @@ class HTTPHelper {
    */
   String findEntry(String key_word) {
     String result = "";
-    String my_query = new String(settings.target_url + "klic=" + key_word + "&login=" + environment.user_name + "&password=" + environment.password);  
+    String my_query = new String(settings.target_url + "?klic=" + key_word + "&login=" + environment.user_name + "&password=" + environment.password);  
     
     System.out.print("Query: " + my_query); // Debug output
     
