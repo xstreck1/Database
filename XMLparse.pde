@@ -3,11 +3,17 @@
  */
 public class XMLParse extends DefaultHandler
 { 
+  /**
+   * Constructor just calls its handler super-class.
+   */
   public XMLParse ()
   {
     super();
   }
 
+  /**
+   * More error-prone attribute parser.
+   */
   String getAttribute(String name, Attributes atts) {
     if (atts.getValue(name) == null) {
       error = (name.concat(" attribute was not found where expected."));
@@ -16,6 +22,9 @@ public class XMLParse extends DefaultHandler
     return atts.getValue(name);
   }
 
+  /**
+   * Main parsing logic - on an initial element event, this is called and in dependency on TAG name the content is red and set in the settings object.
+   */
   @Override
   public void startElement (String uri, String name, String qName, Attributes atts)
   {
@@ -54,7 +63,7 @@ public class XMLParse extends DefaultHandler
       parts.add(getAttribute("b", atts));  
       parts.add(getAttribute("a", atts));       
       settings.colors.put(getAttribute("name", atts), parts);           
-    } else {
+    } else { // If the tag is not found, result with an error
       error = (qName.concat(" is not a known tag."));      
     }
   }

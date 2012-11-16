@@ -2,7 +2,7 @@
  * Class holds layout placement values.
  */
 public class Dimensions {
-  // Screen sizes
+  // Screen dimensions
   int width_;
   int height_;
 
@@ -12,8 +12,8 @@ public class Dimensions {
   int basic_key_size; // Key size
   int caps_size; // GUI text
   int text_size; // I/O text
-  int text_indent;  // Space between window and text
-  int buttons_count; // How many buttons are active
+  final int text_indent = 3;  // Space between window and text
+  final int buttons_count = 38; // How many buttons are active
 
   // Object placement variables - just for simplicity in reccurent uses - THESE ARE COMPUTED
   int keyboard_x; // Leftmost corner x position of the virtual keyboard
@@ -34,14 +34,11 @@ public class Dimensions {
     width_ = settings.screen_width;
     height_ = settings.screen_height;
 
-    buttons_count = 38; // Currently fixed
-
     border_y = round(height_ * 0.05);
     border_x = round(height_ * 0.05) + round((width_ - height_*1.3)/2.0);
     basic_key_size = round(height_ *0.1);
     caps_size = settings.caps_size;
     text_size = settings.text_size;
-    text_indent = 3;
 
     keyboard_x     = border_x;
     keyboard_y     = height_ - basic_key_size*3 - border_y;

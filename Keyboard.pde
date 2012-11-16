@@ -79,7 +79,7 @@ class Keyboard {
     else if (button.equals("Potvrd")) {
         switch (environment.getScreen()) {
         case 1:
-          data.username();      
+          data.username();  
         break;
         case 2:
           data.password();      

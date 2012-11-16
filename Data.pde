@@ -2,55 +2,156 @@
  * Class that handles I/0 and text formatting 
  */
 class Data {
-  ArrayList output_stream;  
-  String input_stream;
-  int first_output;
+  ArrayList output_stream; // List of strings, each corresponding to a single line of the output
+  String input_stream; // The string containing the user-given text
+  int first_output; // Ordinal number of the first line that is displayed
 
+  /**
+   * Constructor just clears objects to the references
+   */
   Data() {
     clear();
   }
   
+  /**
+   * Assigns new objects to the employed references
+   */
   void clear() {
     output_stream = new ArrayList();
-    output_stream.add("");
-    input_stream = new String();
+    output_stream.add(""); // Make an empty first line
+    input_stream = "";
     first_output = 0;
   }
   
+  /**
+   * Reset current data based on the screen you are in.
+   * Options correspond to username, password, interactive mode and error.
+   */
   void setScreenData() {
     switch (environment.getScreen()) {
-      case 1:
-        output_stream.clear();
+      case 1: // Username
+        clear();
         output(settings.getText("username"));       
-      break;
-      case 2:
-        output_stream.clear();
+        break;
+        
+      case 2: // Password
+        clear();
         output(settings.getText("password") + environment.getAccountName());       
-      break;
-      case 3:
-        output_stream.clear();
+        break;
+        
+      case 3: // Interface
+        clear();
         if (settings.illegal)
           output(settings.getText("welcome") + "???");
         else {
           output(settings.getText("welcome") + environment.getAccountName() + ".");
           output(settings.getText("logoff") );
         }       
-      break;
-      case 4:
-        output_stream.clear();
+        break;
+        
+      case 4: // Error
+        clear();
         output(error);
-        error = "";      
-      break;
+        error = ""; // After error the user will be allowed to continue normally.      
+        break;
+    }
+  }
+
+  /**
+   * Called when the user confirms his typed username.
+   * Just moves to the password screen.
+   * TODO: Move to Keyboard.
+   */
+  void username() {
+    environment.setAccount(input_stream);
+    environment.setScreen(2);
+  }
+  
+  /**
+   * Called when the user confirms the typed in password.
+   * Control if the user has the access rights - currently take both DENIED and NOT and OK, but sth else should be put here.
+   * TODO: Move to Keyboard.
+   */
+  void password() {
+    environment.password = input_stream;
+    String valid = http.findEntry("ACCOUNT_VALID");
+    if (valid.substring(0,6).contentEquals("DENIED") || valid.substring(0,2).contentEquals("OK") || valid.substring(0,3).contentEquals("NOT")) {
+      environment.setScreen(3);
+    }
+    else {
+      environment.setScreen(1);   
+      output(settings.getText("wronglogin"));
     }
   }
   
-  // If in the third (database) screen, add data to output, otherwise replace current output with data
+  /**
+   * Called when the user confirms the search of the input.
+   * TODO: Move to Keyboard.
+   */
+  void search() {
+    if (input_stream.equals("EXIT")) {
+      if (settings.illegal)
+        output(settings.getText("illegallogoff"));
+      else {
+        environment.setScreen(1);
+        clear();
+        output(settings.getText("logoffreset"));
+      }
+    }
+    else {
+      String result = http.findEntry(input_stream);
+      if (result.substring(0,2).contentEquals("OK")) {
+        output(input_stream + ": " + result.substring(3));
+      } else if (result.substring(0,6).contentEquals("DENIED")) {
+        output(input_stream + ": " + settings.getText("denied"));
+      } else if (result.substring(0,6).contentEquals("NOT FOUND")) {
+        output(input_stream + ": " + settings.getText("notfound"));
+      } else if (result.substring(0,6).contentEquals("CORRUPTED")) {
+        output(input_stream + ": " + settings.getText("corrupted"));
+      }
+      display();
+    }
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Input stream manipulation
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  void addLetter(char letter) {
+    input_stream = input_stream.concat(str(letter));
+    if (textWidth(input_stream) > (dims.keyboard_width-2*dims.text_indent)) {
+      eraseLast();
+      output(settings.getText("outofbounds"));
+    }
+  }
+  
+  void eraseLast() {
+    if (input_stream.length() > 0)
+      input_stream = input_stream.substring(0,input_stream.length()-1);
+  }
+  
+  void eraseAll() {
+    input_stream = new String();
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Output stream manipulation
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  /**
+   * Reformats the string and places it into the ouput container
+   */
   void output(String new_text) {
+    // Remove newline symbols from the string
+    new_text.replace('\n', ' ');
     new_text.replace('\r', ' ');
+    // Add the text to the output
     addToOutput(new_text);
     first_output = max (0, (output_stream.size() - dims.lines_count));
   }
   
+  /**
+   *
+   */
   void addToOutput(String new_text) {
     if ((new_text.indexOf('\n') != -1) && (new_text.indexOf('\n') != new_text.length() - 1)) {
       if (new_text.indexOf('\n') != 0)
@@ -93,72 +194,7 @@ class Data {
     
     addToOutput(output_content);
   }
-  
-  void username() {
-    environment.setAccount(input_stream);
-    environment.setScreen(2);
-    eraseAll();
-  }
-  
-  /**
-   * Control if the user has the access rights - currently take both DENIED and NOT and OK, but sth else should be put here
-   */
-  void password() {
-    environment.password = input_stream;
-    String valid = http.findEntry("ACCOUNT_VALID");
-    if (valid.substring(0,6).contentEquals("DENIED") || valid.substring(0,2).contentEquals("OK") || valid.substring(0,3).contentEquals("NOT")) {
-      environment.setScreen(3);
-      eraseAll(); 
-    }
-    else {
-      environment.setScreen(1);   
-      eraseAll();
-      output(settings.getText("wronglogin"));
-    }
-  }
-  
-  void search() {
-    if (input_stream.equals("EXIT")) {
-      if (settings.illegal)
-        output(settings.getText("illegallogoff"));
-      else {
-        environment.setScreen(1);
-        clear();
-        output(settings.getText("logoffreset"));
-      }
-    }
-    else {
-      String result = http.findEntry(input_stream);
-      if (result.substring(0,2).contentEquals("OK")) {
-        output(input_stream + ": " + result.substring(3));
-      } else if (result.substring(0,6).contentEquals("DENIED")) {
-        output(input_stream + ": " + settings.getText("denied"));
-      } else if (result.substring(0,6).contentEquals("NOT FOUND")) {
-        output(input_stream + ": " + settings.getText("notfound"));
-      } else if (result.substring(0,6).contentEquals("CORRUPTED")) {
-        output(input_stream + ": " + settings.getText("corrupted"));
-      }
-      display();
-    }
-  }
-  
-  void addLetter(char letter) {
-    input_stream = input_stream.concat(str(letter));
-    if (textWidth(input_stream) > (dims.keyboard_width-2*dims.text_indent)) {
-      eraseLast();
-      output(settings.getText("outofbounds"));
-    }
-  }
-  
-  void eraseLast() {
-    if (input_stream.length() > 0)
-      input_stream = input_stream.substring(0,input_stream.length()-1);
-  }
-  
-  void eraseAll() {
-    input_stream = new String();
-  }
-  
+
   void scrollFirst() {
     first_output = 0;
     display();  
@@ -178,6 +214,10 @@ class Data {
     first_output = max(0, output_stream.size() - dims.lines_count);
     display();  
   }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Visual
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   void display() {
     textFont(environment.getCurrentFont(), dims.text_size);

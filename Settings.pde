@@ -2,7 +2,7 @@
  * Contains settings load from the xml file.
  */
 class Settings {
-  int ID;
+  int ID; // ID of the terminal
   int screen_width;
   int screen_height;
   int text_size;
@@ -70,4 +70,13 @@ class Settings {
       return color(r,g,b,a);
     }  
   }
+  
+  /**
+   * This function control if all the mandatory tags are set.
+   */
+  void control() {
+    String error_pref = "Missing a mandatory data from the setting file that should have been described in the tag: ";
+    if (ID == -1)
+      error = error_pref + "ID.";
+    }
 }
