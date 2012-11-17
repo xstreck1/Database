@@ -62,7 +62,7 @@ public class Settings {
   String getFont(int number) {
     String font_name = "";
     
-    // Try to seach for the font.
+    // Try to seach for the font
     try {
       font_name = (String) fonts.elementAt(number);
     } catch (Exception e) {
