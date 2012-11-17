@@ -1,5 +1,6 @@
 /**
- * Class parses data from the settings.xml file and stores them in settings object.
+ * This class inherits its skills from the Default XML handler and is used for parsing an XML file.
+ * Using the parse command (not even mentione here), the object parses data from the file to which it is connected and stores them in the settings object.
  */
 public class XMLParse extends DefaultHandler
 { 

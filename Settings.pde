@@ -1,5 +1,6 @@
 /**
- * Contains settings load from the xml file.
+ * Contains settings load from the xml file. 
+ * Most settings are not really that important or have default values, that are instantiated in the constructor. The mandatory ones can be checked using the "control" function.
  */
 class Settings {
   int ID; // ID of the terminal.

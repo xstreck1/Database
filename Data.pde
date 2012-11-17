@@ -1,5 +1,5 @@
 /**
- * Class that handles I/0 and text formatting 
+ * Class that handles I/0 and text formatting.
  */
 class Data {
   ArrayList output_stream; // List of strings, each corresponding to a single line of the output
