@@ -44,8 +44,6 @@ public class XMLParse extends DefaultHandler
       settings.caps_size = Integer.valueOf(getAttribute("value", atts));
     }  else if (qName.equals("URL")) {
       settings.target_url = getAttribute("url", atts);     
-    } else if (qName.equals("USER")) {
-      settings.users.put(getAttribute("name", atts), getAttribute("pass", atts));     
     } else if (qName.equals("FONT")) {
       settings.fonts.add(getAttribute("name", atts));     
     } else if (qName.equals("STRING")) {

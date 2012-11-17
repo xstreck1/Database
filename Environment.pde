@@ -33,17 +33,9 @@ class Environment {
     new_font  = loadFont(font_path);
     fonts.put(settings.getFont(3), new_font);
   }
-  
-  boolean accountExists(String name) {
-    return settings.users.containsKey(name);
-  } 
 
   void setAccount(String name) {
     user_name = name;
-  }
-  
-  boolean passwordMatches(String pass) {
-    return (0 == pass.compareToIgnoreCase((String) settings.users.get(user_name)));
   }
   
   String getAccountName() {
