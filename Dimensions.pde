@@ -13,7 +13,6 @@ public class Dimensions {
   int caps_size; // GUI text
   int text_size; // I/O text
   final int text_indent = 3;  // Space between window and text
-  final int buttons_count = 38; // How many buttons are active
 
   // Object placement variables - just for simplicity in reccurent uses - THESE ARE COMPUTED
   int keyboard_x; // Leftmost corner x position of the virtual keyboard

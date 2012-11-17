@@ -2,7 +2,7 @@
  * Contains settings load from the xml file. 
  * Most settings are not really that important or have default values, that are instantiated in the constructor. The mandatory ones can be checked using the "control" function.
  */
-class Settings {
+public class Settings {
   int ID; // ID of the terminal.
   int screen_width; // Width of the screen, in pixels.
   int screen_height; // Height of the screen, in pixels.
@@ -62,7 +62,7 @@ class Settings {
   String getFont(int number) {
     String font_name = "";
     
-    // Try to seach for the font
+    // Try to seach for the font.
     try {
       font_name = (String) fonts.elementAt(number);
     } catch (Exception e) {
@@ -97,7 +97,7 @@ class Settings {
   }
   
   /**
-   * This function control if all the mandatory tags are set.
+   * This function controls if all the mandatory tags are set in the way sufficient for the sucessful run of the app.
    */
   void control() {
     String error_pref = "Missing a mandatory data from the setting file that should have been described in the tag: ";

@@ -15,7 +15,7 @@ public class XMLParse extends DefaultHandler
   /**
    * More error-prone attribute parser.
    */
-  String getAttribute(String name, Attributes atts) {
+  private String getAttribute(String name, Attributes atts) {
     if (atts.getValue(name) == null) {
       error = (name.concat(" attribute was not found where expected."));
       return "";  
@@ -62,7 +62,7 @@ public class XMLParse extends DefaultHandler
       parts.add(getAttribute("b", atts));  
       parts.add(getAttribute("a", atts));       
       settings.colors.put(getAttribute("name", atts), parts);           
-    } else { // If the tag is not found, result with an error
+    } else { // If the tag is not found, result with an error.
       error = (qName.concat(" is not a known tag."));      
     }
   }
