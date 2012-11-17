@@ -34,12 +34,14 @@ public class Dimensions {
     width_ = settings.screen_width;
     height_ = settings.screen_height;
 
+    // Relate basic values to this setting
     border_y = round(height_ * 0.05);
     border_x = round(height_ * 0.05) + round((width_ - height_*1.3)/2.0);
     basic_key_size = round(height_ *0.1);
     caps_size = settings.caps_size;
     text_size = settings.text_size;
 
+    // Compute helping values from the basic ones.
     keyboard_x     = border_x;
     keyboard_y     = height_ - basic_key_size*3 - border_y;
     keyboard_width = basic_key_size*12;

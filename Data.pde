@@ -18,7 +18,6 @@ class Data {
    */
   void clear() {
     output_stream = new ArrayList();
-    output_stream.add(""); // Make an empty first line
     input_stream = "";
     first_output = 0;
   }

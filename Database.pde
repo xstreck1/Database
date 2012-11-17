@@ -94,7 +94,7 @@ void parseSettings() {
   // Create a new settings object - up till now there was none.
   settings = new Settings();
   
-  // Setup parser and parse settings
+  // Setup parser and parse settings.
   try {
     XMLReader xr = XMLReaderFactory.createXMLReader();
     XMLParse handler = new XMLParse();
@@ -109,6 +109,9 @@ void parseSettings() {
   
   // Control if everything that has to be set is set.
   settings.control();
+  
+  // Log out progress.
+  System.out.println("Parsing finished correctly."); 
 }
 
 /**

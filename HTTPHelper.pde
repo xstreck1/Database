@@ -42,12 +42,12 @@ class HTTPHelper {
     }
     catch (Exception e) {
       e.printStackTrace();
-      error = e.getMessage();
+      error = "Chyba spojeni s databazi.";
       result = "Error.";
     }
         
-    int index_of_space = result.indexOf(0x0);
-    result = result.substring(0, index_of_space);
+    int index_of_empty = (result.indexOf(0x0) == -1) ? result.length() : result.indexOf(0x0);
+    result = result.substring(0, index_of_empty);
     
     System.out.println(". Response: " + result); // Debug output
     

@@ -29,7 +29,7 @@ public class XMLParse extends DefaultHandler
   public void startElement (String uri, String name, String qName, Attributes atts)
   {
     if (qName.equals("DATABASE")) {
-      // System.out.println("Parsing started."); 
+      System.out.println("Parsing started."); 
     } else if (qName.equals("ID")) {
       settings.ID = Integer.valueOf(getAttribute("value", atts));
     } else if (qName.equals("ILLEGAL")) {
