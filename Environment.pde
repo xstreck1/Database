@@ -9,11 +9,15 @@ class Environment {
   private String  password = ""; // Password of the current user.
 
   /**
-   * Constructor creates fonts and sets the first one as active.
+   * Constructor creates fonts and sets the active font.
    */
   Environment () {
     loadFonts();
-    currentFont = settings.getFont(0);
+    
+    if (fonts.size() > 0)
+      currentFont = settings.getFont(0);
+    else
+      currentFont = BASIC_FONT_NAME;
   }
 
   /**
@@ -24,19 +28,20 @@ class Environment {
     String font_path;
     PFont new_font;
     
-    font_path = settings.getFont(0) + ".vlw";
-    new_font  = loadFont(font_path);
-    fonts.put(settings.getFont(0), new_font);
-    font_path = settings.getFont(1)  + ".vlw";
-    new_font  = loadFont(font_path);
-    fonts.put(settings.getFont(1), new_font);
-    font_path = settings.getFont(2) + ".vlw";
-    new_font  = loadFont(font_path);
-    fonts.put(settings.getFont(2), new_font);
-    font_path = settings.getFont(3) + ".vlw";
-    new_font  = loadFont(font_path);
-    fonts.put(settings.getFont(3), new_font);
+    // Create all fonts that are loaded from settings.
+    for (int i = 0; i < FONT_COUNT; i++) {
+      font_path = settings.getFont(i) + ".vlw";
+      new_font  = loadFont(font_path);
+      fonts.put(settings.getFont(i), new_font);
+    }
+    
+    // Add the basic font.
+    fonts.put(BASIC_FONT_NAME, basic_font);
   }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Getters / Setters.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   void setAccountName(final String name) {
     user_name = name;

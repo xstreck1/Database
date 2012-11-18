@@ -1,17 +1,20 @@
-/* @pjs preload="1024x768_1.png, 800x600_1.png, 800x600_10.png, 800x600_2.png, 800x600_3.png, 800x600_4.png, 800x600_5.png, 800x600_6.png, 800x600_7.png, 800x600_8.png, 800x600_9.png, _800x600_1.png, cursor.png"; 
- */
-
 // Resources locations.
-final String SETTINGS_FILE = "settings.xml";
-final String CURSOR_FILE = "cursor.png";
+final String SETTINGS_FILE = "settings.xml"; ///< The file with all the settings.
+final String CURSOR_FILE = "cursor.png"; ///< A picture used as the cursor.
 // Background images and fonts are derived from settings.
+final int FONT_COUNT = 4; ///< Number of fonts employed.
+final String BASIC_FONT_NAME = "Arial.vlw"; ///< Name of the font that is used in default cases.
+PFont basic_font; ///< Reference to a program-wise basic font.
+PImage [] background_images; ///< An array containing the images rotated on the background.
+// Screen identifiers.
+final int NAME_SCREEN = 1; ///< Identifier of the screen with the name prompt.
+final int PASS_SCREEN = 2; ///< Identifier of the screen with the password prompt.
+final int TEXT_SCREEN = 3; ///< Identifier of the screen with the text content.
 
 // Number of frames per second.
 final int FRAME_RATE = 50; 
 // Counter of repetitions of display operation.
 int draw_count = 0;
-// A list of images cycling on the background.
-PImage [] background_images;
 
 // Singular objects that will be used during the computation.
 // ALL THESE ARE SHARED PROJECT-WISE!
@@ -33,6 +36,7 @@ void setup() {
   // Load data
   parseSettings();
   loadBackground();
+  basic_font = loadFont(BASIC_FONT_NAME);
   
   // Create handling objects.
   dims        = new Dimensions();
@@ -43,14 +47,13 @@ void setup() {
   
   // Setup graphics.
   size(settings.screen_width, settings.screen_height, JAVA2D);
-  PImage my_cursor = loadImage(CURSOR_FILE);
-  cursor(my_cursor, 16, 16);
+  cursor(loadImage(CURSOR_FILE), 16, 16);
   smooth();
   frameRate(FRAME_RATE);
   draw();  
   
   // Start the terminal as required.
-  environment.setScreen(settings.illegal ? 3 : 1);     
+  environment.setScreen(settings.illegal ? TEXT_SCREEN : NAME_SCREEN);     
 }
 
 @Override

@@ -220,37 +220,40 @@ class Data {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   void display() {
-    textFont(environment.getFont(), dims.text_size);
+    // Fill the text fileds.
     noStroke();
     fill(settings.getColor("field"));
     rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
     rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
         
+    // Display error output if there is any.
     if (!error.isEmpty()) {
-        fill(settings.getColor("error"));
-        textAlign(LEFT);
-        text(error, dims.input_x + dims.text_indent, int(dims.basic_key_size*0.75) + dims.input_y + settings.text_size);
-    }    
-        
-    switch (environment.getScreen()) {
-      case 1: case 2:  case 3:
-        fill(settings.getColor("text"));
-        textAlign(LEFT);
-        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
-        for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
-          text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output));
-        }
-      break;
+      textFont(basic_font, dims.text_size);
+      fill(settings.getColor("error"));
+      textAlign(LEFT);
+      text(error, dims.input_x + dims.text_indent, int(dims.basic_key_size*0.75) + dims.input_y + settings.text_size);
+    } 
+    else {
+      textFont(environment.getFont(), dims.text_size);
+      fill(settings.getColor("text"));
+      textAlign(LEFT);
       
-      case 5:
-        fill(settings.getColor("text"));
-        textAlign(LEFT);
-        text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
-        fill(settings.getColor("offline"));
-        textAlign(CENTER);
-        textSize(250);
-        text("OFF", dims.input_x + dims.output_width/2,  int(dims.basic_key_size*0.75) + dims.input_y + dims.output_height/2 + 80);
-      break;
+      switch (environment.getScreen()) {
+        case 1: case 2:  case 3:
+          text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
+          for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
+            text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output));
+          }
+        break;
+        
+        case 5:
+          text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
+          fill(settings.getColor("offline"));
+          textAlign(CENTER);
+          textSize(250);
+          text("OFF", dims.input_x + dims.output_width/2,  int(dims.basic_key_size*0.75) + dims.input_y + dims.output_height/2 + 80);
+        break;
+      }
     }
   }
 }
