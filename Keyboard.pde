@@ -186,7 +186,7 @@ class Button {
   /**
    * Draws the button on the screen.
    */
-  public void display(boolean is_mouse_over) {    
+  public void display(final boolean is_mouse_over) {    
     // Choose the highlight color, if requested.
     if (is_mouse_over) {
       fill(settings.getColor("highlight"));

@@ -1,3 +1,9 @@
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+
 /**
  * This class inherits its skills from the Default XML handler and is used for parsing an XML file.
  * Using the parse command (not even mentione here), the object parses data from the file to which it is connected and stores them in the settings object.
