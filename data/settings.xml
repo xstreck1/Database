@@ -1,0 +1,45 @@
+<DATABASE>
+	<!-- ID must be unique for each running database -->
+	<ID value="1" />
+	<!-- value can be "true" or "false", if this set to true, terminal can not be logged off -->
+	<ILLEGAL value="false" />
+	<!-- CAUTION! RATION MUST BE 4:3! width*height should correspond to the resolution of the running monitor, also background images must be present -->
+	<WIDTH value="1024" />
+	<HEIGHT value="768" />
+	<!-- Images count describes number of images used for animation - each image must have name width*height_num.suffix where num must be from ]1,IMAGES_COUNT[ interval. Delay defines time destance between in bulks of 20ms e.g. delay of 5 causes picture to switch every 0.1s . Also, transparency will not work for background. -->
+	<IMAGES_COUNT value="1" />
+	<DELAY value="7" />
+	<IMAGE_SUFFIX value=".png" /> <!--  .gif, .jpg, .tga, .png are possible -->
+	<!-- sizes of fonts are in pixels -->
+	<TEXTSIZE value="20" /> <!-- input / output text -->
+	<CAPSSIZE value="30" /> <!-- caption of the buttons -->
+	<!-- url must be of the format http://adress -->
+	<URL url="http://markyparky.php5.cz/strepiny/databaze.php" />
+	<!-- four fonts are currently expected, must be in file name.vlw; order of font names here determines order of buttons displayed -->
+	<FONT name="AlienLines" />
+	<FONT name="OmikronOne" />
+	<FONT name="Homeworld" />	
+	<FONT name="SilverStr" />	
+	<!-- colors - Red, Green, Blue, Alpha component (the lower the value is the more opaque the color gets), can be in the range ]0,255[ -->
+	<COLOR name="background" r="20" g="65" b="20" a="125" /> <!-- color that is displayed on background if the image is not loaded correcly --> 
+	<COLOR name="field" r="255" g="255" b="255" a="4" /> <!-- backgound of input/output views --> 
+	<COLOR name="text" r="0" g="0" b="0" a="255" /> <!-- input/output text --> 
+	<COLOR name="caption" r="30" g="30" b="110" a="255" /> <!-- caption of the button --> 
+	<COLOR name="highlight" r="80" g="160" b="190" a="255" /> <!-- caption for button that is under the cursor --> 
+	<COLOR name="offline" r="80" g="160" b="190" a="255" /> <!-- color in which the OFF text is displayed. --> 
+	<COLOR name="error" r="150" g="0" b="0" a="255" /> <!-- program error info text (not part of the game) --> 
+	<!-- strings are expected in the ASCII charset -->	
+	<STRING name="username" text="Zadejte uzivatelske jmeno." />
+	<STRING name="password" text="Zadejte heslo k uctu: " />
+	<STRING name="wrongpass" text="Neplatne uzivatelske heslo." />
+	<STRING name="wronglogin" text="Neplatne uzivatelske jmeno nebo heslo." />
+	<STRING name="welcome" text="Vitejte uzivateli " />
+	<STRING name="logoff" text="Pro odhlaseni zadejte EXIT a potvrdte." />
+	<STRING name="noname" text="Zadane uzivatelske jmeno neexistuje." />
+	<STRING name="outofbounds" text="Prekrocena delka vstupniho pole." />
+	<STRING name="denied" text="K zobrazeni tohoto hesla nemate dostatecne pravomoce." />	
+	<STRING name="notfound" text="Heslo nebylo nalezeno v databazi." />
+	<STRING name="corrupted" text="Heslo je v tuto chvili nedostupne." />
+	<STRING name="logoffreset" text="Logoff. Zadejte uzivatelske jmeno." />
+	<STRING name="illegallogoff" text="Logoff nelze provest, terminal je blokovan."  />
+</DATABASE>
