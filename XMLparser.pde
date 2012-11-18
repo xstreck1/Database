@@ -23,11 +23,12 @@ public class XMLParser
    * @return  a content of the parameter or an empty string if it was not found
    */
   private String getAttribute(String name, XML node) {
-    if (node.getString(name) == null) {
+    String data = node.getString(name);
+    if (data == null) {
       error = name + " attribute was not found in a node " + node + ".";
-      return "";  
+      data = "";
     }
-    return node.getString(name);
+    return data;
   }
 
   /**

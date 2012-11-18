@@ -28,9 +28,6 @@ Dimensions  dims;
 // A string that is filled if something goes wrong - basically non-intrusive version of an exception. Mainly would be raised if a parsed tag in the settings.xml is unknown.
 String error = "";
 
-/**
- * THE ENTRY FUNCTION OF THE APPLICATION
- */ 
 @Override
 void setup() {
   // Load data
@@ -53,7 +50,7 @@ void setup() {
   draw();  
   
   // Start the terminal as required.
-  environment.setScreen(settings.illegal ? TEXT_SCREEN : NAME_SCREEN);     
+  startDatabase();
 }
 
 @Override
@@ -104,13 +101,13 @@ void parseSettings() {
 
 /**
  * Load (once) images that will be displayed as a background.
- * Images are to be in the form "width"x"height"_"animation index form 1"."suffix as given in settings"
+ * Images are to be in the form "width"x"height"_"animation index form 1"."suffix as given in settings".
  */
 void loadBackground() {
   // Create space to store the images.
   background_images = new PImage[settings.images_num];
   
-  // Create prefix of files that will be read
+  // Create prefix of files that will be read.
   String file = String.valueOf(settings.screen_width);
   file = file.concat("x");
   file = file.concat(String.valueOf(settings.screen_height));
@@ -119,6 +116,22 @@ void loadBackground() {
   for (int i = 1; i <= settings.images_num; i++) {
     background_images[i-1] = loadImage(file + "_" + i + settings.image_suffix);
   }
+}
+
+/**
+ * This function starts a database from the scratch.
+ */
+void startDatabase() {
+  // Content is dependent on whether the terminal is legal or not.
+  if (settings.illegal) { 
+    data.clear();
+    environment.setScreen(TEXT_SCREEN);
+    data.output(settings.getText("illegal_welcome")); 
+  } else { 
+    data.clear();
+    environment.setScreen(NAME_SCREEN);
+    data.output(settings.getText("username")); 
+  }   
 }
 
 

@@ -2,18 +2,19 @@
  * Keyboard is completelly responsible for the appereance and functionallity of the virtual keyboard acessible to user.
  */
 public class Keyboard {
-  private Vector<Button> buttons = new Vector();; ///< Holder for all the buttons that are actually used.
+  private Vector<Button> buttons = new Vector();
+  ; ///< Holder for all the buttons that are actually used.
   private int hover_button = -1; ///< ID of the button that has a mouse over it at the moment. -1 stands for none.
 
   // ASCII codes for some important positions
   private final char ALPHA_BEGIN = 65;
   private final char ALPHA_END = 91;
   private final char SPACE = '_';
-  
+
   // Dimensions, in the number of buttons, of the keyboard.
   private final int BOARD_WIDTH = 9;
   private final int BOARD_HEIGHT = 3; 
-  
+
   // Strings for some action buttons.
   private final String CONFIRM = "Potvrd";
   private final String ERASE = "Smaz";
@@ -22,7 +23,7 @@ public class Keyboard {
   private final String PREV = "<";
   private final String NEXT = ">";
   private final String LAST = ">>";
-  
+
   /**
    * Creates the keyboard itself - from this moment all the buttons are ready to go.
    */
@@ -37,14 +38,14 @@ public class Keyboard {
   void createButtons() {
     // Create buttons etter buttons.
     char caption = char(ALPHA_BEGIN);
-    
+
     // Build the buttons
     for (int y_counter = 0; y_counter < BOARD_HEIGHT; y_counter++) {
       for (int x_counter = 0; x_counter < BOARD_WIDTH; x_counter++) {
         // Change the last button for the space
         if (caption == ALPHA_END)
           caption = char(SPACE);
-          
+
         // Add a button with the character given by the caption variable and position in based on the loop.
         buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + y_counter*+dims.basic_key_size));
       }
@@ -91,7 +92,7 @@ public class Keyboard {
       }
     }
   }
-  
+
   /**
    * A reaction on a button press.
    */
@@ -99,10 +100,10 @@ public class Keyboard {
     // If there is no button under the mouse, do not mind.
     if (hover_button == -1)
       return;
-    
+
     // Obtain the caption of the current button.
     String button = buttons.get(hover_button).getCaption();
-    
+
     // Go through letter buttons and space.
     if (button.matches("\\p{Lu}"))
       data.addLetter(button.charAt(0));
@@ -111,47 +112,112 @@ public class Keyboard {
 
     // Action buttons
     else if (button.equals(CONFIRM)) {
-        if (!error.isEmpty()) {
-          error = "";
-          environment.setScreen(1);
-          data.setScreenData(); 
-        }
-        
-        else switch (environment.getScreen()) {
-          case 1:
-            data.username();  
-            break;
-            
-          case 2:
-            data.password();      
-            break;
-            
-          case 3:
-            data.search();  
-            break;
+      // Erase the previous error if there was any.
+      if (!error.isEmpty()) {
+        error = "";
+        startDatabase();
       }
-    } else if (button.equals(ERASE)) {
+
+      // Pass the current input to an appropriate handler.
+      else { 
+        final String input = new String(data.getInput());
+        switch (environment.getScreen()) {
+        case NAME_SCREEN:
+          confirmName(input);
+          break;
+  
+        case PASS_SCREEN:
+          confirmPass(input);     
+          break;
+  
+        case TEXT_SCREEN:
+          searchText(input);  
+          break;
+        }
+      }
+    } 
+    else if (button.equals(ERASE)) {
       data.eraseLast();
-    } else if (button.equals(KILL)) {
+    } 
+    else if (button.equals(KILL)) {
       data.eraseAll();
     }
-    
+
     // Font buttons
     else if (button.equals(settings.getFont(0)) || button.equals(settings.getFont(1)) || button.equals(settings.getFont(2)) || button.equals(settings.getFont(3))) {
       environment.setFont(button);
       data.reFormatOutput(); 
       data.first_output = max(0, min(data.first_output, data.output_stream.size() - dims.lines_count));
     }
-    
+
     // Scrollers
     else if (button.equals(FIRST)) {
       data.scrollFirst();
-    } else if (button.equals(PREV)) {
+    } 
+    else if (button.equals(PREV)) {
       data.scrollBackwards();
-    } else if (button.equals(NEXT)) {
+    } 
+    else if (button.equals(NEXT)) {
       data.scrollForward();
-    } else if (button.equals(LAST)) {
+    } 
+    else if (button.equals(LAST)) {
       data.scrollLast();
+    }
+  }
+
+  /**
+   * Called when the user presses confirm button while in the name screen.
+   */
+  private void confirmName(final String input) {
+    environment.setAccountName(input);
+    environment.setScreen(PASS_SCREEN);
+    data.clear();
+    data.output(settings.getText("password") + input);
+  }
+  
+  /**
+   * Called when the user confirms the typed in password.
+   * Control if the user has the access rights - currently take both DENIED and NOT and OK, but sth else should be put here.
+   */
+  private void confirmPass(final String input) {
+    environment.password = input;
+    String valid = http.findEntry("ACCOUNT_VALID");
+    if (valid.substring(0,6).contentEquals("DENIED") || valid.substring(0,2).contentEquals("OK") || valid.substring(0,3).contentEquals("NOT")) {
+      environment.setScreen(TEXT_SCREEN); 
+      data.output(settings.getText("welcome") + environment.getAccountName() + ".");
+      data.output(settings.getText("logoff"));
+    }
+    else {
+      environment.setScreen(NAME_SCREEN);
+      data.clear();
+      data.output(settings.getText("wrongpass") + input);   
+    } 
+  }
+  
+  /**
+   * Called when the user confirms the search of the input.
+   */
+  void searchText(final String input) {
+    if (input.equals("EXIT")) {
+      if (settings.illegal)
+        data.output(settings.getText("illegallogoff"));
+      else {
+        environment.setScreen(1);
+        data.clear();
+        data.output(settings.getText("logoffreset"));
+      }
+    }
+    else {
+      String result = http.findEntry(input);
+      if (result.substring(0,2).contentEquals("OK")) {
+        data.output(input + ": " + result.substring(3));
+      } else if (result.substring(0,6).contentEquals("DENIED")) {
+        data.output(input + ": " + settings.getText("denied"));
+      } else if (result.substring(0,6).contentEquals("NOT FOUND")) {
+        data.output(input + ": " + settings.getText("notfound"));
+      } else if (result.substring(0,6).contentEquals("CORRUPTED")) {
+        data.output(input + ": " + settings.getText("corrupted"));
+      }
     }
   }
 }
@@ -199,7 +265,7 @@ class Button {
     else {
       fill(settings.getColor("caption"));
     }
-    
+
     // Draw the caption with X in the middle of button, Y being moved down a half of the letter height (basically center) 
     textAlign(CENTER);
     text(caption, x_pos + width_/2, y_pos + (height_ + dims.caps_size)/2);
@@ -216,7 +282,7 @@ class Button {
     else 
       return false;
   }
-  
+
   /**
    * @return  caption of the button
    */

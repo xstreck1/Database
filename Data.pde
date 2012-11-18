@@ -2,7 +2,7 @@
  * Class that handles I/0 and text formatting.
  */
 class Data {
-  ArrayList output_stream; // List of strings, each corresponding to a single line of the output
+  ArrayList<String> output_stream; // List of strings, each corresponding to a single line of the output
   String input_stream; // The string containing the user-given text
   int first_output; // Ordinal number of the first line that is displayed
 
@@ -22,97 +22,14 @@ class Data {
     first_output = 0;
   }
   
-  /**
-   * Reset current data based on the screen you are in.
-   * Options correspond to username, password, interactive mode and error.
-   */
-  void setScreenData() {
-    switch (environment.getScreen()) {
-      case 1: // Username
-        clear();
-        output(settings.getText("username"));       
-        break;
-        
-      case 2: // Password
-        clear();
-        output(settings.getText("password") + environment.getAccountName());       
-        break;
-        
-      case 3: // Interface
-        clear();
-        if (settings.illegal)
-          output(settings.getText("welcome") + "???");
-        else {
-          output(settings.getText("welcome") + environment.getAccountName() + ".");
-          output(settings.getText("logoff") );
-        }       
-        break;
-        
-      case 4: // Error
-        clear();
-        output(error);
-        error = ""; // After error the user will be allowed to continue normally.      
-        break;
-    }
-  }
-
-  /**
-   * Called when the user confirms his typed username.
-   * Just moves to the password screen.
-   * TODO: Move to Keyboard.
-   */
-  void username() {
-    environment.setAccountName(input_stream);
-    environment.setScreen(2);
-    setScreenData(); 
+  final String getInput() {
+    return input_stream;
   }
   
-  /**
-   * Called when the user confirms the typed in password.
-   * Control if the user has the access rights - currently take both DENIED and NOT and OK, but sth else should be put here.
-   * TODO: Move to Keyboard.
-   */
-  void password() {
-    environment.password = input_stream;
-    String valid = http.findEntry("ACCOUNT_VALID");
-    if (valid.substring(0,6).contentEquals("DENIED") || valid.substring(0,2).contentEquals("OK") || valid.substring(0,3).contentEquals("NOT")) {
-      environment.setScreen(3);
-    }
-    else {
-      environment.setScreen(1);   
-    }
-    setScreenData(); 
+  final ArrayList<String> getOutput() {
+    return output_stream;
   }
-  
-  /**
-   * Called when the user confirms the search of the input.
-   * TODO: Move to Keyboard.
-   */
-  void search() {
-    if (input_stream.equals("EXIT")) {
-      if (settings.illegal)
-        output(settings.getText("illegallogoff"));
-      else {
-        environment.setScreen(1);
-        clear();
-        setScreenData();
-      }
-    }
-    else {
-      String result = http.findEntry(input_stream);
-      if (result.substring(0,2).contentEquals("OK")) {
-        output(input_stream + ": " + result.substring(3));
-      } else if (result.substring(0,6).contentEquals("DENIED")) {
-        output(input_stream + ": " + settings.getText("denied"));
-      } else if (result.substring(0,6).contentEquals("NOT FOUND")) {
-        output(input_stream + ": " + settings.getText("notfound"));
-      } else if (result.substring(0,6).contentEquals("CORRUPTED")) {
-        output(input_stream + ": " + settings.getText("corrupted"));
-      }
-      display();
-    }
-  }
-  
+    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Input stream manipulation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,7 +67,7 @@ class Data {
   }
   
   /**
-   *
+   * 
    */
   void addToOutput(String new_text) {
     if ((new_text.indexOf('\n') != -1) && (new_text.indexOf('\n') != new_text.length() - 1)) {
@@ -247,6 +164,8 @@ class Data {
         break;
         
         case 5:
+          
+          textAlign(LEFT);
           text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
           fill(settings.getColor("offline"));
           textAlign(CENTER);
