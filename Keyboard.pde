@@ -57,10 +57,9 @@ public class Keyboard {
     buttons.add(new Button(KILL, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 2*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));
 
     // Environment language buttons.
-    buttons.add(new Button(settings.getFont(0), dims.wide_key_size*0 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size));                                 
-    buttons.add(new Button(settings.getFont(1), dims.wide_key_size*1 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size));   
-    buttons.add(new Button(settings.getFont(2), dims.wide_key_size*2 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size));  
-    buttons.add(new Button(settings.getFont(3), dims.wide_key_size*3 + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size));
+    for (int i = 0; i < FONT_COUNT; i++) {
+      buttons.add(new Button(settings.getFont(i), dims.wide_key_size*i + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size, dims.text_size));                                 
+    }
 
     // Output scroll buttons.
     int scroll_button_x = dims.input_y + round(dims.basic_key_size*0.75);
@@ -227,37 +226,48 @@ public class Keyboard {
  */
 class Button {
   private int x_pos, y_pos, width_, height_; // Dimensions.n  boolean is_mouse_over = false; 
+  private int font_size;
   private String caption; // Caption of the button, also used as a key string.
 
   /**
    * Set all the data of the button.
    */
-  private void setValues(String o_caption, int o_x, int o_y, int o_width, int o_height) {
+  private void setValues(String o_caption, int o_x, int o_y, int o_width, int o_height, int o_font_size) {
     caption = o_caption;
     x_pos = o_x;
     y_pos = o_y;
     width_ = o_width;
     height_ = o_height;
+    font_size = o_font_size;
   }
-
+  
+  /**
+   * Constructor for buttons width specific height, width and font size.
+   */
+  Button(String o_caption, int o_x, int o_y, int o_width, int o_height, int o_font_size) {
+    setValues(o_caption, o_x, o_y, o_width, o_height, o_font_size);
+  }
+  
   /**
    * Constructor for buttons width specific height and width.
    */
   Button(String o_caption, int o_x, int o_y, int o_width, int o_height) {
-    setValues(o_caption, o_x, o_y, o_width, o_height);
+    setValues(o_caption, o_x, o_y, o_width, o_height, dims.caps_size);
   }
 
   /**
    * Constructor for the basic, square buttons.
    */
   Button (String o_caption, int o_x, int o_y) {
-    setValues(o_caption, o_x, o_y, dims.basic_key_size, dims.basic_key_size);
+    setValues(o_caption, o_x, o_y, dims.basic_key_size, dims.basic_key_size, dims.caps_size);
   }
 
   /**
    * Draws the button on the screen.
    */
-  public void display(final boolean is_mouse_over) {    
+  public void display(final boolean is_mouse_over) {
+    textSize(font_size);
+    
     // Choose the highlight color, if requested.
     if (is_mouse_over) {
       fill(settings.getColor("highlight"));
@@ -268,7 +278,7 @@ class Button {
 
     // Draw the caption with X in the middle of button, Y being moved down a half of the letter height (basically center) 
     textAlign(CENTER);
-    text(caption, x_pos + width_/2, y_pos + (height_ + dims.caps_size)/2);
+    text(caption, x_pos + width_/2, y_pos + (height_ + font_size)/2);
   }
 
   /**
