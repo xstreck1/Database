@@ -164,7 +164,7 @@ class Data {
     // Fill the text fileds with grey overlap.
     noStroke();
     fill(settings.getColor("field"));
-    rect(dims.input_x, dims.input_y, dims.keyboard_width, dims.text_size); 
+    rect(dims.input_x, dims.input_y, dims.keyboard_width, round(dims.text_size*1.25)); 
     rect(dims.input_x, dims.output_y, dims.output_width, dims.output_height); 
     textAlign(LEFT);    
         
@@ -180,7 +180,7 @@ class Data {
       fill(settings.getColor("text"));
       
       // Fill the input bar.
-      text(input_stream, dims.input_x + dims.text_indent, dims.input_y + dims.text_size*0.8);
+      text(input_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.text_size*0.90));
       
       // From the output string take those substrings that are currently visible.
       String [] substrings = output_stream.split("\n");
