@@ -6,6 +6,7 @@ class Data {
   private String output_stream; ///< List of strings, each corresponding to a single line of the output.
   private String input_stream; ///< The string containing the user-given text.
   private int first_output; ///< Ordinal number of the first line that is displayed
+  private int lines_count; ///< Vector holds positions of newline symbols in the output_stream
 
   /**
    * Constructor just assigns empty data to the objects.
@@ -21,7 +22,7 @@ class Data {
     output_stream = "";
     output_data = "";
     input_stream = "";
-    first_output = 0;
+    first_output = lines_count = 0;
   }
   
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +61,7 @@ class Data {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
   private String getSublines(String new_line) {
+    lines_count++;
     if (textWidth(new_line) <= dims.data_width) {
       return (new_line + "\n");
     }
@@ -94,10 +96,13 @@ class Data {
   void addLine(String new_text) {
     output_data += new_text + "\n";
     output_stream += reFormat(new_text);
+    scrollLast();
   }
   
   void rebuildOutput() {
+    lines_count = 0;
     output_stream = reFormat(output_data);
+    scrollLast();
     // print("Data: " + output_data);
     // print("Stream: " + output_stream);
   }
@@ -120,14 +125,14 @@ class Data {
    * Display the output from the next line.
    */  
   void scrollForward() {
-    // first_output = max (min (first_output + 1, (output_stream.size() - dims.lines_count)), 0); 
+    first_output = max (0, min (first_output + 1, lines_count - dims.lines_count)); 
   }
   
   /**
    * Display the output from the first line such that the last line is still visible.
    */    
   void scrollLast() {
-    // first_output = max(0, output_stream.size() - dims.lines_count);
+    first_output = max(0, lines_count - dims.lines_count);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,7 +158,10 @@ class Data {
       fill(settings.getColor("text"));
       
       text(input_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.basic_key_size*0.25) + dims.text_size*0.8);
-      text(output_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.basic_key_size*0.75) + dims.text_size);
+      
+      String [] substrings = output_stream.split("\n");
+      for (int i = 0; (i < dims.lines_count) && (i + first_output < substrings.length); i++)
+        text(substrings[i + first_output], dims.input_x + dims.text_indent, dims.input_y + round(dims.basic_key_size*0.75) + dims.text_indent + dims.text_size*(i+1));
     }
   }
   

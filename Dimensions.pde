@@ -53,7 +53,7 @@ public class Dimensions {
     output_height  = basic_key_size*4;
     data_width     = output_width - 2*text_indent;
     data_height    = output_height - 2*text_indent;    
-    lines_count    = floor(((float) data_width)  / text_size); // This is tweaked a bit to make sure no overlap occurs in the bottom.
+    lines_count    = data_height  / text_size; // This is tweaked a bit to make sure no overlap occurs in the bottom.
   }
 }
 
