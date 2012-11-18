@@ -29,17 +29,17 @@
 	<COLOR name="offline" r="80" g="160" b="190" a="255" /> <!-- color in which the OFF text is displayed. --> 
 	<COLOR name="error" r="150" g="0" b="0" a="255" /> <!-- program error info text (not part of the game) --> 
 	<!-- strings are expected in the ASCII charset -->	
-	<STRING name="emptyinput" text="Vstupni pole je prazdne. Ignoruji." />
-	<STRING name="username" text="Zadejte uzivatelske jmeno." />
-	<STRING name="password" text="Zadejte heslo k uctu: " />
-	<STRING name="wronglogin" text="Neplatne uzivatelske jmeno nebo heslo." />
-	<STRING name="welcome" text="Vitejte uzivateli " />
-	<STRING name="illegal_welcome" text="Vitejte uzivateli UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" />
-	<STRING name="logoff" text="Pro odhlaseni zadejte EXIT a potvrdte." />
-	<STRING name="outofbounds" text="Prekrocena delka vstupniho pole." />
-	<STRING name="denied" text="K zobrazeni tohoto hesla nemate dostatecne pravomoce." />	
-	<STRING name="notfound" text="Heslo nebylo nalezeno v databazi." />
-	<STRING name="corrupted" text="Heslo je v tuto chvili nedostupne." />
-	<STRING name="logoffreset" text="Uzivatel odhlasen. Zadejte uzivatelske jmeno." />
-	<STRING name="illegal_logoff" text="CHYBA ODPOJENI. NEOPRAVNENE UZIVANI TERMINALU JE TRESTNE!"  />
+	<STRING name="emptyinput" text="Vstupni pole je prazdne. Ignoruji." /> <!-- empty input field message -->
+	<STRING name="username" text="Zadejte uzivatelske jmeno." /> <!-- imput username request - for the first time or after error -->
+	<STRING name="password" text="Zadejte heslo k uctu %1$s." /> <!-- imput password request - %1$s is formatted into username -->
+	<STRING name="wronglogin" text="Neplatne uzivatelske jmeno nebo heslo." /> <!-- login failed -->
+	<STRING name="welcome" text="Vitejte uzivateli %1$s." /> <!-- login succeeded - %1$s is formatted into username -->
+	<STRING name="illegal_welcome" text="Vitejte uzivateli UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" /> <!-- login message on the illegal terminal -->
+	<STRING name="prompt" text="Pro odhlaseni zadejte EXIT a potvrdte. Pro vyhledavani zadejte heslo a potvrdte." /> <!-- usage information for the user -->
+	<STRING name="outofbounds" text="Prekrocena delka vstupniho pole." /> <!-- displayed when the input field is exceeded -->
+	<STRING name="denied" text="K zobrazeni tohoto hesla nemate dostatecne pravomoce." /> <!-- on DENIED response-->	
+	<STRING name="notfound" text="Heslo nebylo nalezeno v databazi." /> <!-- on NOT FOUND response-->
+	<STRING name="corrupted" text="Heslo je v tuto chvili nedostupne." /> <!-- on CORRUPTED response-->
+	<STRING name="logoffreset" text="Uzivatel odhlasen. Zadejte uzivatelske jmeno." /> <!-- displayed after the exit command -->
+	<STRING name="illegal_logoff" text="CHYBA ODPOJENI. NEOPRAVNENE UZIVANI TERMINALU JE TRESTNE!"  /> <!-- displayed after the exit command if typed on the illegal terminal -->
 </DATABASE>

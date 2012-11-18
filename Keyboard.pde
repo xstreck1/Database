@@ -135,24 +135,22 @@ public class Keyboard {
       else { 
         final String input = data.getInput();
         switch (environment.getScreen()) {
-          case NAME_SCREEN:
-            confirmName(input);
-            break;
-  
-          case PASS_SCREEN:
-            confirmPass(input);     
-            break;
-  
-          case TEXT_SCREEN:
-            searchText(input);  
-            break;
+        case NAME_SCREEN:
+          confirmName(input);
+          break;
+
+        case PASS_SCREEN:
+          confirmPass(input);     
+          break;
+
+        case TEXT_SCREEN:
+          searchText(input);  
+          break;
         }
       }
-    } 
-    else if (button.equals(ERASE)) {
+    } else if (button.equals(ERASE)) {
       data.eraseLast();
-    } 
-    else if (button.equals(KILL)) {
+    } else if (button.equals(KILL)) {
       data.eraseAll();
     }
 
@@ -185,7 +183,11 @@ public class Keyboard {
     environment.setAccountName(input);
     environment.setScreen(PASS_SCREEN);
     data.clear();
-    data.addLine(settings.getText("password") + input);
+    String formatted = String.format(settings.getText("password"), input);
+    if (formatted != null)
+      data.addLine(formatted);
+    else
+      error = "Unable to format " + formatted + " with argument " + input + ".";
   }
 
   /**
@@ -196,14 +198,20 @@ public class Keyboard {
     environment.password = input;
     data.clear();
     String valid = http.findEntry("ACCOUNT_VALID");
+    
     if (valid.substring(0, 6).contentEquals("DENIED") || valid.substring(0, 2).contentEquals("OK") || valid.substring(0, 3).contentEquals("NOT")) {
       environment.setScreen(TEXT_SCREEN);
-      data.addLine(settings.getText("welcome") + environment.getAccountName() + ".");
-      data.addLine(settings.getText("logoff"));
+      // Get user nume and display prompty
+      String formatted = String.format(settings.getText("welcome"), environment.getAccountName());
+      if (formatted != null)
+        data.addLine(formatted);
+      else
+        error = "Unable to format " + formatted + " with argument " + input + ".";
+      data.addLine(settings.getText("prompt"));
     }
     else {
       environment.setScreen(NAME_SCREEN);
-      data.addLine(settings.getText("wronglogin") + input);
+      data.addLine(settings.getText("wronglogin"));
     }
   }
 
