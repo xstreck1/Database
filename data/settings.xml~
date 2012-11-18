@@ -29,19 +29,17 @@
 	<COLOR name="offline" r="80" g="160" b="190" a="255" /> <!-- color in which the OFF text is displayed. --> 
 	<COLOR name="error" r="150" g="0" b="0" a="255" /> <!-- program error info text (not part of the game) --> 
 	<!-- strings are expected in the ASCII charset -->	
+	<STRING name="emptyinput" text="Vstupni pole je prazdne. Ignoruji." />
 	<STRING name="username" text="Zadejte uzivatelske jmeno." />
-	<STRING name="illegal_welcome" text="Vitejte uzivateli UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" />
 	<STRING name="password" text="Zadejte heslo k uctu: " />
-	<STRING name="password" text="Zadejte heslo k uctu: " />
-	<STRING name="wrongpass" text="Neplatne uzivatelske heslo." />
 	<STRING name="wronglogin" text="Neplatne uzivatelske jmeno nebo heslo." />
 	<STRING name="welcome" text="Vitejte uzivateli " />
+	<STRING name="illegal_welcome" text="Vitejte uzivateli UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" />
 	<STRING name="logoff" text="Pro odhlaseni zadejte EXIT a potvrdte." />
-	<STRING name="noname" text="Zadane uzivatelske jmeno neexistuje." />
 	<STRING name="outofbounds" text="Prekrocena delka vstupniho pole." />
 	<STRING name="denied" text="K zobrazeni tohoto hesla nemate dostatecne pravomoce." />	
 	<STRING name="notfound" text="Heslo nebylo nalezeno v databazi." />
 	<STRING name="corrupted" text="Heslo je v tuto chvili nedostupne." />
-	<STRING name="logoffreset" text="Logoff. Zadejte uzivatelske jmeno." />
+	<STRING name="logoffreset" text="Uzivatel odhlasen. Zadejte uzivatelske jmeno." />
 	<STRING name="illegal_logoff" text="CHYBA ODPOJENI. NEOPRAVNENE UZIVANI TERMINALU JE TRESTNE!"  />
 </DATABASE>

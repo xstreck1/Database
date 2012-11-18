@@ -9,7 +9,7 @@ public class Keyboard {
   // ASCII codes for some important positions
   private final char ALPHA_BEGIN = 65;
   private final char ALPHA_END = 91;
-  private final char SPACE = '_';
+  private final char SPACE = '_'; // In the keyboard space is replaced with _ for clarity.
 
   // Dimensions, in the number of buttons, of the keyboard.
   private final int BOARD_WIDTH = 9;
@@ -28,8 +28,9 @@ public class Keyboard {
    * Creates the keyboard itself - from this moment all the buttons are ready to go.
    */
   Keyboard() {
-    buttons.clear();
+    buttons = new Vector();
     createButtons();
+    hover_button = -1;
   }
 
   /**
@@ -62,11 +63,10 @@ public class Keyboard {
     }
 
     // Output scroll buttons.
-    int scroll_button_x = dims.input_y + round(dims.basic_key_size*0.75);
-    buttons.add(new Button(FIRST, 11*dims.basic_key_size + dims.border_x, scroll_button_x + dims.basic_key_size*0, dims.basic_key_size, dims.basic_key_size));
-    buttons.add(new Button(PREV, 11*dims.basic_key_size + dims.border_x, scroll_button_x + dims.basic_key_size*1, dims.basic_key_size, dims.basic_key_size));
-    buttons.add(new Button(NEXT, 11*dims.basic_key_size + dims.border_x, scroll_button_x + dims.basic_key_size*2, dims.basic_key_size, dims.basic_key_size));
-    buttons.add(new Button(LAST, 11*dims.basic_key_size + dims.border_x, scroll_button_x + dims.basic_key_size*3, dims.basic_key_size, dims.basic_key_size));
+    buttons.add(new Button(FIRST, 11*dims.basic_key_size + dims.border_x, dims.output_y + dims.basic_key_size*0, dims.basic_key_size, dims.basic_key_size));
+    buttons.add(new Button(PREV, 11*dims.basic_key_size + dims.border_x, dims.output_y + dims.basic_key_size*1, dims.basic_key_size, dims.basic_key_size));
+    buttons.add(new Button(NEXT, 11*dims.basic_key_size + dims.border_x, dims.output_y + dims.basic_key_size*2, dims.basic_key_size, dims.basic_key_size));
+    buttons.add(new Button(LAST, 11*dims.basic_key_size + dims.border_x, dims.output_y + dims.basic_key_size*3, dims.basic_key_size, dims.basic_key_size));
   }  
 
   /**
@@ -203,7 +203,7 @@ public class Keyboard {
     }
     else {
       environment.setScreen(NAME_SCREEN);
-      data.addLine(settings.getText("wrongpass") + input);
+      data.addLine(settings.getText("wronglogin") + input);
     }
   }
 

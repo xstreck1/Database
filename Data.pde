@@ -164,8 +164,8 @@ class Data {
     // Fill the text fileds with grey overlap.
     noStroke();
     fill(settings.getColor("field"));
-    rect(dims.input_x, dims.input_y + round(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
-    rect(dims.input_x, dims.input_y + round(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
+    rect(dims.input_x, dims.input_y, dims.keyboard_width, dims.text_size); 
+    rect(dims.input_x, dims.output_y, dims.output_width, dims.output_height); 
     textAlign(LEFT);    
         
     // Display error output if there is any.
@@ -173,19 +173,19 @@ class Data {
       textFont(basic_font, dims.text_size); // Set readable font.
       fill(settings.getColor("error"));
       // Fill the output filed with the error.
-      text(error, dims.input_x + dims.text_indent, int(dims.basic_key_size*0.75) + dims.input_y + settings.text_size);
+      text(error, dims.input_x + dims.text_indent, dims.input_y + settings.text_size);
     } 
     else {
       textFont(environment.getFont(), dims.text_size);
       fill(settings.getColor("text"));
       
       // Fill the input bar.
-      text(input_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.basic_key_size*0.25) + dims.text_size*0.8);
+      text(input_stream, dims.input_x + dims.text_indent, dims.input_y + dims.text_size*0.8);
       
       // From the output string take those substrings that are currently visible.
       String [] substrings = output_stream.split("\n");
       for (int i = 0; (i < dims.lines_count) && (i + first_output < substrings.length); i++)
-        text(substrings[i + first_output], dims.input_x + dims.text_indent, dims.input_y + round(dims.basic_key_size*0.75) + dims.text_indent + dims.text_size*(i+1));
+        text(substrings[i + first_output], dims.input_x + dims.text_indent, dims.output_y + dims.text_size*(i+1) + dims.text_indent);
     }
   }
   

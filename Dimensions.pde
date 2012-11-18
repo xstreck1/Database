@@ -12,7 +12,7 @@ public class Dimensions {
   int basic_key_size; ///< Key size.
   int caps_size; ///< GUI text.
   int text_size; ///< I/O text.
-  final int text_indent = 3;  ///< Space between window and text.
+  final int text_indent = 5;  ///< Space between window and text.
 
   // Object placement variables - just for simplicity in reccurent uses - THESE ARE COMPUTED.
   int keyboard_x; ///< Leftmost corner x position of the virtual keyboard.
@@ -21,6 +21,8 @@ public class Dimensions {
   int wide_key_size; ///< Size of the bigger key (e.g. "erase").
   int input_x; ///< Leftmost corner x position of the input filed.
   int input_y; ///< Leftmost corner y position of the input filed.
+  int output_x; ///< Leftmost corner x position of the output filed.
+  int output_y; ///< Leftmost corner y position of the output filed.  
   int output_width; ///< Width of the output field.
   int output_height; ///< Height of the output field.
   int data_width; ///< Width of the output text.
@@ -48,12 +50,14 @@ public class Dimensions {
     keyboard_width = basic_key_size*12;
     wide_key_size  = basic_key_size*3;
     input_x        = border_x;
-    input_y        = basic_key_size + border_y;
+    input_y        = round(basic_key_size*1.25) + border_y;
+    output_x       = border_x;
+    output_y       = round(basic_key_size*1.75) + border_y;
     output_width   = keyboard_width - basic_key_size;
     output_height  = basic_key_size*4;
     data_width     = output_width - 2*text_indent;
-    data_height    = output_height - 2*text_indent;    
-    lines_count    = data_height  / text_size; // This is tweaked a bit to make sure no overlap occurs in the bottom.
+    data_height    = output_height - 2*text_indent;;    
+    lines_count    = data_height / text_size; // This is tweaked a bit to make sure no overlap occurs in the bottom.
   }
 }
 
