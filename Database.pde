@@ -126,11 +126,11 @@ void startDatabase() {
   if (settings.illegal) { 
     data.clear();
     environment.setScreen(TEXT_SCREEN);
-    data.output(settings.getText("illegal_welcome")); 
+    data.addLine(settings.getText("illegal_welcome")); 
   } else { 
     data.clear();
     environment.setScreen(NAME_SCREEN);
-    data.output(settings.getText("username")); 
+    data.addLine(settings.getText("username")); 
   }   
 }
 

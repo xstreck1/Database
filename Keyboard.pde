@@ -145,6 +145,8 @@ public class Keyboard {
     // Font buttons
     else if (button.equals(settings.getFont(0)) || button.equals(settings.getFont(1)) || button.equals(settings.getFont(2)) || button.equals(settings.getFont(3))) {
       environment.setFont(button);
+      data.rebuildOutput();
+      data.display();
     }
 
     // Scrollers
@@ -169,7 +171,7 @@ public class Keyboard {
     environment.setAccountName(input);
     environment.setScreen(PASS_SCREEN);
     data.clear();
-    data.output(settings.getText("password") + input);
+    data.addLine(settings.getText("password") + input);
   }
   
   /**
@@ -181,13 +183,13 @@ public class Keyboard {
     String valid = http.findEntry("ACCOUNT_VALID");
     if (valid.substring(0,6).contentEquals("DENIED") || valid.substring(0,2).contentEquals("OK") || valid.substring(0,3).contentEquals("NOT")) {
       environment.setScreen(TEXT_SCREEN); 
-      data.output(settings.getText("welcome") + environment.getAccountName() + ".");
-      data.output(settings.getText("logoff"));
+      data.addLine(settings.getText("welcome") + environment.getAccountName() + ".");
+      data.addLine(settings.getText("logoff"));
     }
     else {
       environment.setScreen(NAME_SCREEN);
       data.clear();
-      data.output(settings.getText("wrongpass") + input);   
+      data.addLine(settings.getText("wrongpass") + input);   
     } 
   }
   
@@ -197,23 +199,23 @@ public class Keyboard {
   void searchText(final String input) {
     if (input.equals("EXIT")) {
       if (settings.illegal)
-        data.output(settings.getText("illegallogoff"));
+        data.addLine(settings.getText("illegallogoff"));
       else {
         environment.setScreen(1);
         data.clear();
-        data.output(settings.getText("logoffreset"));
+        data.addLine(settings.getText("logoffreset"));
       }
     }
     else {
       String result = http.findEntry(input);
       if (result.substring(0,2).contentEquals("OK")) {
-        data.output(input + ": " + result.substring(3));
+        data.addLine(input + ": " + result.substring(3));
       } else if (result.substring(0,6).contentEquals("DENIED")) {
-        data.output(input + ": " + settings.getText("denied"));
-      } else if (result.substring(0,6).contentEquals("NOT FOUND")) {
-        data.output(input + ": " + settings.getText("notfound"));
+        data.addLine(input + ": " + settings.getText("denied"));
+      } else if(result.substring(0,6).contentEquals("NOT FOUND")) {
+        data.addLine(input + ": " + settings.getText("notfound"));
       } else if (result.substring(0,6).contentEquals("CORRUPTED")) {
-        data.output(input + ": " + settings.getText("corrupted"));
+        data.addLine(input + ": " + settings.getText("corrupted"));
       }
     }
   }

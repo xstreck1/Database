@@ -18,8 +18,8 @@ class Data {
    * Assigns new objects to the employed references.
    */
   void clear() {
-    output_data = "";
     output_stream = "";
+    output_data = "";
     input_stream = "";
     first_output = 0;
   }
@@ -36,7 +36,7 @@ class Data {
     // Check if the text can still be fitted in the field - if not, erase the symbol and prompt the  user.
     if (textWidth(input_stream) > (dims.keyboard_width-2*dims.text_indent)) {
       eraseLast();
-      output(settings.getText("outofbounds"));
+      addLine(settings.getText("outofbounds"));
     }
   }
   
@@ -59,39 +59,47 @@ class Data {
 // Output stream manipulation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
-  private String addSubline(String formatted_text, String new_line) {
+  private String getSublines(String new_line) {
     if (textWidth(new_line) <= dims.data_width) {
-      System.out.println(str(2) + formatted_text);
-      return (formatted_text + new_line + "\n");
+      return (new_line + "\n");
     }
     else {
-      for (int symbol = dims.data_width / dims.text_size; symbol < new_line.length(); symbol++) {
+      for (int symbol = 0; symbol < new_line.length(); symbol++) {
         if (textWidth(new_line.substring(0, symbol)) > dims.data_width) {
           int space_pos = new_line.substring(0, symbol).lastIndexOf(' ');
-          return (new_line.substring(0, space_pos-1) + "\n" + addSubline(formatted_text, new_line.substring(0, space_pos+1)));
+          return (new_line.substring(0, space_pos) + "\n" + getSublines(new_line.substring(space_pos+1)));
         }
       }  
     }
-    return "";
+    return null; // Errornous state, will not occur.
   }
   
   String reFormat(String input_text) {
-     String [] lines = input_text.split("\n");
-     String formatted_text = "";
+    textFont(environment.getFont());
+    textSize(dims.text_size);  
+    
+    String [] lines = input_text.split("\n");
+    String formatted_text = "";
      
-     for (int i = 0; i < lines.length; i++) {
-       formatted_text += addSubline(formatted_text, lines[i]);
-     }
-     
-     return formatted_text;
+    for (int i = 0; i < lines.length; i++) {
+      formatted_text += getSublines(lines[i]);
+    }
+    
+    return formatted_text;
   }
   
   /**
    * Reformats the string and places it into the ouput container
    */
-  void output(String new_text) {
-     output_data += new_text;
-     output_stream += reFormat(new_text);
+  void addLine(String new_text) {
+    output_data += new_text + "\n";
+    output_stream += reFormat(new_text);
+  }
+  
+  void rebuildOutput() {
+    output_stream = reFormat(output_data);
+    // print("Data: " + output_data);
+    // print("Stream: " + output_stream);
   }
   
   /**
