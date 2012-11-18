@@ -1,3 +1,6 @@
+/* @pjs preload="1024x768_1.png, 800x600_1.png, 800x600_10.png, 800x600_2.png, 800x600_3.png, 800x600_4.png, 800x600_5.png, 800x600_6.png, 800x600_7.png, 800x600_8.png, 800x600_9.png, _800x600_1.png, cursor.png"; 
+ */
+
 // Resources locations.
 final String SETTINGS_FILE = "settings.xml";
 final String CURSOR_FILE = "cursor.png";
@@ -52,10 +55,6 @@ void setup() {
 
 @Override
 void draw() { 
-  // Display error if there is some.
-  if (!error.isEmpty())
-    environment.setScreen(4);  
-    
   // Decide current BG image number.
   int img_num = ((draw_count % (settings.delay * settings.images_num)) / settings.delay);
   
@@ -97,10 +96,7 @@ void parseSettings() {
   parser.parse(SETTINGS_FILE);
   
   // Control if everything that has to be set is set.
-  settings.control();
-  
-  // Log out progress.
-  System.out.println("Parsing finished correctly."); 
+  settings.control(); 
 }
 
 /**
