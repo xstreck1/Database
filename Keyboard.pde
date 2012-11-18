@@ -58,7 +58,7 @@ public class Keyboard {
 
     // Environment language buttons.
     for (int i = 0; i < FONT_COUNT; i++) {
-      buttons.add(new Button(settings.getFont(i), dims.wide_key_size*i + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size, dims.text_size));                                 
+      buttons.add(new Button(settings.getFont(i), dims.wide_key_size*i + dims.border_x, dims.border_y, dims.wide_key_size, dims.basic_key_size, dims.text_size));
     }
 
     // Output scroll buttons.
@@ -93,7 +93,7 @@ public class Keyboard {
   }
 
   /**
-   * A reaction on a button press.
+   * A reaction on a button press. All the logic of virtual buttons is governed here!
    */
   void mousePress() {
     // If there is no button under the mouse, do not mind.
@@ -117,21 +117,31 @@ public class Keyboard {
         startDatabase();
       }
 
+      else if (data.getInput().equals("EXIT")) {
+        if (settings.illegal)
+          data.addLine(settings.getText("illegallogoff"));
+        else {
+          environment.setScreen(1);
+          data.clear();
+          data.addLine(settings.getText("logoffreset"));
+        }
+      }
+
       // Pass the current input to an appropriate handler.
       else { 
-        final String input = new String(data.getInput());
+        final String input = data.getInput();
         switch (environment.getScreen()) {
-        case NAME_SCREEN:
-          confirmName(input);
-          break;
+          case NAME_SCREEN:
+            confirmName(input);
+            break;
   
-        case PASS_SCREEN:
-          confirmPass(input);     
-          break;
+          case PASS_SCREEN:
+            confirmPass(input);     
+            break;
   
-        case TEXT_SCREEN:
-          searchText(input);  
-          break;
+          case TEXT_SCREEN:
+            searchText(input);  
+            break;
         }
       }
     } 
@@ -173,50 +183,42 @@ public class Keyboard {
     data.clear();
     data.addLine(settings.getText("password") + input);
   }
-  
+
   /**
    * Called when the user confirms the typed in password.
    * Control if the user has the access rights - currently take both DENIED and NOT and OK, but sth else should be put here.
    */
   private void confirmPass(final String input) {
     environment.password = input;
+    data.clear();
     String valid = http.findEntry("ACCOUNT_VALID");
-    if (valid.substring(0,6).contentEquals("DENIED") || valid.substring(0,2).contentEquals("OK") || valid.substring(0,3).contentEquals("NOT")) {
-      environment.setScreen(TEXT_SCREEN); 
+    if (valid.substring(0, 6).contentEquals("DENIED") || valid.substring(0, 2).contentEquals("OK") || valid.substring(0, 3).contentEquals("NOT")) {
+      environment.setScreen(TEXT_SCREEN);
       data.addLine(settings.getText("welcome") + environment.getAccountName() + ".");
       data.addLine(settings.getText("logoff"));
     }
     else {
       environment.setScreen(NAME_SCREEN);
-      data.clear();
-      data.addLine(settings.getText("wrongpass") + input);   
-    } 
-  }
-  
-  /**
-   * Called when the user confirms the search of the input.
-   */
-  void searchText(final String input) {
-    if (input.equals("EXIT")) {
-      if (settings.illegal)
-        data.addLine(settings.getText("illegallogoff"));
-      else {
-        environment.setScreen(1);
-        data.clear();
-        data.addLine(settings.getText("logoffreset"));
-      }
+      data.addLine(settings.getText("wrongpass") + input);
     }
-    else {
-      String result = http.findEntry(input);
-      if (result.substring(0,2).contentEquals("OK")) {
-        data.addLine(input + ": " + result.substring(3));
-      } else if (result.substring(0,6).contentEquals("DENIED")) {
-        data.addLine(input + ": " + settings.getText("denied"));
-      } else if(result.substring(0,6).contentEquals("NOT FOUND")) {
-        data.addLine(input + ": " + settings.getText("notfound"));
-      } else if (result.substring(0,6).contentEquals("CORRUPTED")) {
-        data.addLine(input + ": " + settings.getText("corrupted"));
-      }
+  }
+
+  /**
+   * Called when the user confirms the search of the input. The input keyed data are requested from the server and then stored in the output string.
+   */
+  private void searchText(final String input) {
+    String result = http.findEntry(input);
+    if (result.substring(0, 2).contentEquals("OK")) {
+      data.addLine(input + ": " + result.substring(3));
+    } 
+    else if (result.substring(0, 6).contentEquals("DENIED")) {
+      data.addLine(input + ": " + settings.getText("denied"));
+    } 
+    else if (result.substring(0, 6).contentEquals("NOT FOUND")) {
+      data.addLine(input + ": " + settings.getText("notfound"));
+    } 
+    else if (result.substring(0, 6).contentEquals("CORRUPTED")) {
+      data.addLine(input + ": " + settings.getText("corrupted"));
     }
   }
 }
@@ -240,14 +242,14 @@ class Button {
     height_ = o_height;
     font_size = o_font_size;
   }
-  
+
   /**
    * Constructor for buttons width specific height, width and font size.
    */
   Button(String o_caption, int o_x, int o_y, int o_width, int o_height, int o_font_size) {
     setValues(o_caption, o_x, o_y, o_width, o_height, o_font_size);
   }
-  
+
   /**
    * Constructor for buttons width specific height and width.
    */
@@ -267,7 +269,7 @@ class Button {
    */
   public void display(final boolean is_mouse_over) {
     textSize(font_size);
-    
+
     // Choose the highlight color, if requested.
     if (is_mouse_over) {
       fill(settings.getColor("highlight"));

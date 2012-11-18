@@ -18,12 +18,12 @@ int draw_count = 0;
 
 // Singular objects that will be used during the computation.
 // ALL THESE ARE SHARED PROJECT-WISE!
-Keyboard    keyboard;
-Environment environment;
-Data        data;
-HTTPHelper  http;
-Settings    settings;
-Dimensions  dims;
+Keyboard    keyboard; ///< Virtual keyboard object.
+Environment environment; ///< Global values and current setting.
+Data        data; ///< Input / output content.
+HTTPHelper  http; ///< Class for conntecting to the server.
+Settings    settings; ///< Settings read from the XML file.
+Dimensions  dims; ///< Numerical layout values.
 
 // A string that is filled if something goes wrong - basically non-intrusive version of an exception. Mainly would be raised if a parsed tag in the settings.xml is unknown.
 String error = "";
@@ -54,7 +54,9 @@ void setup() {
 }
 
 @Override
-void draw() { 
+void draw() {
+  draw_count++;
+  
   // Decide current BG image number.
   int img_num = ((draw_count % (settings.delay * settings.images_num)) / settings.delay);
   
@@ -69,9 +71,9 @@ void draw() {
   data.display();
   
   // Within a loop, check status from time to time (100 == 2 secs).
-  if ((draw_count++ % 100) == 0) {
+  // if ((draw_count++ % 100) == 0) {
     // http.check();
-  }
+  //}
 }
 
 @Override
