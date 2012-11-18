@@ -30,7 +30,7 @@
 	<COLOR name="error" r="150" g="0" b="0" a="255" /> <!-- program error info text (not part of the game) --> 
 	<!-- strings are expected in the ASCII charset -->	
 	<STRING name="username" text="Zadejte uzivatelske jmeno." />
-	<STRING na_me="illegal_welcome" text="Vitejte uzivateli UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" />
+	<STRING name="illegal_welcome" text="Vitejte uzivateli UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" />
 	<STRING name="password" text="Zadejte heslo k uctu: " />
 	<STRING name="password" text="Zadejte heslo k uctu: " />
 	<STRING name="wrongpass" text="Neplatne uzivatelske heslo." />

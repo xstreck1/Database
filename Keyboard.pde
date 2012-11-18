@@ -145,8 +145,6 @@ public class Keyboard {
     // Font buttons
     else if (button.equals(settings.getFont(0)) || button.equals(settings.getFont(1)) || button.equals(settings.getFont(2)) || button.equals(settings.getFont(3))) {
       environment.setFont(button);
-      data.reFormatOutput(); 
-      data.first_output = max(0, min(data.first_output, data.output_stream.size() - dims.lines_count));
     }
 
     // Scrollers

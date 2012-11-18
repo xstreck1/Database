@@ -2,50 +2,55 @@
  * Class that handles I/0 and text formatting.
  */
 class Data {
-  ArrayList<String> output_stream; // List of strings, each corresponding to a single line of the output
-  String input_stream; // The string containing the user-given text
-  int first_output; // Ordinal number of the first line that is displayed
+  private String output_data; ///< Original string previous to being reformed.
+  private String output_stream; ///< List of strings, each corresponding to a single line of the output.
+  private String input_stream; ///< The string containing the user-given text.
+  private int first_output; ///< Ordinal number of the first line that is displayed
 
   /**
-   * Constructor just clears objects to the references
+   * Constructor just assigns empty data to the objects.
    */
   Data() {
     clear();
   }
   
   /**
-   * Assigns new objects to the employed references
+   * Assigns new objects to the employed references.
    */
   void clear() {
-    output_stream = new ArrayList();
+    output_data = "";
+    output_stream = "";
     input_stream = "";
     first_output = 0;
   }
   
-  final String getInput() {
-    return input_stream;
-  }
-  
-  final ArrayList<String> getOutput() {
-    return output_stream;
-  }
-    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Input stream manipulation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /**
+   * Adds a letter to the input text field.
+   */
   void addLetter(char letter) {
-    input_stream = input_stream.concat(str(letter));
+    input_stream = input_stream + str(letter);
+    
+    // Check if the text can still be fitted in the field - if not, erase the symbol and prompt the  user.
     if (textWidth(input_stream) > (dims.keyboard_width-2*dims.text_indent)) {
       eraseLast();
       output(settings.getText("outofbounds"));
     }
   }
   
+  /**
+   * Erases the single last symbol from the input stream.
+   */
   void eraseLast() {
     if (input_stream.length() > 0)
-      input_stream = input_stream.substring(0,input_stream.length()-1);
+      input_stream = input_stream.substring(0, input_stream.length() - 1);
   }
   
+  /**
+   * Erases all the symbols in the input stream.
+   */
   void eraseAll() {
     input_stream = new String();
   }
@@ -54,125 +59,101 @@ class Data {
 // Output stream manipulation
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
+  private String addSubline(String formatted_text, String new_line) {
+    if (textWidth(new_line) <= dims.data_width) {
+      System.out.println(str(2) + formatted_text);
+      return (formatted_text + new_line + "\n");
+    }
+    else {
+      for (int symbol = dims.data_width / dims.text_size; symbol < new_line.length(); symbol++) {
+        if (textWidth(new_line.substring(0, symbol)) > dims.data_width) {
+          int space_pos = new_line.substring(0, symbol).lastIndexOf(' ');
+          return (new_line.substring(0, space_pos-1) + "\n" + addSubline(formatted_text, new_line.substring(0, space_pos+1)));
+        }
+      }  
+    }
+    return "";
+  }
+  
+  String reFormat(String input_text) {
+     String [] lines = input_text.split("\n");
+     String formatted_text = "";
+     
+     for (int i = 0; i < lines.length; i++) {
+       formatted_text += addSubline(formatted_text, lines[i]);
+     }
+     
+     return formatted_text;
+  }
+  
   /**
    * Reformats the string and places it into the ouput container
    */
   void output(String new_text) {
-    // Remove newline symbols from the string
-    new_text.replace('\n', ' ');
-    new_text.replace('\r', ' ');
-    // Add the text to the output
-    addToOutput(new_text);
-    first_output = max (0, (output_stream.size() - dims.lines_count));
+     output_data += new_text;
+     output_stream += reFormat(new_text);
   }
   
   /**
-   * 
+   * Display the output from the first line.
    */
-  void addToOutput(String new_text) {
-    if ((new_text.indexOf('\n') != -1) && (new_text.indexOf('\n') != new_text.length() - 1)) {
-      if (new_text.indexOf('\n') != 0)
-        addToOutput(new_text.substring(0,new_text.indexOf('\n')));
-      addToOutput(new_text.substring(new_text.indexOf('\n')+1));     
-    }
-    else if (textWidth(new_text) <= (dims.output_width-2*dims.text_indent)) {
-      output_stream.add(new_text + "\n");
-    }
-    else {
-      int subset_length = 0;
-      // while the substring is too long or can't be spliced, shorten it
-      while ((textWidth(new_text.substring(0, subset_length)) < (dims.output_width-2*dims.text_indent)) && (subset_length < new_text.length()))
-        subset_length++;
-      subset_length--;
-      while (subset_length > 0 && Character.isLetter(new_text.charAt(subset_length)))
-        subset_length--;    
-       
-      boolean toAdd = false;
-      for (int i = 0; i < subset_length; i++) {
-          toAdd = Character.isLetter(new_text.charAt(i)) || Character.isDigit(new_text.charAt(i));
-      }
-      
-      if (new_text.charAt(subset_length) == ' ')
-        subset_length++;
-      if (toAdd)
-        output_stream.add(new_text.substring(0, subset_length));
-      addToOutput(new_text.substring(subset_length));
-    }
-  }
-  
-  void reFormatOutput() {
-    String output_content = new String();
-    for (int i = 0; i < output_stream.size(); i++) {
-      output_content = output_content.concat((String) output_stream.get(i));
-    }
-    output_stream.clear();
-    
-    textFont(environment.getFont(), dims.text_size);
-    
-    addToOutput(output_content);
-  }
-
   void scrollFirst() {
     first_output = 0;
-    display();  
   }
   
+  /**
+   * Display the output from the previous line.
+   */  
   void scrollBackwards() {
-    first_output = max (first_output - 1, 0);
-    display();  
+    first_output = max (first_output - 1, 0); 
   }
-  
+
+  /**
+   * Display the output from the next line.
+   */  
   void scrollForward() {
-    first_output = max (min (first_output + 1, (output_stream.size() - dims.lines_count)), 0);
-    display();  
+    // first_output = max (min (first_output + 1, (output_stream.size() - dims.lines_count)), 0); 
   }
   
+  /**
+   * Display the output from the first line such that the last line is still visible.
+   */    
   void scrollLast() {
-    first_output = max(0, output_stream.size() - dims.lines_count);
-    display();  
+    // first_output = max(0, output_stream.size() - dims.lines_count);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Visual
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   void display() {
-    // Fill the text fileds.
+    // Fill the text fileds with grey overlap.
     noStroke();
     fill(settings.getColor("field"));
-    rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
-    rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
+    rect(dims.input_x, dims.input_y + round(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
+    rect(dims.input_x, dims.input_y + round(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
+        
+    textAlign(LEFT);    
         
     // Display error output if there is any.
     if (!error.isEmpty()) {
       textFont(basic_font, dims.text_size);
       fill(settings.getColor("error"));
-      textAlign(LEFT);
       text(error, dims.input_x + dims.text_indent, int(dims.basic_key_size*0.75) + dims.input_y + settings.text_size);
     } 
     else {
       textFont(environment.getFont(), dims.text_size);
       fill(settings.getColor("text"));
-      textAlign(LEFT);
       
-      switch (environment.getScreen()) {
-        case 1: case 2:  case 3:
-          text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
-          for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
-            text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output));
-          }
-        break;
-        
-        case 5:
-          
-          textAlign(LEFT);
-          text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
-          fill(settings.getColor("offline"));
-          textAlign(CENTER);
-          textSize(250);
-          text("OFF", dims.input_x + dims.output_width/2,  int(dims.basic_key_size*0.75) + dims.input_y + dims.output_height/2 + 80);
-        break;
-      }
+      text(input_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.basic_key_size*0.25) + dims.text_size*0.8);
+      text(output_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.basic_key_size*0.75) + dims.text_size);
     }
+  }
+  
+  final String getInput() {
+    return input_stream;
+  }
+  
+  final String getOutput() {
+    return output_stream;
   }
 }

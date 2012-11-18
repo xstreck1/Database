@@ -3,27 +3,29 @@
  */
 public class Dimensions {
   // Screen dimensions
-  int width_;
-  int height_;
+  int width_; ///< Width of the window itself.
+  int height_; ///< Height of the window itself.
 
-  // Layout variables - THESE ARE SET
-  int border_x; // Space between layout and window horizontally
-  int border_y; // Space between layout and window vertically
-  int basic_key_size; // Key size
-  int caps_size; // GUI text
-  int text_size; // I/O text
-  final int text_indent = 3;  // Space between window and text
+  // Layout variables - THESE ARE SET IN THE SETTINGS
+  int border_x; ///< Space between layout and window horizontally.
+  int border_y; ///< Space between layout and window vertically.
+  int basic_key_size; ///< Key size.
+  int caps_size; ///< GUI text.
+  int text_size; ///< I/O text.
+  final int text_indent = 3;  ///< Space between window and text.
 
-  // Object placement variables - just for simplicity in reccurent uses - THESE ARE COMPUTED
-  int keyboard_x; // Leftmost corner x position of the virtual keyboard
-  int keyboard_y; // Leftmost corner y position of the virtual keyboard
-  int keyboard_width; // Leftmost corner y position of the virtual keyboard
-  int wide_key_size; // Size of the bigger key (e.g. "erase")
-  int input_x; // Leftmost corner x position of the input filed
-  int input_y; // Leftmost corner y position of the input filed
-  int output_width; // Width of the output field
-  int output_height; // Height of the output field
-  int lines_count; // Number of lines in the output filed
+  // Object placement variables - just for simplicity in reccurent uses - THESE ARE COMPUTED.
+  int keyboard_x; ///< Leftmost corner x position of the virtual keyboard.
+  int keyboard_y; ///< Leftmost corner y position of the virtual keyboard.
+  int keyboard_width; ///< Leftmost corner y position of the virtual keyboard.
+  int wide_key_size; ///< Size of the bigger key (e.g. "erase").
+  int input_x; ///< Leftmost corner x position of the input filed.
+  int input_y; ///< Leftmost corner y position of the input filed.
+  int output_width; ///< Width of the output field.
+  int output_height; ///< Height of the output field.
+  int data_width; ///< Width of the output text.
+  int data_height; ///< Height of the output text.
+  int lines_count; ///< Number of lines in the output filed.
 
   /**
    * The constructor sets the values.
@@ -49,7 +51,9 @@ public class Dimensions {
     input_y        = basic_key_size + border_y;
     output_width   = keyboard_width - basic_key_size;
     output_height  = basic_key_size*4;
-    lines_count    = (int) ((float) (output_height - text_indent*2)  / (float) text_size); // This is tweaked a bit to make sure no overlap occurs in the bottom.
+    data_width     = output_width - 2*text_indent;
+    data_height    = output_height - 2*text_indent;    
+    lines_count    = floor(((float) data_width)  / text_size); // This is tweaked a bit to make sure no overlap occurs in the bottom.
   }
 }
 
