@@ -62,8 +62,9 @@ class Data {
    * TODO: Move to Keyboard.
    */
   void username() {
-    environment.setAccount(input_stream);
+    environment.setAccountName(input_stream);
     environment.setScreen(2);
+    setScreenData(); 
   }
   
   /**
@@ -79,8 +80,8 @@ class Data {
     }
     else {
       environment.setScreen(1);   
-      output(settings.getText("wronglogin"));
     }
+    setScreenData(); 
   }
   
   /**
@@ -94,7 +95,7 @@ class Data {
       else {
         environment.setScreen(1);
         clear();
-        output(settings.getText("logoffreset"));
+        setScreenData();
       }
     }
     else {
@@ -189,7 +190,7 @@ class Data {
     }
     output_stream.clear();
     
-    textFont(environment.getCurrentFont(), dims.text_size);
+    textFont(environment.getFont(), dims.text_size);
     
     addToOutput(output_content);
   }
@@ -219,25 +220,23 @@ class Data {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   void display() {
-    textFont(environment.getCurrentFont(), dims.text_size);
+    textFont(environment.getFont(), dims.text_size);
     noStroke();
     fill(settings.getColor("field"));
     rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.25), dims.keyboard_width, dims.text_size); 
     rect(dims.input_x, dims.input_y + int(dims.basic_key_size*0.75), dims.output_width, dims.output_height); 
+        
+    if (!error.isEmpty()) {
+        fill(settings.getColor("error"));
+        textAlign(LEFT);
+        text(error, dims.input_x + dims.text_indent, int(dims.basic_key_size*0.75) + dims.input_y + settings.text_size);
+    }    
         
     switch (environment.getScreen()) {
       case 1: case 2:  case 3:
         fill(settings.getColor("text"));
         textAlign(LEFT);
         text(input_stream, dims.input_x + dims.text_indent, dims.input_y + int(dims.basic_key_size*0.25) + dims.text_size*0.8);
-        for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
-          text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output));
-        }
-      break;
-      
-      case 4:
-        fill(settings.getColor("error"));
-        textAlign(LEFT);
         for (int i = first_output; i < (min(output_stream.size(), (first_output + dims.lines_count))); i++) {
           text((String) output_stream.get(i), dims.input_x + dims.text_indent,  int(dims.basic_key_size*0.75) + dims.input_y + dims.text_size*(1 + i - first_output));
         }

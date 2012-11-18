@@ -73,7 +73,7 @@ public class Keyboard {
    * Calls the display function for all the buttons in the container.
    */
   void displayButtons() {
-    textFont(environment.getCurrentFont(), dims.caps_size);
+    textFont(environment.getFont(), dims.caps_size);
     for (int i = 0; i < buttons.size(); i++) // Display only this environments buttons - for the one that is hovered over pass that information.
       buttons.get(i).display(i == hover_button);
   }
@@ -111,19 +111,24 @@ public class Keyboard {
 
     // Action buttons
     else if (button.equals(CONFIRM)) {
-        switch (environment.getScreen()) {
-        case 1:
-          data.username();  
-        break;
-        case 2:
-          data.password();      
-        break;
-        case 3:
-          data.search();  
-        break;
-        case 4:
-          environment.setScreen(settings.illegal ? 3 : 1);   
-        break;
+        if (!error.isEmpty()) {
+          error = "";
+          environment.setScreen(1);
+          data.setScreenData(); 
+        }
+        
+        else switch (environment.getScreen()) {
+          case 1:
+            data.username();  
+            break;
+            
+          case 2:
+            data.password();      
+            break;
+            
+          case 3:
+            data.search();  
+            break;
       }
     } else if (button.equals(ERASE)) {
       data.eraseLast();
@@ -133,7 +138,7 @@ public class Keyboard {
     
     // Font buttons
     else if (button.equals(settings.getFont(0)) || button.equals(settings.getFont(1)) || button.equals(settings.getFont(2)) || button.equals(settings.getFont(3))) {
-      environment.changeFont(button);
+      environment.setFont(button);
       data.reFormatOutput(); 
       data.first_output = max(0, min(data.first_output, data.output_stream.size() - dims.lines_count));
     }

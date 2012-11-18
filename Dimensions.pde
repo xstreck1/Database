@@ -49,7 +49,7 @@ public class Dimensions {
     input_y        = basic_key_size + border_y;
     output_width   = keyboard_width - basic_key_size;
     output_height  = basic_key_size*4;
-    lines_count    = (int) ((float) (output_height - text_indent*2)  / (float) text_size);
+    lines_count    = (int) ((float) (output_height - text_indent*2)  / (float) text_size); // This is tweaked a bit to make sure no overlap occurs in the bottom.
   }
 }
 

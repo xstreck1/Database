@@ -31,7 +31,7 @@ class HTTPHelper {
     do {
       max_lenght *= 2;
       buffer = new char[max_lenght]; }
-    while (content.read(buffer, 0, max_lenght) >= max_lenght && content >= 1);
+    while (content.read(buffer, 0, max_lenght) >= max_lenght && max_lenght >= 1);
     
     return new String(buffer);
   }
