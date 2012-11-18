@@ -29,6 +29,7 @@
 	<COLOR name="offline" r="80" g="160" b="190" a="255" /> <!-- color in which the OFF text is displayed. --> 
 	<COLOR name="error" r="150" g="0" b="0" a="255" /> <!-- program error info text (not part of the game) --> 
 	<!-- strings are expected in the ASCII charset -->	
+	<STRING name="emptyinput" text="Vstupni pole je prazdne. Ignoruji." />
 	<STRING name="username" text="Zadejte uzivatelske jmeno." />
 	<STRING name="illegal_welcome" text="Vitejte uzivateli UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" />
 	<STRING name="password" text="Zadejte heslo k uctu: " />

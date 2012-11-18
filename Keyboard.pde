@@ -116,7 +116,11 @@ public class Keyboard {
         error = "";
         startDatabase();
       }
-
+      // Else control for emptyness.
+      else if (data.getInput().equals("")) {
+        data.addLine(settings.getText("emptyinput"));
+      }
+      // Else test whether the user does not require to exit.
       else if (data.getInput().equals("EXIT")) {
         if (settings.illegal)
           data.addLine(settings.getText("illegallogoff"));
