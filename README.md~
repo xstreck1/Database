@@ -1,0 +1,10 @@
+Database
+========
+
+Other executions than Windows are not tested!
+
+File data/screen_layout_description.png contains visual description of layout sizes of the database. 
+
+File data/settings.xml, contains all initialization values and is sufficently commented.
+
+Folder data also contains all graphics used in the application as well as fonts. Background image must correlate with screen resolution.
