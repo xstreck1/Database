@@ -16,10 +16,10 @@
 	<!-- url must be of the format http://adress -->
 	<URL url="http://markyparky.php5.cz/strepiny/databaze.php" />
 	<!-- four fonts are currently expected, must be in file name.vlw; order of font names here determines order of buttons displayed -->
-	<FONT name="AlienLines" />
-	<FONT name="OmikronOne" />
-	<FONT name="Homeworld" />	
-	<FONT name="SilverStr" />	
+	<FONT name="AlienLines" move="0" />
+	<FONT name="OmikronOne" move="10" />
+	<FONT name="Homeworld" move="0" />	
+	<FONT name="SilverStr" move="2" />	
 	<!-- colors - Red, Green, Blue, Alpha component (the lower the value is the more opaque the color gets), can be in the range ]0,255[ -->
 	<COLOR name="background" r="20" g="65" b="20" a="125" /> <!-- color that is displayed on background if the image is not loaded correcly --> 
 	<COLOR name="field" r="255" g="255" b="255" a="0" /> <!-- backgound of input/output views --> 

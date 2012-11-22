@@ -60,7 +60,7 @@ public class XMLParser
       } else if (node.equals("URL")) {
         settings.target_url = getAttribute("url", entries[i]);     
       } else if (node.equals("FONT")) {
-        settings.fonts.add(getAttribute("name", entries[i]));     
+        settings.addFont(getAttribute("name", entries[i]), getAttribute("move", entries[i]));     
       } else if (node.equals("STRING")) {
         settings.strings.put(getAttribute("name", entries[i]), getAttribute("text", entries[i]));     
       } else if (node.equals("IMAGES_COUNT")) {

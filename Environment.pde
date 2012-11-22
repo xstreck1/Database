@@ -2,8 +2,7 @@
  * Class that holds and manages environment info
  */
 class Environment {
-  private HashMap<String, PFont> fonts; ///< Container of the fonts keyed by their name.
-  private String  currentFont; ///< Name of the current font.
+  private FontDesc current_font = BASIC_FONT; ///< Name of the current font.
   private int screen_type = 1; ///< 1 for name, 2 for password, 3 for data 
   private String  user_name = ""; ///< Name of the current user.
   private String  password = ""; ///< Password of the current user.
@@ -12,34 +11,11 @@ class Environment {
   /**
    * Constructor creates fonts and sets the active font.
    */
-  Environment () {
-    loadFonts();
-    
-    if (fonts.size() > 0)
-      currentFont = settings.getFont(0);
-    else
-      currentFont = BASIC_FONT_NAME;
+  Environment () {   
+    if (settings.getFontCount() > 0)
+      current_font = settings.getFont(0);
       
-      on_line = settings.on_line;
-  }
-
-  /**
-   * Load fonts based on their resource names - exactly 4 are assumed to be present.
-   */
-  void loadFonts() {
-    fonts = new HashMap();
-    String font_path;
-    PFont new_font;
-    
-    // Create all fonts that are loaded from settings.
-    for (int i = 0; i < settings.getFontCount(); i++) {
-      font_path = settings.getFont(i) + ".vlw";
-      new_font  = loadFont(font_path);
-      fonts.put(settings.getFont(i), new_font);
-    }
-    
-    // Add the basic font.
-    fonts.put(BASIC_FONT_NAME, basic_font);
+    on_line = settings.on_line;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,12 +29,12 @@ class Environment {
     return user_name;
   }  
   
-  void setFont(final String font_name) {
-    currentFont = font_name;
+  void setFont(final int font_num) {
+    current_font = settings.getFont(font_num);
   }
 
-  PFont getFont() {
-    return fonts.get(currentFont);
+  FontDesc getFont() {
+    return current_font;
   }
   
   void setScreen(final int new_screen) { 

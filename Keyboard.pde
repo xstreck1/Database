@@ -70,7 +70,7 @@ public class Keyboard {
     int font_count = settings.fonts.size();
     int button_width = dims.keyboard_width / font_count;
     for (int i = 0; i < font_count; i++) {
-      buttons.add(new Button(settings.getFont(i), button_width*i + dims.border_x, dims.border_y, button_width, dims.basic_key_size, dims.text_size));
+      buttons.add(new Button(settings.getFont(i).name, button_width*i + dims.border_x, dims.border_y, button_width, dims.basic_key_size, dims.text_size));
     }
 
     // Output scroll buttons.
@@ -84,7 +84,7 @@ public class Keyboard {
    * Calls the display function for all the buttons in the container.
    */
   void displayButtons() {
-    textFont(environment.getFont(), dims.caps_size);
+    textFont(environment.getFont().font, dims.caps_size);
     for (int i = 0; i < buttons.size(); i++) // Display only this environments buttons - for the one that is hovered over pass that information.
       buttons.get(i).display(i == hover_button);
   }
@@ -181,8 +181,8 @@ public class Keyboard {
     
     // Font buttons
     else for (int i = 0; i < settings.getFontCount(); i++) {
-      if (button.equals(settings.getFont(i))) {
-        environment.setFont(button);
+      if (button.equals(settings.getFont(i).name)) {
+        environment.setFont(i);
         data.rebuildOutput();
         data.display();
       }
@@ -305,7 +305,7 @@ class Button {
 
     // Draw the caption with X in the middle of button, Y being moved down a half of the letter height (basically center) 
     textAlign(CENTER);
-    text(caption, x_pos + width_/2, y_pos + (height_ + font_size)/2);
+    text(caption, x_pos + width_/2, y_pos + (height_ + font_size)/2 - environment.getFont().move);
   }
 
   /**
