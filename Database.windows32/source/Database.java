@@ -420,7 +420,7 @@ public class Dimensions {
 
     // Compute helping values from the basic ones.
     keyboard_x     = border_x;
-    keyboard_y     = height_ - basic_key_size*3 - border_y;
+    keyboard_y     = height_ - basic_key_size*4 - border_y;
     keyboard_width = basic_key_size*12;
     wide_key_size  = basic_key_size*3;
     input_x        = border_x;
@@ -428,7 +428,7 @@ public class Dimensions {
     output_x       = border_x;
     output_y       = round(basic_key_size*1.75f) + border_y;
     output_width   = keyboard_width - basic_key_size;
-    output_height  = basic_key_size*4;
+    output_height  = basic_key_size*3;
     data_width     = output_width - 2*text_indent;
     data_height    = output_height - 2*text_indent;;    
     lines_count    = data_height / text_size; // This is tweaked a bit to make sure no overlap occurs in the bottom.
@@ -627,6 +627,8 @@ public class Keyboard {
   // ASCII codes for some important positions
   private final char ALPHA_BEGIN = 65;
   private final char ALPHA_END = 91;
+  private final char NUM_BEGIN = 48;
+  private final char NUM_END = 57;
   private final char SPACE = '_'; // In the keyboard space is replaced with _ for clarity.
 
   // Dimensions, in the number of buttons, of the keyboard.
@@ -658,7 +660,14 @@ public class Keyboard {
     // Create buttons etter buttons.
     char caption = PApplet.parseChar(ALPHA_BEGIN);
 
-    // Build the buttons
+    // Build the nubmers
+    caption = PApplet.parseChar(NUM_BEGIN);
+    for (int x_counter = 0; x_counter <= NUM_END - NUM_BEGIN; x_counter++) {
+      // Add a button with the character given by the caption variable and position in based on the loop.
+      buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + 0*+dims.basic_key_size));
+    }
+
+    // Build the letters (one line below numbers)
     for (int y_counter = 0; y_counter < BOARD_HEIGHT; y_counter++) {
       for (int x_counter = 0; x_counter < BOARD_WIDTH; x_counter++) {
         // Change the last button for the space
@@ -666,14 +675,14 @@ public class Keyboard {
           caption = PApplet.parseChar(SPACE);
 
         // Add a button with the character given by the caption variable and position in based on the loop.
-        buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + y_counter*+dims.basic_key_size));
+        buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + (y_counter+1)*dims.basic_key_size));
       }
     }
-
+ 
     // Special input buttons.
-    buttons.add(new Button(CONFIRM, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 0*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));                                 
-    buttons.add(new Button(ERASE, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 1*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));
-    buttons.add(new Button(KILL, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 2*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));
+    buttons.add(new Button(CONFIRM, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 1*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));                                 
+    buttons.add(new Button(ERASE, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 2*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));
+    buttons.add(new Button(KILL, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 3*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));
 
     // Environment language buttons.
     int font_count = settings.fonts.size();
@@ -724,7 +733,7 @@ public class Keyboard {
     String button = buttons.get(hover_button).getCaption();
 
     // Go through letter buttons and space.
-    if (button.matches("\\p{Lu}"))
+    if (button.matches("[\\p{Lu},\\p{Digit}]"))
       data.addLetter(button.charAt(0));
     else if (button.equals("_"))
       data.addLetter(' ');

@@ -9,6 +9,8 @@ public class Keyboard {
   // ASCII codes for some important positions
   private final char ALPHA_BEGIN = 65;
   private final char ALPHA_END = 91;
+  private final char NUM_BEGIN = 48;
+  private final char NUM_END = 57;
   private final char SPACE = '_'; // In the keyboard space is replaced with _ for clarity.
 
   // Dimensions, in the number of buttons, of the keyboard.
@@ -40,7 +42,14 @@ public class Keyboard {
     // Create buttons etter buttons.
     char caption = char(ALPHA_BEGIN);
 
-    // Build the buttons
+    // Build the nubmers
+    caption = char(NUM_BEGIN);
+    for (int x_counter = 0; x_counter <= NUM_END - NUM_BEGIN; x_counter++) {
+      // Add a button with the character given by the caption variable and position in based on the loop.
+      buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + 0*+dims.basic_key_size));
+    }
+
+    // Build the letters (one line below numbers)
     for (int y_counter = 0; y_counter < BOARD_HEIGHT; y_counter++) {
       for (int x_counter = 0; x_counter < BOARD_WIDTH; x_counter++) {
         // Change the last button for the space
@@ -48,14 +57,14 @@ public class Keyboard {
           caption = char(SPACE);
 
         // Add a button with the character given by the caption variable and position in based on the loop.
-        buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + y_counter*+dims.basic_key_size));
+        buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + (y_counter+1)*dims.basic_key_size));
       }
     }
-
+ 
     // Special input buttons.
-    buttons.add(new Button(CONFIRM, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 0*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));                                 
-    buttons.add(new Button(ERASE, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 1*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));
-    buttons.add(new Button(KILL, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 2*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));
+    buttons.add(new Button(CONFIRM, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 1*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));                                 
+    buttons.add(new Button(ERASE, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 2*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));
+    buttons.add(new Button(KILL, 9*dims.basic_key_size + dims.border_x, dims.keyboard_y + 3*dims.basic_key_size, dims.wide_key_size, dims.basic_key_size));
 
     // Environment language buttons.
     int font_count = settings.fonts.size();
@@ -106,7 +115,7 @@ public class Keyboard {
     String button = buttons.get(hover_button).getCaption();
 
     // Go through letter buttons and space.
-    if (button.matches("\\p{Lu}"))
+    if (button.matches("[\\p{Lu},\\p{Digit}]"))
       data.addLetter(button.charAt(0));
     else if (button.equals("_"))
       data.addLetter(' ');

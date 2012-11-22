@@ -46,7 +46,7 @@ public class Dimensions {
 
     // Compute helping values from the basic ones.
     keyboard_x     = border_x;
-    keyboard_y     = height_ - basic_key_size*3 - border_y;
+    keyboard_y     = height_ - basic_key_size*4 - border_y;
     keyboard_width = basic_key_size*12;
     wide_key_size  = basic_key_size*3;
     input_x        = border_x;
@@ -54,7 +54,7 @@ public class Dimensions {
     output_x       = border_x;
     output_y       = round(basic_key_size*1.75) + border_y;
     output_width   = keyboard_width - basic_key_size;
-    output_height  = basic_key_size*4;
+    output_height  = basic_key_size*3;
     data_width     = output_width - 2*text_indent;
     data_height    = output_height - 2*text_indent;;    
     lines_count    = data_height / text_size; // This is tweaked a bit to make sure no overlap occurs in the bottom.
