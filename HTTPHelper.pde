@@ -56,7 +56,7 @@ class HTTPHelper {
    * @param name  a password to use instead of current user password
    */  
   String buildQuery(String key_word, String name, String password) {
-    return settings.target_url + "?term=" + settings.ID + "&klic=" + key_word + "&login=" + environment.user_name + "&password=" + environment.password;
+    return settings.target_url + "?term=" + settings.ID + "&klic=" + key_word + "&login=" + name + "&password=" + password;
   }
 
   /**
@@ -105,6 +105,6 @@ class HTTPHelper {
     }
     environment.on_line = status.equals("ON");
     // Debug output
-    println("Status: " + status); 
+    println("Status: " + my_query + " " + status); 
   }
 }

@@ -39,17 +39,15 @@ public class Keyboard {
    * Creates object representing all the buttons.
    */
   void createButtons() {
-    // Create buttons etter buttons.
-    char caption = char(ALPHA_BEGIN);
-
     // Build the nubmers
-    caption = char(NUM_BEGIN);
+    char caption = char(NUM_BEGIN);
     for (int x_counter = 0; x_counter <= NUM_END - NUM_BEGIN; x_counter++) {
       // Add a button with the character given by the caption variable and position in based on the loop.
       buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + 0*+dims.basic_key_size));
     }
 
     // Build the letters (one line below numbers)
+    caption = char(ALPHA_BEGIN);
     for (int y_counter = 0; y_counter < BOARD_HEIGHT; y_counter++) {
       for (int x_counter = 0; x_counter < BOARD_WIDTH; x_counter++) {
         // Change the last button for the space
@@ -70,7 +68,7 @@ public class Keyboard {
     int font_count = settings.fonts.size();
     int button_width = dims.keyboard_width / font_count;
     for (int i = 0; i < font_count; i++) {
-      buttons.add(new Button(settings.getFont(i), button_width*i + dims.border_x, dims.border_y, button_width, dims.basic_key_size, dims.text_size));
+      buttons.add(new Button(settings.getFont(i).name, button_width*i + dims.border_x, dims.border_y, button_width, dims.basic_key_size, dims.text_size));
     }
 
     // Output scroll buttons.
@@ -84,7 +82,7 @@ public class Keyboard {
    * Calls the display function for all the buttons in the container.
    */
   void displayButtons() {
-    textFont(environment.getFont(), dims.caps_size);
+    textFont(environment.getFont().font, dims.caps_size);
     for (int i = 0; i < buttons.size(); i++) // Display only this environments buttons - for the one that is hovered over pass that information.
       buttons.get(i).display(i == hover_button);
   }
@@ -181,8 +179,8 @@ public class Keyboard {
     
     // Font buttons
     else for (int i = 0; i < settings.getFontCount(); i++) {
-      if (button.equals(settings.getFont(i))) {
-        environment.setFont(button);
+      if (button.equals(settings.getFont(i).name)) {
+        environment.setFont(i);
         data.rebuildOutput();
         data.display();
       }
@@ -210,7 +208,7 @@ public class Keyboard {
   private void confirmPass(final String input) {
     environment.password = input;
     data.clear();
-    String valid = http.findEntry("ACCOUNT_VALID");
+    String valid = http.findEntry("ROLE");
     
     if (valid.substring(0, 2).contentEquals("OK")) {
       environment.setScreen(TEXT_SCREEN);
@@ -305,7 +303,7 @@ class Button {
 
     // Draw the caption with X in the middle of button, Y being moved down a half of the letter height (basically center) 
     textAlign(CENTER);
-    text(caption, x_pos + width_/2, y_pos + (height_ + font_size)/2);
+    text(caption, x_pos + width_/2, y_pos + (height_ + font_size)/2 - environment.getFont().move);
   }
 
   /**

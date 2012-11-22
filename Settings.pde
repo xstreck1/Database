@@ -1,5 +1,8 @@
+/**
+ * An object holding a font - its name, padding and acuall font object.
+ */
 public class FontDesc {
-  String name;
+  String name; ///< A name that is describing the font.
   PFont font;
   int move;
   

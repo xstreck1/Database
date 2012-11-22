@@ -93,7 +93,7 @@ class Data {
    */
   private String reFormat(String input_text) {
     // Make sure we will measure correctly.
-    textFont(environment.getFont());
+    textFont(environment.getFont().font);
     textSize(dims.text_size);  
     
     // Split to substrings that are already separated.
@@ -170,13 +170,13 @@ class Data {
         
     // Display error output if there is any.
     if (!error.isEmpty()) {
-      textFont(basic_font, dims.text_size); // Set readable font.
+      textFont(BASIC_FONT.font, dims.text_size); // Set readable font.
       fill(settings.getColor("error"));
       // Fill the output filed with the error.
-      text(error, dims.input_x + dims.text_indent, dims.input_y + settings.text_size);
+      text(error, dims.input_x + dims.text_indent, dims.input_y + settings.text_size - environment.getFont().move);
     } 
     else {
-      textFont(environment.getFont(), dims.text_size);
+      textFont(environment.getFont().font, dims.text_size);
       fill(settings.getColor("text"));
       
       // Fill the input bar.
@@ -185,7 +185,7 @@ class Data {
       // From the output string take those substrings that are currently visible.
       String [] substrings = output_stream.split("\n");
       for (int i = 0; (i < dims.lines_count) && (i + first_output < substrings.length); i++)
-        text(substrings[i + first_output], dims.input_x + dims.text_indent, dims.output_y + dims.text_size*(i+1) + dims.text_indent);
+        text(substrings[i + first_output], dims.input_x + dims.text_indent, dims.output_y + dims.text_size*(i+1) + dims.text_indent - environment.getFont().move);
     }
   }
   

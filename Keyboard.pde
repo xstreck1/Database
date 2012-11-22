@@ -39,17 +39,15 @@ public class Keyboard {
    * Creates object representing all the buttons.
    */
   void createButtons() {
-    // Create buttons etter buttons.
-    char caption = char(ALPHA_BEGIN);
-
     // Build the nubmers
-    caption = char(NUM_BEGIN);
+    char caption = char(NUM_BEGIN);
     for (int x_counter = 0; x_counter <= NUM_END - NUM_BEGIN; x_counter++) {
       // Add a button with the character given by the caption variable and position in based on the loop.
       buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + 0*+dims.basic_key_size));
     }
 
     // Build the letters (one line below numbers)
+    caption = char(ALPHA_BEGIN);
     for (int y_counter = 0; y_counter < BOARD_HEIGHT; y_counter++) {
       for (int x_counter = 0; x_counter < BOARD_WIDTH; x_counter++) {
         // Change the last button for the space
@@ -210,7 +208,7 @@ public class Keyboard {
   private void confirmPass(final String input) {
     environment.password = input;
     data.clear();
-    String valid = http.findEntry("ACCOUNT_VALID");
+    String valid = http.findEntry("ROLE");
     
     if (valid.substring(0, 2).contentEquals("OK")) {
       environment.setScreen(TEXT_SCREEN);

@@ -2,8 +2,7 @@
 final String SETTINGS_FILE = "settings.xml"; ///< The file with all the settings.
 final String CURSOR_FILE = "cursor.png"; ///< A picture used as the cursor.
 // Background images and fonts are derived from settings.
-final String BASIC_FONT_NAME = "Arial.vlw"; ///< Name of the font that is used in default cases.
-PFont basic_font; ///< Reference to a program-wise basic font.
+FontDesc BASIC_FONT; ///< Name of the font that is used in default cases.
 PImage [] background_images; ///< An array containing the images rotated on the background.
 PImage offline_image; ///< An image that is displayed when the terminal is on-line.
 // Screen identifiers.
@@ -33,7 +32,8 @@ void setup() {
   // Load data
   parseSettings();
   loadBackground();
-  basic_font = loadFont(BASIC_FONT_NAME);
+  
+  BASIC_FONT = new FontDesc("Arial", loadFont("Arial.vlw"), 0);
   
   // Create handling objects.
   dims        = new Dimensions();

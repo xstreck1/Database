@@ -26,8 +26,7 @@ public class Database extends PApplet {
 final String SETTINGS_FILE = "settings.xml"; ///< The file with all the settings.
 final String CURSOR_FILE = "cursor.png"; ///< A picture used as the cursor.
 // Background images and fonts are derived from settings.
-final String BASIC_FONT_NAME = "Arial.vlw"; ///< Name of the font that is used in default cases.
-PFont basic_font; ///< Reference to a program-wise basic font.
+FontDesc BASIC_FONT; ///< Name of the font that is used in default cases.
 PImage [] background_images; ///< An array containing the images rotated on the background.
 PImage offline_image; ///< An image that is displayed when the terminal is on-line.
 // Screen identifiers.
@@ -57,7 +56,8 @@ void setup() {
   // Load data
   parseSettings();
   loadBackground();
-  basic_font = loadFont(BASIC_FONT_NAME);
+  
+  BASIC_FONT = new FontDesc("Arial", loadFont("Arial.vlw"), 0);
   
   // Create handling objects.
   dims        = new Dimensions();
@@ -265,7 +265,7 @@ class Data {
    */
   private String reFormat(String input_text) {
     // Make sure we will measure correctly.
-    textFont(environment.getFont());
+    textFont(environment.getFont().font);
     textSize(dims.text_size);  
     
     // Split to substrings that are already separated.
@@ -342,13 +342,13 @@ class Data {
         
     // Display error output if there is any.
     if (!error.isEmpty()) {
-      textFont(basic_font, dims.text_size); // Set readable font.
+      textFont(BASIC_FONT.font, dims.text_size); // Set readable font.
       fill(settings.getColor("error"));
       // Fill the output filed with the error.
-      text(error, dims.input_x + dims.text_indent, dims.input_y + settings.text_size);
+      text(error, dims.input_x + dims.text_indent, dims.input_y + settings.text_size - environment.getFont().move);
     } 
     else {
-      textFont(environment.getFont(), dims.text_size);
+      textFont(environment.getFont().font, dims.text_size);
       fill(settings.getColor("text"));
       
       // Fill the input bar.
@@ -357,7 +357,7 @@ class Data {
       // From the output string take those substrings that are currently visible.
       String [] substrings = output_stream.split("\n");
       for (int i = 0; (i < dims.lines_count) && (i + first_output < substrings.length); i++)
-        text(substrings[i + first_output], dims.input_x + dims.text_indent, dims.output_y + dims.text_size*(i+1) + dims.text_indent);
+        text(substrings[i + first_output], dims.input_x + dims.text_indent, dims.output_y + dims.text_size*(i+1) + dims.text_indent - environment.getFont().move);
     }
   }
   
@@ -439,8 +439,7 @@ public class Dimensions {
  * Class that holds and manages environment info
  */
 class Environment {
-  private HashMap<String, PFont> fonts; ///< Container of the fonts keyed by their name.
-  private String  currentFont; ///< Name of the current font.
+  private FontDesc current_font = BASIC_FONT; ///< Name of the current font.
   private int screen_type = 1; ///< 1 for name, 2 for password, 3 for data 
   private String  user_name = ""; ///< Name of the current user.
   private String  password = ""; ///< Password of the current user.
@@ -449,34 +448,11 @@ class Environment {
   /**
    * Constructor creates fonts and sets the active font.
    */
-  Environment () {
-    loadFonts();
-    
-    if (fonts.size() > 0)
-      currentFont = settings.getFont(0);
-    else
-      currentFont = BASIC_FONT_NAME;
+  Environment () {   
+    if (settings.getFontCount() > 0)
+      current_font = settings.getFont(0);
       
-      on_line = settings.on_line;
-  }
-
-  /**
-   * Load fonts based on their resource names - exactly 4 are assumed to be present.
-   */
-  public void loadFonts() {
-    fonts = new HashMap();
-    String font_path;
-    PFont new_font;
-    
-    // Create all fonts that are loaded from settings.
-    for (int i = 0; i < settings.getFontCount(); i++) {
-      font_path = settings.getFont(i) + ".vlw";
-      new_font  = loadFont(font_path);
-      fonts.put(settings.getFont(i), new_font);
-    }
-    
-    // Add the basic font.
-    fonts.put(BASIC_FONT_NAME, basic_font);
+    on_line = settings.on_line;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -490,12 +466,12 @@ class Environment {
     return user_name;
   }  
   
-  public void setFont(final String font_name) {
-    currentFont = font_name;
+  public void setFont(final int font_num) {
+    current_font = settings.getFont(font_num);
   }
 
-  public PFont getFont() {
-    return fonts.get(currentFont);
+  public FontDesc getFont() {
+    return current_font;
   }
   
   public void setScreen(final int new_screen) { 
@@ -564,7 +540,7 @@ class HTTPHelper {
    * @param name  a password to use instead of current user password
    */  
   public String buildQuery(String key_word, String name, String password) {
-    return settings.target_url + "?term=" + settings.ID + "&klic=" + key_word + "&login=" + environment.user_name + "&password=" + environment.password;
+    return settings.target_url + "?term=" + settings.ID + "&klic=" + key_word + "&login=" + name + "&password=" + password;
   }
 
   /**
@@ -613,7 +589,7 @@ class HTTPHelper {
     }
     environment.on_line = status.equals("ON");
     // Debug output
-    println("Status: " + status); 
+    println("Status: " + my_query + " " + status); 
   }
 }
 /**
@@ -657,17 +633,15 @@ public class Keyboard {
    * Creates object representing all the buttons.
    */
   public void createButtons() {
-    // Create buttons etter buttons.
-    char caption = PApplet.parseChar(ALPHA_BEGIN);
-
     // Build the nubmers
-    caption = PApplet.parseChar(NUM_BEGIN);
+    char caption = PApplet.parseChar(NUM_BEGIN);
     for (int x_counter = 0; x_counter <= NUM_END - NUM_BEGIN; x_counter++) {
       // Add a button with the character given by the caption variable and position in based on the loop.
       buttons.add(new Button(str(caption++), dims.keyboard_x + x_counter*(dims.basic_key_size), dims.keyboard_y + 0*+dims.basic_key_size));
     }
 
     // Build the letters (one line below numbers)
+    caption = PApplet.parseChar(ALPHA_BEGIN);
     for (int y_counter = 0; y_counter < BOARD_HEIGHT; y_counter++) {
       for (int x_counter = 0; x_counter < BOARD_WIDTH; x_counter++) {
         // Change the last button for the space
@@ -688,7 +662,7 @@ public class Keyboard {
     int font_count = settings.fonts.size();
     int button_width = dims.keyboard_width / font_count;
     for (int i = 0; i < font_count; i++) {
-      buttons.add(new Button(settings.getFont(i), button_width*i + dims.border_x, dims.border_y, button_width, dims.basic_key_size, dims.text_size));
+      buttons.add(new Button(settings.getFont(i).name, button_width*i + dims.border_x, dims.border_y, button_width, dims.basic_key_size, dims.text_size));
     }
 
     // Output scroll buttons.
@@ -702,7 +676,7 @@ public class Keyboard {
    * Calls the display function for all the buttons in the container.
    */
   public void displayButtons() {
-    textFont(environment.getFont(), dims.caps_size);
+    textFont(environment.getFont().font, dims.caps_size);
     for (int i = 0; i < buttons.size(); i++) // Display only this environments buttons - for the one that is hovered over pass that information.
       buttons.get(i).display(i == hover_button);
   }
@@ -799,8 +773,8 @@ public class Keyboard {
     
     // Font buttons
     else for (int i = 0; i < settings.getFontCount(); i++) {
-      if (button.equals(settings.getFont(i))) {
-        environment.setFont(button);
+      if (button.equals(settings.getFont(i).name)) {
+        environment.setFont(i);
         data.rebuildOutput();
         data.display();
       }
@@ -828,7 +802,7 @@ public class Keyboard {
   private void confirmPass(final String input) {
     environment.password = input;
     data.clear();
-    String valid = http.findEntry("ACCOUNT_VALID");
+    String valid = http.findEntry("ROLE");
     
     if (valid.substring(0, 2).contentEquals("OK")) {
       environment.setScreen(TEXT_SCREEN);
@@ -923,7 +897,7 @@ class Button {
 
     // Draw the caption with X in the middle of button, Y being moved down a half of the letter height (basically center) 
     textAlign(CENTER);
-    text(caption, x_pos + width_/2, y_pos + (height_ + font_size)/2);
+    text(caption, x_pos + width_/2, y_pos + (height_ + font_size)/2 - environment.getFont().move);
   }
 
   /**
@@ -947,6 +921,21 @@ class Button {
 }
 
 /**
+ * An object holding a font - its name, padding and acuall font object.
+ */
+public class FontDesc {
+  String name; ///< A name that is describing the font.
+  PFont font;
+  int move;
+  
+  FontDesc(String o_name, PFont o_font, int o_move) {
+    name = o_name;
+    font = o_font;
+    move = o_move;
+  }
+}
+  
+/**
  * Contains settings load from the xml file. 
  * Most settings are not really that important or have default values, that are instantiated in the constructor. The mandatory ones can be checked using the "control" function.
  */
@@ -964,7 +953,14 @@ public class Settings {
   private String image_suffix = ".png"; ///< String with the suffix of images that are used
   private HashMap<String, String> strings = new HashMap<String, String>(); ///< Strings that are used within the program.
   private HashMap<String, Vector<String> > colors = new HashMap<String, Vector<String> >(); ///< Colors that are displayed somewhere. Each color is given by four (ARGB) strings.
-  private Vector<String> fonts = new Vector<String>(); ///< Vector that eventually holds the fonts.
+  private Vector<FontDesc> fonts = new Vector<FontDesc>(); ///< Vector that eventually holds the fonts.
+  
+  public void addFont(String name, String move) {
+    PFont font = loadFont(name + ".vlw");
+    int move_val = Integer.valueOf(move);
+    FontDesc new_font = new FontDesc(name, font, move_val);
+    fonts.add(new_font);
+  }
   
   /**
    * Obtain a certain string with the name as a key. If not present, set error.
@@ -983,24 +979,18 @@ public class Settings {
   }
   
   /**
-   * Obtain a certain font name by its ordinal number referenced from 0. If not present, set error.
+   * Obtain a certain font by its ordinal number referenced from 0. If not present, set error.
    *
    * @param number  ordinal number of the requested font
    *
-   * @return  name of the font, if it is present, otherwise an empty string
+   * @return   the font, if it is present, otherwise an empty string
    */
-  public final String getFont(int number) {
-    String font_name = "";
+  public final FontDesc getFont(int number) {    
+    if (number < fonts.size() || number >= 0)
+      return fonts.get(number);
     
-    // Try to seach for the font
-    try {
-      font_name = fonts.elementAt(number);
-    } catch (Exception e) {
-      e.printStackTrace();
-      error = e.getMessage();
-    }
-    
-    return font_name;
+    error = "Trying to acces a font ouf of range."; 
+    return BASIC_FONT;  
   }
   
   /**
@@ -1025,10 +1015,10 @@ public class Settings {
     // Obatain subparts of the color.
     else {
       Vector<String> parts = colors.get(name);
-      int r = Integer.valueOf((String) parts.elementAt(0));
-      int g = Integer.valueOf((String) parts.elementAt(1)); 
-      int b = Integer.valueOf((String) parts.elementAt(2));  
-      int a = Integer.valueOf((String) parts.elementAt(3));  
+      int r = Integer.valueOf(parts.elementAt(0));
+      int g = Integer.valueOf(parts.elementAt(1)); 
+      int b = Integer.valueOf(parts.elementAt(2));  
+      int a = Integer.valueOf(parts.elementAt(3));  
       return color(r,g,b,a);
     }  
   }
@@ -1106,7 +1096,7 @@ public class XMLParser
       } else if (node.equals("URL")) {
         settings.target_url = getAttribute("url", entries[i]);     
       } else if (node.equals("FONT")) {
-        settings.fonts.add(getAttribute("name", entries[i]));     
+        settings.addFont(getAttribute("name", entries[i]), getAttribute("move", entries[i]));     
       } else if (node.equals("STRING")) {
         settings.strings.put(getAttribute("name", entries[i]), getAttribute("text", entries[i]));     
       } else if (node.equals("IMAGES_COUNT")) {

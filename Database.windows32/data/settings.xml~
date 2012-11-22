@@ -16,15 +16,15 @@
 	<!-- url must be of the format http://adress -->
 	<URL url="http://markyparky.php5.cz/strepiny/databaze.php" />
 	<!-- four fonts are currently expected, must be in file name.vlw; order of font names here determines order of buttons displayed -->
-	<FONT name="AlienLines" />
-	<FONT name="OmikronOne" />
-	<FONT name="Homeworld" />	
-	<FONT name="SilverStr" />	
+	<FONT name="AlienLines" move="0" />
+	<FONT name="OmikronOne" move="10" />
+	<FONT name="Homeworld" move="0" />	
+	<FONT name="SilverStr" move="2" />	
 	<!-- colors - Red, Green, Blue, Alpha component (the lower the value is the more opaque the color gets), can be in the range ]0,255[ -->
 	<COLOR name="background" r="20" g="65" b="20" a="125" /> <!-- color that is displayed on background if the image is not loaded correcly --> 
-	<COLOR name="field" r="255" g="255" b="255" a="10" /> <!-- backgound of input/output views --> 
-	<COLOR name="text" r="0" g="0" b="0" a="255" /> <!-- input/output text --> 
-	<COLOR name="caption" r="30" g="30" b="110" a="255" /> <!-- caption of the button --> 
+	<COLOR name="field" r="255" g="255" b="255" a="0" /> <!-- backgound of input/output views --> 
+	<COLOR name="text" r="0" g="255" b="255" a="255" /> <!-- input/output text --> 
+	<COLOR name="caption" r="9" g="241" b="187" a="255" /> <!-- caption of the button --> 
 	<COLOR name="highlight" r="80" g="160" b="190" a="255" /> <!-- caption for button that is under the cursor --> 
 	<COLOR name="offline" r="80" g="160" b="190" a="255" /> <!-- color in which the OFF text is displayed. --> 
 	<COLOR name="error" r="150" g="0" b="0" a="255" /> <!-- program error info text (not part of the game) --> 
@@ -34,7 +34,7 @@
 	<STRING name="password" text="Zadejte heslo k uctu %1$s." /> <!-- imput password request - %1$s is formatted into username -->
 	<STRING name="wronglogin" text="Neplatne uzivatelske jmeno nebo heslo." /> <!-- login failed -->
 	<STRING name="welcome" text="Vitejte uzivateli %1$s." /> <!-- login succeeded - %1$s is formatted into username -->
-	<STRING name="illegal_welcome" text="Vitejte uzivateli UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" /> <!-- login message on the illegal terminal -->
+	<STRING name="illegal_welcome" text="Vitejte uzivateli ... CHYBA! UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" /> <!-- login message on the illegal terminal -->
 	<STRING name="prompt" text="Pro odhlaseni zadejte EXIT a potvrdte. Pro vyhledavani zadejte heslo a potvrdte." /> <!-- usage information for the user -->
 	<STRING name="outofbounds" text="Prekrocena delka vstupniho pole." /> <!-- displayed when the input field is exceeded -->
 	<STRING name="denied" text="K zobrazeni tohoto hesla nemate dostatecne pravomoce." /> <!-- on DENIED response-->	

@@ -1,6 +1,6 @@
 <DATABASE>
 	<!-- ID must be unique for each running database. 0 marks the illegal terminal. -->
-	<ID value="0" />
+	<ID value="1" />
 	<!-- Says if the terminal is initially online. May be true or false. If missing, assumed false. -->
 	<ONLINE value="true" />
 	<!-- CAUTION! RATIO MUST BE 4:3! width*height should correspond to the resolution of the running monitor, also background images must be present -->
@@ -15,7 +15,7 @@
 	<CAPSSIZE value="30" /> <!-- caption of the buttons -->
 	<!-- url must be of the format http://adress -->
 	<URL url="http://markyparky.php5.cz/strepiny/databaze.php" />
-	<!-- four fonts are currently expected, must be in file name.vlw; order of font names here determines order of buttons displayed -->
+	<!-- four fonts are currently expected, must be in file name.vlw; order of font names here determines order of buttons displayed; move is number of pixels the text moves on its y axis (positive to move up, negative to move down) -->
 	<FONT name="AlienLines" move="0" />
 	<FONT name="OmikronOne" move="10" />
 	<FONT name="Homeworld" move="0" />	

@@ -1,4 +1,19 @@
 /**
+ * An object holding a font - its name, padding and acuall font object.
+ */
+public class FontDesc {
+  String name; ///< A name that is describing the font.
+  PFont font;
+  int move;
+  
+  FontDesc(String o_name, PFont o_font, int o_move) {
+    name = o_name;
+    font = o_font;
+    move = o_move;
+  }
+}
+  
+/**
  * Contains settings load from the xml file. 
  * Most settings are not really that important or have default values, that are instantiated in the constructor. The mandatory ones can be checked using the "control" function.
  */
@@ -16,7 +31,14 @@ public class Settings {
   private String image_suffix = ".png"; ///< String with the suffix of images that are used
   private HashMap<String, String> strings = new HashMap<String, String>(); ///< Strings that are used within the program.
   private HashMap<String, Vector<String> > colors = new HashMap<String, Vector<String> >(); ///< Colors that are displayed somewhere. Each color is given by four (ARGB) strings.
-  private Vector<String> fonts = new Vector<String>(); ///< Vector that eventually holds the fonts.
+  private Vector<FontDesc> fonts = new Vector<FontDesc>(); ///< Vector that eventually holds the fonts.
+  
+  void addFont(String name, String move) {
+    PFont font = loadFont(name + ".vlw");
+    int move_val = Integer.valueOf(move);
+    FontDesc new_font = new FontDesc(name, font, move_val);
+    fonts.add(new_font);
+  }
   
   /**
    * Obtain a certain string with the name as a key. If not present, set error.
@@ -35,24 +57,18 @@ public class Settings {
   }
   
   /**
-   * Obtain a certain font name by its ordinal number referenced from 0. If not present, set error.
+   * Obtain a certain font by its ordinal number referenced from 0. If not present, set error.
    *
    * @param number  ordinal number of the requested font
    *
-   * @return  name of the font, if it is present, otherwise an empty string
+   * @return   the font, if it is present, otherwise an empty string
    */
-  final String getFont(int number) {
-    String font_name = "";
+  final FontDesc getFont(int number) {    
+    if (number < fonts.size() || number >= 0)
+      return fonts.get(number);
     
-    // Try to seach for the font
-    try {
-      font_name = fonts.elementAt(number);
-    } catch (Exception e) {
-      e.printStackTrace();
-      error = e.getMessage();
-    }
-    
-    return font_name;
+    error = "Trying to acces a font ouf of range."; 
+    return BASIC_FONT;  
   }
   
   /**
@@ -77,10 +93,10 @@ public class Settings {
     // Obatain subparts of the color.
     else {
       Vector<String> parts = colors.get(name);
-      int r = Integer.valueOf((String) parts.elementAt(0));
-      int g = Integer.valueOf((String) parts.elementAt(1)); 
-      int b = Integer.valueOf((String) parts.elementAt(2));  
-      int a = Integer.valueOf((String) parts.elementAt(3));  
+      int r = Integer.valueOf(parts.elementAt(0));
+      int g = Integer.valueOf(parts.elementAt(1)); 
+      int b = Integer.valueOf(parts.elementAt(2));  
+      int a = Integer.valueOf(parts.elementAt(3));  
       return color(r,g,b,a);
     }  
   }
