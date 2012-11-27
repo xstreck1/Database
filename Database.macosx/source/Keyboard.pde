@@ -66,7 +66,7 @@ public class Keyboard {
 
     // Environment language buttons.
     int font_count = settings.fonts.size();
-    int button_width = dims.keyboard_width / font_count;
+    int button_width = dims.keyboard_width / max(font_count,1);
     for (int i = 0; i < font_count; i++) {
       buttons.add(new Button(settings.getFont(i).name, button_width*i + dims.border_x, dims.border_y, button_width, dims.basic_key_size, dims.text_size));
     }
@@ -181,6 +181,7 @@ public class Keyboard {
     else for (int i = 0; i < settings.getFontCount(); i++) {
       if (button.equals(settings.getFont(i).name)) {
         environment.setFont(i);
+        data.eraseAll();
         data.rebuildOutput();
         data.display();
       }
@@ -209,8 +210,10 @@ public class Keyboard {
     environment.password = input;
     data.clear();
     String valid = http.findEntry("ROLE");
+    if (valid.length() < 2)
+      error = "Login error. Response too short (< 2 chars).";
     
-    if (valid.substring(0, 2).contentEquals("OK")) {
+    if (valid.matches("OK.*")) {
       environment.setScreen(TEXT_SCREEN);
       // Get user nume and display prompty
       String formatted = String.format(settings.getText("welcome"), environment.getAccountName());
@@ -231,16 +234,22 @@ public class Keyboard {
    */
   private void searchText(final String input) {
     String result = http.findEntry(input);
-    if (result.substring(0, 2).contentEquals("OK")) {
+    if (result.isEmpty())
+      error = "Search error. Response empty";
+      
+    if (result.matches("OK.*")) {
       data.addLine(input + ": " + result.substring(3));
     } 
-    else if (result.substring(0, 6).contentEquals("DENIED")) {
+    else if (result.matches("OFF.*")) {
+      data.addLine(input + ": " + settings.getText("off"));
+    } 
+    else if (result.matches("DENIED.*")) {
       data.addLine(input + ": " + settings.getText("denied"));
     } 
-    else if (result.substring(0, 6).contentEquals("NOT FOUND")) {
+    else if (result.matches("NOT.*")) {
       data.addLine(input + ": " + settings.getText("notfound"));
     } 
-    else if (result.substring(0, 6).contentEquals("CORRUPTED")) {
+    else if (result.matches("CORRUPTED.*")) {
       data.addLine(input + ": " + settings.getText("corrupted"));
     }
   }
@@ -292,6 +301,8 @@ class Button {
    */
   public void display(final boolean is_mouse_over) {
     textSize(font_size);
+    if (environment.getFont().name.equals("Anillo"))
+      textSize(round(font_size / ANILLO_FIT));      
 
     // Choose the highlight color, if requested.
     if (is_mouse_over) {

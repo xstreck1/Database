@@ -94,7 +94,8 @@ class Data {
   private String reFormat(String input_text) {
     // Make sure we will measure correctly.
     textFont(environment.getFont().font);
-    textSize(dims.text_size);  
+    int text_size = environment.getFont().name.equals("Anillo") ? round(dims.text_size / ANILLO_FIT) : dims.text_size;
+    textSize(text_size);  
     
     // Split to substrings that are already separated.
     String [] lines = input_text.split("\n");
@@ -161,26 +162,29 @@ class Data {
    * Displays the content of the input and output fileds.
    */
   void display() {
+    int text_size = environment.getFont().name.equals("Anillo") ? round(dims.text_size / ANILLO_FIT): dims.text_size; // Hard-fix for Anillo
+    
     // Fill the text fileds with grey overlap.
     noStroke();
     fill(settings.getColor("field"));
-    rect(dims.input_x, dims.input_y, dims.keyboard_width, round(dims.text_size*1.25)); 
+    rect(dims.input_x, dims.input_y, dims.keyboard_width, round(text_size*1.25)); 
     rect(dims.input_x, dims.output_y, dims.output_width, dims.output_height); 
     textAlign(LEFT);    
         
     // Display error output if there is any.
     if (!error.isEmpty()) {
-      textFont(BASIC_FONT.font, dims.text_size); // Set readable font.
+      textFont(BASIC_FONT.font, text_size); // Set readable font.
       fill(settings.getColor("error"));
       // Fill the output filed with the error.
       text(error, dims.input_x + dims.text_indent, dims.input_y + settings.text_size - environment.getFont().move);
     } 
     else {
-      textFont(environment.getFont().font, dims.text_size);
+      textFont(environment.getFont().font, text_size);
       fill(settings.getColor("text"));
       
       // Fill the input bar.
-      text(input_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.text_size*0.90));
+      int fix = (environment.getFont().name.equals("OmikronOne")) ? round(dims.text_size * -0.25) : 0; // Hard-fix for Omikronone
+      text(input_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.text_size * 0.8) + fix);
       
       // From the output string take those substrings that are currently visible.
       String [] substrings = output_stream.split("\n");

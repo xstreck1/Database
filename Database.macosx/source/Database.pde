@@ -12,8 +12,12 @@ final int TEXT_SCREEN = 3; ///< Identifier of the screen with the text content.
 
 // Number of frames per second.
 final int FRAME_RATE = 50; 
+// Number of seconds between each check.
+final int CHECK_RATE = 5000; 
 // Counter of repetitions of display operation.
 int draw_count = 0;
+
+final float ANILLO_FIT = 2.5; // Changes font size for the Anillo font, which 
 
 // Singular objects that will be used during the computation.
 // ALL THESE ARE SHARED PROJECT-WISE!
@@ -55,7 +59,10 @@ void setup() {
 
 @Override
 void draw() {
-  draw_count++;
+  // Within a loop, check status from time to time (100 == 2 secs).
+  if ((draw_count++ % round(CHECK_RATE/FRAME_RATE)) == 0) {
+    http.check();
+  }
   
   // Pick animation if the terminal is on-line and an image if otherwise.
   if (environment.on_line || settings.illegal ) {
@@ -77,11 +84,6 @@ void draw() {
   // Display buttons and data over the background.
   keyboard.displayButtons();
   data.display();
-  
-  // Within a loop, check status from time to time (100 == 2 secs).
-  if ((draw_count % 100) == 0) {
-    http.check();
-  }
 }
 
 @Override

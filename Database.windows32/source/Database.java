@@ -36,8 +36,12 @@ final int TEXT_SCREEN = 3; ///< Identifier of the screen with the text content.
 
 // Number of frames per second.
 final int FRAME_RATE = 50; 
+// Number of seconds between each check.
+final int CHECK_RATE = 5000; 
 // Counter of repetitions of display operation.
 int draw_count = 0;
+
+final float ANILLO_FIT = 2.5f; // Changes font size for the Anillo font, which 
 
 // Singular objects that will be used during the computation.
 // ALL THESE ARE SHARED PROJECT-WISE!
@@ -79,7 +83,10 @@ void setup() {
 
 public @Override
 void draw() {
-  draw_count++;
+  // Within a loop, check status from time to time (100 == 2 secs).
+  if ((draw_count++ % round(CHECK_RATE/FRAME_RATE)) == 0) {
+    http.check();
+  }
   
   // Pick animation if the terminal is on-line and an image if otherwise.
   if (environment.on_line || settings.illegal ) {
@@ -101,11 +108,6 @@ void draw() {
   // Display buttons and data over the background.
   keyboard.displayButtons();
   data.display();
-  
-  // Within a loop, check status from time to time (100 == 2 secs).
-  if ((draw_count % 100) == 0) {
-    http.check();
-  }
 }
 
 public @Override
@@ -266,7 +268,8 @@ class Data {
   private String reFormat(String input_text) {
     // Make sure we will measure correctly.
     textFont(environment.getFont().font);
-    textSize(dims.text_size);  
+    int text_size = environment.getFont().name.equals("Anillo") ? round(dims.text_size / ANILLO_FIT) : dims.text_size;
+    textSize(text_size);  
     
     // Split to substrings that are already separated.
     String [] lines = input_text.split("\n");
@@ -333,26 +336,29 @@ class Data {
    * Displays the content of the input and output fileds.
    */
   public void display() {
+    int text_size = environment.getFont().name.equals("Anillo") ? round(dims.text_size / ANILLO_FIT): dims.text_size; // Hard-fix for Anillo
+    
     // Fill the text fileds with grey overlap.
     noStroke();
     fill(settings.getColor("field"));
-    rect(dims.input_x, dims.input_y, dims.keyboard_width, round(dims.text_size*1.25f)); 
+    rect(dims.input_x, dims.input_y, dims.keyboard_width, round(text_size*1.25f)); 
     rect(dims.input_x, dims.output_y, dims.output_width, dims.output_height); 
     textAlign(LEFT);    
         
     // Display error output if there is any.
     if (!error.isEmpty()) {
-      textFont(BASIC_FONT.font, dims.text_size); // Set readable font.
+      textFont(BASIC_FONT.font, text_size); // Set readable font.
       fill(settings.getColor("error"));
       // Fill the output filed with the error.
       text(error, dims.input_x + dims.text_indent, dims.input_y + settings.text_size - environment.getFont().move);
     } 
     else {
-      textFont(environment.getFont().font, dims.text_size);
+      textFont(environment.getFont().font, text_size);
       fill(settings.getColor("text"));
       
       // Fill the input bar.
-      text(input_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.text_size*0.90f));
+      int fix = (environment.getFont().name.equals("OmikronOne")) ? round(dims.text_size * -0.25f) : 0; // Hard-fix for Omikronone
+      text(input_stream, dims.input_x + dims.text_indent, dims.input_y + round(dims.text_size * 0.8f) + fix);
       
       // From the output string take those substrings that are currently visible.
       String [] substrings = output_stream.split("\n");
@@ -660,7 +666,7 @@ public class Keyboard {
 
     // Environment language buttons.
     int font_count = settings.fonts.size();
-    int button_width = dims.keyboard_width / font_count;
+    int button_width = dims.keyboard_width / max(font_count,1);
     for (int i = 0; i < font_count; i++) {
       buttons.add(new Button(settings.getFont(i).name, button_width*i + dims.border_x, dims.border_y, button_width, dims.basic_key_size, dims.text_size));
     }
@@ -775,6 +781,7 @@ public class Keyboard {
     else for (int i = 0; i < settings.getFontCount(); i++) {
       if (button.equals(settings.getFont(i).name)) {
         environment.setFont(i);
+        data.eraseAll();
         data.rebuildOutput();
         data.display();
       }
@@ -803,8 +810,10 @@ public class Keyboard {
     environment.password = input;
     data.clear();
     String valid = http.findEntry("ROLE");
+    if (valid.length() < 2)
+      error = "Login error. Response too short (< 2 chars).";
     
-    if (valid.substring(0, 2).contentEquals("OK")) {
+    if (valid.matches("OK.*")) {
       environment.setScreen(TEXT_SCREEN);
       // Get user nume and display prompty
       String formatted = String.format(settings.getText("welcome"), environment.getAccountName());
@@ -825,16 +834,22 @@ public class Keyboard {
    */
   private void searchText(final String input) {
     String result = http.findEntry(input);
-    if (result.substring(0, 2).contentEquals("OK")) {
+    if (result.isEmpty())
+      error = "Search error. Response empty";
+      
+    if (result.matches("OK.*")) {
       data.addLine(input + ": " + result.substring(3));
     } 
-    else if (result.substring(0, 6).contentEquals("DENIED")) {
+    else if (result.matches("OFF.*")) {
+      data.addLine(input + ": " + settings.getText("off"));
+    } 
+    else if (result.matches("DENIED.*")) {
       data.addLine(input + ": " + settings.getText("denied"));
     } 
-    else if (result.substring(0, 6).contentEquals("NOT FOUND")) {
+    else if (result.matches("NOT.*")) {
       data.addLine(input + ": " + settings.getText("notfound"));
     } 
-    else if (result.substring(0, 6).contentEquals("CORRUPTED")) {
+    else if (result.matches("CORRUPTED.*")) {
       data.addLine(input + ": " + settings.getText("corrupted"));
     }
   }
@@ -886,6 +901,8 @@ class Button {
    */
   public void display(final boolean is_mouse_over) {
     textSize(font_size);
+    if (environment.getFont().name.equals("Anillo"))
+      textSize(round(font_size / ANILLO_FIT));      
 
     // Choose the highlight color, if requested.
     if (is_mouse_over) {
@@ -1046,6 +1063,10 @@ public class XMLParser
    */
   public void parse(String filename) {
     XML root = loadXML(filename); // Gets the root node, in this case DATABASE.
+    if (root == null) {
+      error = "The settings.xml file not found in the data folder.";
+      return;
+    }
     XML[] entries = root.getChildren(); // Gets all the children of DATABASE node.
     parseNodes(entries); // Parses the children.
   }

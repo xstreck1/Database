@@ -10,6 +10,10 @@ public class XMLParser
    */
   public void parse(String filename) {
     XML root = loadXML(filename); // Gets the root node, in this case DATABASE.
+    if (root == null) {
+      error = "The settings.xml file not found in the data folder.";
+      return;
+    }
     XML[] entries = root.getChildren(); // Gets all the children of DATABASE node.
     parseNodes(entries); // Parses the children.
   }
