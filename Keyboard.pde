@@ -210,8 +210,6 @@ public class Keyboard {
     environment.password = input;
     data.clear();
     String valid = http.findEntry("ROLE");
-    if (valid.length() < 2)
-      error = "Login error. Response too short (< 2 chars).";
     
     if (valid.matches("OK.*")) {
       environment.setScreen(TEXT_SCREEN);

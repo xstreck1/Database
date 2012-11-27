@@ -176,7 +176,7 @@ class Data {
       textFont(BASIC_FONT.font, text_size); // Set readable font.
       fill(settings.getColor("error"));
       // Fill the output filed with the error.
-      text(error, dims.input_x + dims.text_indent, dims.input_y + settings.text_size - environment.getFont().move);
+      text(error, dims.input_x + dims.text_indent, dims.output_y + text_size - environment.getFont().move);
     } 
     else {
       textFont(environment.getFont().font, text_size);
