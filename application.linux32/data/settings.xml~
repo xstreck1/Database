@@ -1,0 +1,46 @@
+<DATABASE>
+	<!-- ID must be unique for each running database. 0 marks the illegal terminal. -->
+	<ID value="1" />
+	<!-- Says if the terminal is initially online. May be true or false. If missing, assumed false. -->
+	<ONLINE value="true" />
+	<!-- CAUTION! RATIO MUST BE 4:3! width*height should correspond to the resolution of the running monitor, also background images must be present -->
+	<WIDTH value="1280" />
+	<HEIGHT value="800" />
+	<!-- Images count describes number of images used for animation - each image must have name width*height_num.suffix where num must be from ]1,IMAGES_COUNT[ interval. Delay defines time destance between in bulks of 20ms e.g. delay of 5 causes picture to switch every 0.1s . Also, transparency will not work for background. -->
+	<IMAGES_COUNT value="1" />
+	<DELAY value="7" />
+	<IMAGE_SUFFIX value=".png" /> <!--  .gif, .jpg, .tga, .png are possible -->
+	<!-- sizes of fonts are in pixels -->
+	<TEXTSIZE value="20" /> <!-- input / output text -->
+	<CAPSSIZE value="30" /> <!-- caption of the buttons -->
+	<!-- url must be of the format http://adress -->
+	<URL url="http://markyparky.php5.cz/strepiny/databaze.php" />
+	<!-- four fonts are currently expected, must be in file name.vlw; order of font names here determines order of buttons displayed; move is number of pixels the text moves on its y axis (positive to move up, negative to move down) -->
+	<FONT name="AlienLines" move="0" />
+	<FONT name="OmikronOne" move="8" />
+	<FONT name="Anillo" move="1" />	
+	<FONT name="SilverStr" move="2" />	
+	<!-- colors - Red, Green, Blue, Alpha component (the lower the value is the more opaque the color gets), can be in the range ]0,255[ -->
+	<COLOR name="background" r="20" g="65" b="20" a="125" /> <!-- color that is displayed on background if the image is not loaded correcly --> 
+	<COLOR name="field" r="255" g="255" b="255" a="0" /> <!-- backgound of input/output views --> 
+	<COLOR name="text" r="0" g="255" b="255" a="255" /> <!-- input/output text --> 
+	<COLOR name="caption" r="9" g="241" b="187" a="255" /> <!-- caption of the button --> 
+	<COLOR name="highlight" r="80" g="160" b="190" a="255" /> <!-- caption for button that is under the cursor --> 
+	<COLOR name="offline" r="80" g="160" b="190" a="255" /> <!-- color in which the OFF text is displayed. --> 
+	<COLOR name="error" r="150" g="0" b="0" a="255" /> <!-- program error info text (not part of the game) --> 
+	<!-- strings are expected in the ASCII charset -->	
+	<STRING name="emptyinput" text="Vstupni pole je prazdne. Ignoruji." /> <!-- empty input field message -->
+	<STRING name="username" text="Zadejte uzivatelske jmeno." /> <!-- imput username request - for the first time or after error -->
+	<STRING name="password" text="Zadejte heslo k uctu %1$s." /> <!-- imput password request - %1$s is formatted into username -->
+	<STRING name="wronglogin" text="Neplatne uzivatelske jmeno nebo heslo. Opakujte zadani jmena." /> <!-- login failed -->
+	<STRING name="welcome" text="Vitejte uzivateli %1$s." /> <!-- login succeeded - %1$s is formatted into username -->
+	<STRING name="illegal_welcome" text="Vitejte uzivateli ... CHYBA! UZIVATELSKY UCET NEPLATNY, NEOPRAVNENY PRISTUP JE TRESTNY!" /> <!-- login message on the illegal terminal -->
+	<STRING name="prompt" text="Pro odhlaseni zadejte EXIT a potvrdte. Pro vyhledavani zadejte heslo a potvrdte." /> <!-- usage information for the user -->
+	<STRING name="outofbounds" text="Prekrocena delka vstupniho pole." /> <!-- displayed when the input field is exceeded -->
+	<STRING name="off" text="Spojeni s databazi je v tuto chvili vypnute." /> <!-- on DENIED response-->		
+	<STRING name="denied" text="K zobrazeni tohoto hesla nemate dostatecne pravomoce." /> <!-- on DENIED response-->	
+	<STRING name="notfound" text="Heslo nebylo nalezeno v databazi." /> <!-- on NOT FOUND response-->
+	<STRING name="corrupted" text="Heslo je v tuto chvili nedostupne." /> <!-- on CORRUPTED response-->
+	<STRING name="logoffreset" text="Uzivatel odhlasen. Zadejte uzivatelske jmeno." /> <!-- displayed after the exit command -->
+	<STRING name="illegal_logoff" text="CHYBA ODPOJENI. NEOPRAVNENE UZIVANI TERMINALU JE TRESTNE!"  /> <!-- displayed after the exit command if typed on the illegal terminal -->
+</DATABASE>
