@@ -209,7 +209,7 @@ public class Keyboard {
     data.clear();
     String valid = http.findEntry("ROLE");
     
-    if (valid.matches("OK.*")) {
+    if (valid.replace('\n',' ').matches("OK.*")) {
       environment.setScreen(TEXT_SCREEN);
       // Get user nume and display prompty
       String formatted = String.format(settings.getText("welcome"), environment.getAccountName());
@@ -233,19 +233,19 @@ public class Keyboard {
     if (result.isEmpty())
       error = "Search error. Response empty";
       
-    if (result.matches("OK.*")) {
+    if (result.replace('\n',' ').matches("OK.*")) {
       data.addLine(input + ": " + result.substring(3));
     } 
-    else if (result.matches("OFF.*")) {
+    else if (result.replace('\n',' ').matches("OFF.*")) {
       data.addLine(input + ": " + settings.getText("off"));
     } 
-    else if (result.matches("DENIED.*")) {
+    else if (result.replace('\n',' ').matches("DENIED.*")) {
       data.addLine(input + ": " + settings.getText("denied"));
     } 
-    else if (result.matches("NOT.*")) {
+    else if (result.replace('\n',' ').matches("NOT.*")) {
       data.addLine(input + ": " + settings.getText("notfound"));
     } 
-    else if (result.matches("CORRUPTED.*")) {
+    else if (result.replace('\n',' ').matches("CORRUPTED.*")) {
       data.addLine(input + ": " + settings.getText("corrupted"));
     }
   }

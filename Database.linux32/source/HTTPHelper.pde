@@ -5,9 +5,7 @@ import java.net.URLConnection;
 /**
  * Class wrapping very simple basics of a synchronous HTTP connection.
  */
-class HTTPHelper {
-  URLConnection conn; // Maintains a connection
-  
+class HTTPHelper { 
   /**
    * This function establishes a connection, reads the content on the target URL and returns it.
    *
@@ -18,25 +16,20 @@ class HTTPHelper {
   private String connect (final String target_URL) throws MalformedURLException, IOException {
     // Open the connection
     URL url = new URL(target_URL);
-    conn = url.openConnection();
+    URLConnection conn = url.openConnection();
     conn.connect();
 
     // The content is stored into a buffer	
-    InputStreamReader content;
-    content = new InputStreamReader(conn.getInputStream());
-    char [] buffer;
-    int max_lenght = 100; // Current lenght of the buffer
+    InputStreamReader content = new InputStreamReader((InputStream) conn.getContent());
+    BufferedReader buff = new BufferedReader(content);
     
-    // Increase the buffer size until you read it all / until you reach bouns - given by a positive integer size
-    do {
-      max_lenght *= 2;
-      buffer = new char[max_lenght]; }
-    while (content.read(buffer, 0, max_lenght) >= max_lenght && max_lenght >= 1);
-    
-    // Remove empty spaces if there are any and return the result.
-    String result = new String(buffer);
-    int index_of_empty = (result.indexOf(0x0) == -1) ? result.length() : result.indexOf(0x0);
-    return result.substring(0, index_of_empty);
+    String full_text = "", new_line = buff.readLine();
+    while (new_line != null) {
+      full_text = full_text + new_line + "\n";
+      new_line = buff.readLine();
+    };
+
+    return full_text.trim();    
   }
 
   /**
@@ -103,7 +96,7 @@ class HTTPHelper {
       e.printStackTrace();
       status = "Error.";
     }
-    environment.on_line = status.equals("ON");
+    environment.on_line = status.replace('\n',' ').matches("ON.*");
     // Debug output
     println("Status: " + my_query + " " + status); 
   }
