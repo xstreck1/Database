@@ -94,7 +94,7 @@ class Data {
   private String reFormat(String input_text) {
     // Make sure we will measure correctly.
     textFont(environment.getFont().font);
-    int text_size = environment.getFont().name.equals("Anillo") ? round(dims.text_size / ANILLO_FIT) : dims.text_size;
+    int text_size = environment.getFont().name.equals("nobilia") ? round(dims.text_size / ANILLO_FIT) : dims.text_size;
     textSize(text_size);  
     
     // Split to substrings that are already separated.
@@ -162,7 +162,7 @@ class Data {
    * Displays the content of the input and output fileds.
    */
   void display() {
-    int text_size = environment.getFont().name.equals("Anillo") ? round(dims.text_size / ANILLO_FIT): dims.text_size; // Hard-fix for Anillo
+    int text_size = environment.getFont().name.equals("nobilia") ? round(dims.text_size / ANILLO_FIT): dims.text_size; // Hard-fix for Anillo
     
     // Fill the text fileds with grey overlap.
     noStroke();

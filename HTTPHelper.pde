@@ -1,6 +1,7 @@
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.io.InputStreamReader;
 
 /**
  * Class wrapping very simple basics of a synchronous HTTP connection.

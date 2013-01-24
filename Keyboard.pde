@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 /**
  * Keyboard is completelly responsible for the appereance and functionallity of the virtual keyboard acessible to user.
  */
@@ -297,7 +299,7 @@ class Button {
    */
   public void display(final boolean is_mouse_over) {
     textSize(font_size);
-    if (environment.getFont().name.equals("Anillo"))
+    if (environment.getFont().name.equals("nobilia"))
       textSize(round(font_size / ANILLO_FIT));      
 
     // Choose the highlight color, if requested.
