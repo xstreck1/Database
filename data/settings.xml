@@ -4,8 +4,8 @@
 	<!-- Says if the terminal is initially online. May be true or false. If missing, assumed false. -->
 	<ONLINE value="true" />
 	<!-- CAUTION! RATIO MUST BE 4:3! width*height should correspond to the resolution of the running monitor, also background images must be present -->
-	<WIDTH value="800" />
-	<HEIGHT value="600" />
+	<WIDTH value="1024" />
+	<HEIGHT value="768" />
 	<!-- Images count describes number of images used for animation - each image must have name width*height_num.suffix where num must be from ]1,IMAGES_COUNT[ interval. Delay defines time destance between in bulks of 20ms e.g. delay of 5 causes picture to switch every 0.1s . Also, transparency will not work for background. -->
 	<IMAGES_COUNT value="1" />
 	<DELAY value="7" />

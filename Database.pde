@@ -12,8 +12,8 @@ final int TEXT_SCREEN = 3; ///< Identifier of the screen with the text content.
 
 // Number of frames per second.
 final int FRAME_RATE = 50; 
-// Number of seconds between each check.
-final int CHECK_RATE = 5000; 
+// Number of miliseconds between each check.
+final int CHECK_RATE = 3000; 
 // Counter of repetitions of display operation.
 int draw_count = 0;
 
@@ -27,6 +27,7 @@ Data        data; ///< Input / output content.
 HTTPHelper  http; ///< Class for conntecting to the server.
 Settings    settings; ///< Settings read from the XML file.
 Dimensions  dims; ///< Numerical layout values.
+Thread thread;
 
 // A string that is filled if something goes wrong - basically non-intrusive version of an exception. Mainly would be raised if a parsed tag in the settings.xml is unknown.
 String error = "";
@@ -45,6 +46,7 @@ void setup() {
   environment = new Environment();
   data        = new Data();
   http        = new HTTPHelper();
+  thread      = new Thread(http);
   
   // Setup graphics.
   size(settings.screen_width, settings.screen_height, JAVA2D);
@@ -61,7 +63,7 @@ void setup() {
 void draw() {
   // Within a loop, check status from time to time (100 == 2 secs).
   if ((draw_count++ % round(CHECK_RATE/FRAME_RATE)) == 0) {
-    new Thread(http).start();
+    thread.run();
   }
   
   // Pick animation if the terminal is on-line and an image if otherwise.
