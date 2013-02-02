@@ -61,7 +61,7 @@ void setup() {
 void draw() {
   // Within a loop, check status from time to time (100 == 2 secs).
   if ((draw_count++ % round(CHECK_RATE/FRAME_RATE)) == 0) {
-    http.check();
+    new Thread(http).start();
   }
   
   // Pick animation if the terminal is on-line and an image if otherwise.

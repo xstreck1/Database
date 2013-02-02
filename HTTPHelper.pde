@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 /**
  * Class wrapping very simple basics of a synchronous HTTP connection.
  */
-class HTTPHelper { 
+class HTTPHelper implements Runnable { 
   /**
    * This function establishes a connection, reads the content on the target URL and returns it.
    *
@@ -74,8 +74,7 @@ class HTTPHelper {
     }
     catch (Exception e) {
       e.printStackTrace();
-      error = "Chyba spojeni s databazi.";
-      result = "Error.";
+      result = "CONN_ERR";
     }
     
     // Debug output
@@ -87,7 +86,8 @@ class HTTPHelper {
   /**
    * Check status of the database on the server and set environmental variable in dependency on that.
    */  
-  void check() {    
+  @Override
+  void run() {    
     String status = "";
     String my_query = buildQuery("STATUS", "MAINTENANCE", "INSECURITY"); 
     try {
@@ -95,7 +95,6 @@ class HTTPHelper {
     }
     catch (Exception e) {
       e.printStackTrace();
-      status = "Error.";
     }
     environment.on_line = status.replace('\n',' ').matches("ON.*");
     // Debug output

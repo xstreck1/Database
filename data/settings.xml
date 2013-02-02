@@ -43,4 +43,5 @@
 	<STRING name="corrupted" text="Heslo je v tuto chvili nedostupne." /> <!-- on CORRUPTED response-->
 	<STRING name="logoffreset" text="Uzivatel odhlasen. Zadejte uzivatelske jmeno." /> <!-- displayed after the exit command -->
 	<STRING name="illegal_logoff" text="CHYBA ODPOJENI. NEOPRAVNENE UZIVANI TERMINALU JE TRESTNE!"  /> <!-- displayed after the exit command if typed on the illegal terminal -->
+	<STRING name="connerr" text="Chyba ve spojeni se serverem, opakujte pozadavek."  /> 
 </DATABASE>

@@ -211,7 +211,10 @@ public class Keyboard {
     data.clear();
     String valid = http.findEntry("ROLE");
     
-    if (valid.replace('\n',' ').matches("OK.*")) {
+    if (valid.replace('\n',' ').matches("CONN_ERR.*")) {
+      data.addLine("Prihlaseni selhalo. : " + settings.getText("connerr"));      
+    }
+    else if (valid.replace('\n',' ').matches("OK.*")) {
       environment.setScreen(TEXT_SCREEN);
       // Get user nume and display prompty
       String formatted = String.format(settings.getText("welcome"), environment.getAccountName());
@@ -249,6 +252,9 @@ public class Keyboard {
     } 
     else if (result.replace('\n',' ').matches("CORRUPTED.*")) {
       data.addLine(input + ": " + settings.getText("corrupted"));
+    }
+    else if (result.replace('\n',' ').matches("CONN_ERR.*")) {
+      data.addLine(input + ": " + settings.getText("connerr"));      
     }
   }
 }
